@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useBuscarCartao, usePagarCartao } from "../../../hooks/useCartao";
-import { Loader2, CreditCard, Lock, CheckCircle, Eye, EyeOff, Menu } from "lucide-react";
+import { CreditCard, Lock, CheckCircle, Eye, EyeOff, Menu } from "lucide-react";
 
 function Dashboard() {
   const [cardNumber, setCardNumber] = useState<string>("");
@@ -27,7 +27,7 @@ function Dashboard() {
   }, [cardNumber]);
 
   
-  const { data: cardData, isError, error, isLoading } = useBuscarCartao(searchValue || "");
+  const { data: cardData, isError, isLoading } = useBuscarCartao(searchValue || "");
 
   const pagarCartao = usePagarCartao();
 

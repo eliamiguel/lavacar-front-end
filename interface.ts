@@ -91,6 +91,10 @@ export interface IAuthInput{
     data: string;
     valorDesconto: number;
   }
+  export interface TransacaoRecente {
+    dataTransacao: string;
+    valorDesconto: number;
+  }
   
   export interface DashboardData {
     totalCartoes: number;
