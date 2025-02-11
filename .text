@@ -1,0 +1,160 @@
+-- Usuários do sistema
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    profile_image_url VARCHAR(450),
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Clientes
+CREATE TABLE clients (
+    client_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL, -- Nome do cliente
+    email VARCHAR(100) UNIQUE, -- Email do cliente (opcional, mas útil)
+    phone VARCHAR(20), -- Telefone de contato
+    address TEXT, -- Endereço do cliente
+    city VARCHAR(100), -- Cidade
+    state_id INT REFERENCES states(state_id), -- Relação com a tabela de estados
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Data de criação do cliente
+);
+
+-- Estados
+CREATE TABLE states (
+    state_id SERIAL PRIMARY KEY,
+    state_code CHAR(2) UNIQUE NOT NULL,
+    state_name VARCHAR(100) NOT NULL
+);
+
+-- Produtos
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    product_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Preços por estado
+CREATE TABLE price_by_state (
+    price_id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(product_id),
+    state_id INT REFERENCES states(state_id),
+    price NUMERIC(10, 2) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Orçamentos
+CREATE TABLE budgets (
+    budget_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
+    client_id INT REFERENCES clients(client_id);
+    total_value NUMERIC(15, 2) DEFAULT 0.00,
+    status VARCHAR(50) DEFAULT 'em aberto', -- em aberto, aprovado, faturado
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Itens do orçamento
+CREATE TABLE budget_items (
+    budget_item_id SERIAL PRIMARY KEY,
+    budget_id INT REFERENCES budgets(budget_id) ON DELETE CASCADE,
+    product_id INT REFERENCES products(product_id),
+    quantity INT NOT NULL,
+    state_id INT REFERENCES states(state_id),
+    price NUMERIC(10, 2) NOT NULL,
+    total NUMERIC(15, 2) NOT NULL
+);
+
+-- Aprovações
+CREATE TABLE approvals (
+    approval_id SERIAL PRIMARY KEY,
+    budget_id INT REFERENCES budgets(budget_id),
+    approved_by INT REFERENCES users(user_id),
+    approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Faturamentos
+CREATE TABLE invoices (
+    invoice_id SERIAL PRIMARY KEY,
+    budget_id INT REFERENCES budgets(budget_id),
+    total_faturado NUMERIC(15, 2) NOT NULL,
+    issued_by INT REFERENCES users(user_id),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Empenhos
+CREATE TABLE commitments (
+    commitment_id SERIAL PRIMARY KEY,
+    budget_id INT REFERENCES budgets(budget_id),
+    total_empenhado NUMERIC(15, 2) NOT NULL,
+    committed_by INT REFERENCES users(user_id),
+    committed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO clients (name, email, phone, address, city, state_id)
+VALUES
+('João Silva', 'joao.silva@example.com', '(11) 98765-4321', 'Rua das Flores, 123', 'São Paulo', 1),
+('Maria Oliveira', 'maria.oliveira@example.com', '(21) 98765-4321', 'Avenida Brasil, 456', 'Rio de Janeiro', 2),
+('Carlos Souza', 'carlos.souza@example.com', '(31) 98765-4321', 'Rua XV de Novembro, 789', 'Belo Horizonte', 3),
+('Ana Costa', 'ana.costa@example.com', '(41) 98765-4321', 'Praça Sete, 101', 'Curitiba', 4),
+('Lucas Pereira', 'lucas.pereira@example.com', '(51) 98765-4321', 'Rua dos Andradas, 202', 'Porto Alegre', 5),
+('Fernanda Almeida', 'fernanda.almeida@example.com', '(61) 98765-4321', 'Quadra 10, Bloco A', 'Brasília', 6),
+('Eduardo Lima', 'eduardo.lima@example.com', '(71) 98765-4321', 'Avenida Paralela, 303', 'Salvador', 7),
+('Patrícia Gomes', 'patricia.gomes@example.com', '(85) 98765-4321', 'Rua Almirante Barroso, 404', 'Fortaleza', 8),
+('Roberto Santos', 'roberto.santos@example.com', '(81) 98765-4321', 'Rua da Aurora, 505', 'Recife', 9),
+('Mariana Fernandes', 'mariana.fernandes@example.com', '(11) 98765-4321', 'Rua dos Três Irmãos, 606', 'São Paulo', 1);
+
+
+-- Inserir dados para os usuários
+INSERT INTO users (name, email, password_hash, role) VALUES
+('Ana Costa', 'ana.costa@example.com', 'hashed_password_ana', 'admin' ),
+('Carlos Silva', 'carlos.silva@example.com', 'hashed_password_carlos', 'financeiro'),
+('Mariana Souza', 'mariana.souza@example.com', 'hashed_password_mariana', 'user');
+-- Inserir dados para os estados
+INSERT INTO states (state_code, state_name) VALUES
+('SP', 'São Paulo'),
+('RJ', 'Rio de Janeiro'),
+('MG', 'Minas Gerais'),
+('BA', 'Bahia'),
+('RS', 'Rio Grande do Sul');
+-- Inserir preços para os produtos por estado
+INSERT INTO products (product_name, product_description) VALUES
+('Produto A', 'Descrição do Produto A'),
+('Produto B', 'Descrição do Produto B'),
+('Produto C', 'Descrição do Produto C'),
+('Produto D', 'Descrição do Produto D');
+INSERT INTO price_by_state (product_id, state_id, price) VALUES
+(1, 1, 100.00),  -- Produto A em São Paulo
+(1, 2, 110.00),  -- Produto A no Rio de Janeiro
+(2, 1, 200.00),  -- Produto B em São Paulo
+(2, 3, 190.00),  -- Produto B em Minas Gerais
+(3, 4, 150.00),  -- Produto C na Bahia
+(4, 5, 250.00);  -- Produto D no Rio Grande do Sul
+-- Inserir dados para os orçamentos
+INSERT INTO budgets (user_id, total_value, status) VALUES
+(1, 1500.00, 'em aberto'),
+(2, 3000.00, 'aprovado'),
+(3, 1200.00, 'faturado');
+-- Inserir dados para os itens do orçamento
+INSERT INTO budget_items (budget_id, product_id, quantity, state_id, price, total) VALUES
+(1, 1, 5, 1, 100.00, 500.00),  -- Produto A (5 unidades) no orçamento 1
+(1, 2, 3, 2, 200.00, 600.00),  -- Produto B (3 unidades) no orçamento 1
+(2, 3, 10, 4, 150.00, 1500.00), -- Produto C (10 unidades) no orçamento 2
+(3, 4, 4, 5, 250.00, 1000.00);  -- Produto D (4 unidades) no orçamento 3
+-- Inserir dados para as aprovações
+INSERT INTO approvals (budget_id, approved_by) VALUES
+(2, 2),  -- Orçamento 2 aprovado por Carlos Silva
+(1, 1);  -- Orçamento 1 aprovado por Ana Costa
+-- Inserir dados para os faturamentos
+INSERT INTO invoices (budget_id, total_faturado, issued_by) VALUES
+(3, 1200.00, 3);  -- Orçamento 3 faturado por Mariana Souza
+INSERT INTO commitments (budget_id, total_empenhado, committed_by) VALUES
+(4, 500.00, 4),  -- Orçamento 1 empenhado por Ana Costa
+(5, 2500.00, 5); -- Orçamento 2 empenhado por Carlos Silva
+
+
+
+Painel do Administrador
+Painel do Cliente
+Painel do Estabelecimento
