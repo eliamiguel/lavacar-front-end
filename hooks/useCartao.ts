@@ -38,6 +38,7 @@ export const usePagarCartao = () => {
     onSuccess: (data) => {
       toast.success(data.mensagem || "Pagamento realizado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ['transacao'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
     onError: (error: AxiosError<{ message: string }>) => {
       const errorMessage = error.response?.data?.message || "Erro ao processar pagamento.";
@@ -83,6 +84,7 @@ export const useCartoes = () => {
         onSuccess: (data) => {
          toast.success(data.mensagem || "Cartão criado com sucesso.")
           queryClient.invalidateQueries({ queryKey: ['cartaos'] }); 
+          queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
           const errorMessage = error.response?.data?.message || 'Erro ao criar cartão. Tente novamente.';
@@ -102,6 +104,7 @@ export const useCartoes = () => {
         .then((res)=>res.data)},
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey:["lavacarsPermitidos"]});
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         toast.success(data.message || "Cartão vinculado com sucesso" )
       },
       onError:(error: AxiosError<{ message: string }>)=>{
@@ -130,6 +133,7 @@ export const useCartoes = () => {
       onSuccess: (data) => {
         toast.success(data.message || 'Saldo atualizado com sucesso!');
         queryClient.invalidateQueries({ queryKey: ['cartaos'] }); 
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       },
       onError: (error: AxiosError<{ message: string }>) => {
         const errorMessage = error.response?.data?.message || 'Erro ao editar cliente. Tente novamente.';
@@ -153,6 +157,7 @@ export const useCartoes = () => {
       onSuccess: (data) => {
         toast.success(data.mensagem ||"Cartão Excluido com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['cartaos'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       },onError: (error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'Erro ao excluir cartão';
         console.log('erro ao excluir cartão', errorMessage);

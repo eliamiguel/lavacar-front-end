@@ -1,25 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import Link from "next/link";
-import { LogOut, Users, Car, LayoutDashboard, ArrowLeft, ArrowRight, RefreshCw, Shield, Settings, UserCog } from "lucide-react";
+import { UserContext } from "@/context/UserContext";
+import { LogOut, Users, Car, LayoutDashboard, ArrowLeft, ArrowRight, RefreshCw, UserCog, Building2 } from "lucide-react";
 import useLogout from "../../../hooks/useLogout";
 
-
 function Sidebar() {
+  const { isAdmin, isLavacar } = useContext(UserContext); 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const logout = useLogout();
-  const [userType, setUserType] = useState<string | null>(null); // Estado para armazenar o tipo de usuário
-
-  // Simula busca do tipo de usuário (pode vir da API ou localStorage)
-  useEffect(() => {
-    const tipoUsuario = localStorage.getItem("userType") || "cliente"; // Simulando
-    setUserType(tipoUsuario);
-  }, []);
 
   return (
-    <div className={`h-screen bg-gray-900 text-white fixed pt-14 top-0 left-0 z-20 transition-all shadow-lg ${isCollapsed ? "w-16" : "w-40"}`}>
-      
+    <div className={`h-screen bg-gray-900 text-white fixed pt-20 top-0 left-0 z-20 transition-all shadow-lg ${isCollapsed ? "w-16" : "w-40"}`}>
       {/* Botão de expandir/recolher Sidebar */}
       <div className="flex items-center justify-between p-4 mt-2">
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:text-gray-400 transition">
@@ -29,6 +22,7 @@ function Sidebar() {
 
       {/* Menu padrão */}
       <nav className="mt-4 space-y-2">
+        
         <Link href="/dashboard">
           <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
             <LayoutDashboard size={20} />
@@ -36,58 +30,56 @@ function Sidebar() {
           </div>
         </Link>
 
-        <Link href="/clientes">
-          <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
-            <Users size={20} />
-            {!isCollapsed && <span>Clientes</span>}
-          </div>
-        </Link>
+        {isAdmin && (
+          <Link href="/clientes">
+            <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
+              <Users size={20} />
+              {!isCollapsed && <span>Clientes</span>}
+            </div>
+          </Link>
+        )}
 
-        <Link href="#">
-          <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
-            <Car size={20} />
-            {!isCollapsed && <span>Carros</span>}
-          </div>
-        </Link>
-
+        {isAdmin && (
+          <Link href="/carros">
+            <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
+              <Car size={20} />
+              {!isCollapsed && <span>Carros</span>}
+            </div>
+          </Link>
+        )}
+        {isAdmin &&(
         <Link href="/transacoes">
           <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
             <RefreshCw size={20} />
             {!isCollapsed && <span>Transações</span>}
           </div>
         </Link>
+        )}
+        {isLavacar && (
+          <Link href="/seuestalecimento">
+            <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
+              <Building2 size={20} />
+              {!isCollapsed && <span>Meu Lavacar</span>}
+            </div>
+          </Link>
+        )}
 
-        {/* Link fixo para Administrador */}
-        <Link href="/admin">
-          <div className="flex items-center gap-3 p-3 bg-gray-800 text-yellow-400 rounded-lg cursor-pointer hover:bg-gray-700">
-            <UserCog size={20} />
-            {!isCollapsed && <span>Administrador</span>}
-          </div>
-        </Link>
-
-        {/* Se o usuário for administrador, exibe opções extras */}
-        {userType === "admin" && (
+        {isAdmin && (
           <>
-            <Link href="/admin/configuracoes">
-              <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
-                <Settings size={20} />
-                {!isCollapsed && <span>Configurações</span>}
+            <Link href="/admin">
+              <div className="flex items-center gap-3 p-3 bg-gray-800 text-yellow-400 rounded-lg cursor-pointer hover:bg-gray-700">
+                <UserCog size={20} />
+                {!isCollapsed && <span>Administrador</span>}
               </div>
             </Link>
 
-            <Link href="/admin/gerenciar">
-              <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
-                <Shield size={20} />
-                {!isCollapsed && <span>Gerenciar Sistema</span>}
-              </div>
-            </Link>
           </>
         )}
       </nav>
 
       {/* Botão de Logout */}
       <div onClick={() => logout.mutate()} className="absolute bottom-4 left-4 flex items-center gap-3 cursor-pointer text-red-400 hover:text-red-300 transition">
-        <LogOut size={20}  />
+        <LogOut size={20} />
         {!isCollapsed && <span>Sair</span>}
       </div>
     </div>

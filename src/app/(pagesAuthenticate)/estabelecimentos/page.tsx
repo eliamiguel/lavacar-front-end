@@ -1,6 +1,5 @@
 'use client';
 
-import Clientes from "@/components/cliente";
 import Estabelecimentos from "@/components/estabeleciomentos";
 
 

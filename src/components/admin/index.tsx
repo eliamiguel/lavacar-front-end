@@ -114,48 +114,54 @@ export default function Dashboard() {
 />
 
 
-      <div className="col-span-1 md:col-span-2 lg:col-span-4 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Gráfico de Transações</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={dataChart}>
-            <XAxis dataKey="data" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="valor" fill="#3b82f6" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+<div className="col-span-full w-full p-6 bg-white shadow-md rounded-lg">
+  <h2 className="text-2xl font-bold mb-4">Gráfico de Transações</h2>
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={dataChart}>
+      <XAxis dataKey="data" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="valor" fill="#3b82f6" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
 
-      {/* Últimas Transações */}
-      <div className="col-span-1 md:col-span-2 lg:col-span-4 p-6 bg-white shadow-md rounded-lg">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Últimas Transações</h2>
-          <button className="flex items-center bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition" onClick={exportarCSV}>
-            <Download size={18} className="mr-2" /> Exportar CSV
-          </button>
-        </div>
+{/* Últimas Transações */}
+<div className="col-span-full w-full p-6 bg-white shadow-md rounded-lg">
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-2xl font-bold">Últimas Transações</h2>
+    <button
+      className="flex items-center bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition"
+      onClick={exportarCSV}
+    >
+      <Download size={18} className="mr-2" /> Exportar CSV
+    </button>
+  </div>
 
-        {/* Campo de Pesquisa */}
-        <input type="date" className="border p-2 rounded-lg w-full mb-4" onChange={(e) => setSearch(e.target.value)} />
+  {/* Campo de Pesquisa */}
+  <input type="date" className="border p-2 rounded-lg w-full mb-4" onChange={(e) => setSearch(e.target.value)} />
 
-        <ul className="divide-y divide-gray-200">
-          {transacoesFiltradas.map((transacao, index) => {
-            const dataConvertida = corrigirData(transacao.dataTransacao);
-            const dataFormatada = isNaN(dataConvertida.getTime()) ? "Data Inválida" : dataConvertida.toLocaleDateString();
+  <ul className="divide-y divide-gray-200">
+    {transacoesFiltradas.map((transacao, index) => {
+      const dataConvertida = corrigirData(transacao.dataTransacao);
+      const dataFormatada = isNaN(dataConvertida.getTime()) ? "Data Inválida" : dataConvertida.toLocaleDateString();
 
-            return (
-              <li key={index} className="py-3 flex justify-between">
-                <span className="text-gray-600">{dataFormatada}</span>
-                <span className="text-blue-600 font-bold">R$ {transacao.valorDesconto.toFixed(2)}</span>
-              </li>
-            );
-          })}
-        </ul>
+      return (
+        <li key={index} className="py-3 flex justify-between">
+          <span className="text-gray-600">{dataFormatada}</span>
+          <span className="text-blue-600 font-bold">R$ {transacao.valorDesconto.toFixed(2)}</span>
+        </li>
+      );
+    })}
+  </ul>
 
-        <button className="mt-4 w-[100px] bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition" onClick={() => router.push("/transacoes")}>
-          Ver mais
-        </button>
-      </div>
+  <button
+    className="mt-4 w-[100px] bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+    onClick={() => router.push("/transacoes")}
+  >
+    Ver mais
+  </button>
+</div>
     </div>
   );
 }

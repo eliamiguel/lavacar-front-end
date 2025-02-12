@@ -7,7 +7,7 @@ import Image from "next/image";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, isAdmin } = useContext(UserContext); 
   const logout = useLogout();
 
   useEffect(() => {
@@ -40,13 +40,13 @@ function Header() {
         {/* Menu do Usuário */}
         <div className="relative">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center space-x-3">
-            <Image
+           {isAdmin &&(<Image
               className="rounded-full"
               src={user?.urlImagemPerfil || "https://img.freepik.com/free-icon/user_318-159711.jpg"}
               alt="User avatar"
               width={40}
               height={40}
-            />
+            />)} 
             <span className="font-medium text-white">{user?.nome}</span>
             <ChevronDown size={18} className="text-white"/>
           </button>

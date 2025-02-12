@@ -12,7 +12,8 @@ const useLogout = () => {
     mutationFn: async () => await makeRequest.post('/auth/logout').then((res) => res.data),
     onSuccess: () => {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem("financa:user");
+        localStorage.removeItem("orcamento:user");
+        localStorage.removeItem("orcamento:token");
       }
       setUser(undefined);
       router.push('/login');

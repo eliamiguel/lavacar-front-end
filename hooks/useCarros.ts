@@ -36,6 +36,7 @@ export const useCarros = () => {
             )},
         onSuccess: () => {
          toast.success("Carro criado com sucesso.")
+         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
           queryClient.invalidateQueries({ queryKey: ['carros'] }); 
         },
         onError: (error: AxiosError<{ mensagem: string }>) => {
@@ -64,6 +65,7 @@ export const useCarros = () => {
       },
       onSuccess: () => {
         toast.success("Carro atualizado com sucesso!");
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         queryClient.invalidateQueries({ queryKey: ["carros"] });
       },
       onError: (error: AxiosError<{ mensagem: string }>) => {
@@ -87,6 +89,7 @@ export const useCarros = () => {
           }),
       onSuccess: () => {
         toast.success("Excluido o carro com sucesso!")
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         queryClient.invalidateQueries({ queryKey: ['carros'] });
       },onError: (error: AxiosError<{ mensagem: string }>)=>{
         const errorMessage = error.response?.data?.mensagem || "Erro ao excluir carro.";

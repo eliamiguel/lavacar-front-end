@@ -15,8 +15,7 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [cnpj, setCnpj] = useState('');
   const [error, setError] = useState<string | null>(null);
    
   useEffect(() => {
@@ -25,21 +24,18 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
       setEmail(clienteEditado.email || '');
       setTelefone(clienteEditado.telefone || '');
       setEndereco(clienteEditado.endereco || '');
-      setCpf(clienteEditado.cpf || '');
+      setCnpj(clienteEditado.cnpj || '');
   
+    
       
-      const dataFormatada = clienteEditado.dataNascimento
-        ? clienteEditado.dataNascimento.split("T")[0]  
-        : "";
       
-      setDataNascimento(dataFormatada);
     } else {
       setNome('');
       setEmail('');
       setTelefone('');
       setEndereco('');
-      setCpf('');
-      setDataNascimento('');
+      setCnpj('');
+  
     }
   }, [clienteEditado]);
   
@@ -47,7 +43,7 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   
-    if (!nome || !email || !telefone || !endereco || !cpf || !dataNascimento) {
+    if (!nome || !email || !telefone || !endereco || !cnpj) {
       setError("Por favor, preencha todos os campos.");
       return;
     }
@@ -58,8 +54,7 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
       email,
       telefone,
       endereco,
-      cpf,
-      dataNascimento: new Date(dataNascimento).toISOString() 
+      cnpj
     };
   
     aoSalvar(novoCliente);
@@ -108,6 +103,7 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
           <input
             type="text"
             value={telefone}
+            maxLength={11}
             onChange={(e) => setTelefone(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg"
             placeholder="Digite o telefone do cliente"
@@ -129,22 +125,14 @@ const ClienteForm = ({ clienteEditado, aoFechar, aoSalvar }: ClienteFormProps) =
           <label className="block text-sm font-semibold text-gray-700">CPF</label>
           <input
             type="text"
-            value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
+            value={cnpj}
+            maxLength={14}
+            onChange={(e) => setCnpj(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg"
             placeholder="Digite o CPF do cliente"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700">Data de Nascimento</label>
-          <input
-            type="date"
-            value={dataNascimento}
-            onChange={(e) => setDataNascimento(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
-          />
-        </div>
         <div>
           <button type="submit" className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             {clienteEditado ? 'Salvar Alterações' : 'Adicionar Cliente'}

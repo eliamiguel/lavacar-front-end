@@ -5,7 +5,7 @@ import { IAuthInput } from '../../../interface'
   
   return(
     <div>
-      <label htmlFor="email" className="block text-sm font-medium text-gray-600">{props.label}</label>
+      <label htmlFor="email" className="block text-sm font-medium text-white">{props.label}</label>
       <input
       required
       placeholder={props.placeholder}

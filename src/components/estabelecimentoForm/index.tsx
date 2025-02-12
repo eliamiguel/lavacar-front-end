@@ -13,7 +13,8 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
     endereco: "",
     telefone: "",
     email: "",
-    cnpj: ""
+    cnpj: "",
+    senhaHash:""
   });
 
   // Carregar dados ao editar um estabelecimento existente
@@ -43,9 +44,12 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
         <form onSubmit={handleSubmit} className="space-y-4">
           <input type="text" name="nome" value={estabelecimento.nome} onChange={handleChange} placeholder="Nome" className="w-full border p-2 rounded" required />
           <input type="text" name="endereco" value={estabelecimento.endereco} onChange={handleChange} placeholder="Endereço" className="w-full border p-2 rounded" required />
-          <input type="text" name="telefone" value={estabelecimento.telefone} onChange={handleChange} placeholder="Telefone" className="w-full border p-2 rounded" required />
+          <input type="text" name="telefone" maxLength={11} value={estabelecimento.telefone} onChange={handleChange} placeholder="Telefone" className="w-full border p-2 rounded" required />
           <input type="email" name="email" value={estabelecimento.email} onChange={handleChange} placeholder="Email" className="w-full border p-2 rounded" required />
-          <input type="text" name="cnpj" value={estabelecimento.cnpj} onChange={handleChange} placeholder="CNPJ" className="w-full border p-2 rounded" required />
+          <input type="text" name="cnpj" maxLength={14} value={estabelecimento.cnpj} onChange={handleChange} placeholder="CNPJ" className="w-full border p-2 rounded" required />
+          {!estabelecimentoEditado && (
+            <input type="password" name="senhaHash" value={estabelecimento.senhaHash} onChange={handleChange} placeholder="Senha para login" className="w-full border p-2 rounded" required />
+          )}
           <div className="flex justify-end gap-2">
             <button type="button" onClick={aoFechar} className="bg-gray-500 text-white px-4 py-2 rounded">Cancelar</button>
             <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Salvar</button>

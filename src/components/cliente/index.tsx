@@ -16,8 +16,7 @@ const Clientes = () => {
 
   const handleSalvarCliente = (cliente: ClienteIrteface) => {
     if (cliente.idCliente) {
-      mutateAdicionar.mutate({cpf:cliente.cpf,
-        dataNascimento:cliente.dataNascimento,
+      mutateAdicionar.mutate({cnpj:cliente.cnpj,
         email:cliente.email,
         endereco:cliente.endereco,
         idCliente:cliente.idCliente,
@@ -27,8 +26,7 @@ const Clientes = () => {
     } else {
       mutateCriar.mutate({
        idUsuario:Number(user?.idUsuario),
-        cpf:cliente.cpf,
-        dataNascimento:cliente.dataNascimento,
+        cnpj:cliente.cnpj,
         email:cliente.email,
         endereco:cliente.endereco,
         nome:cliente.nome,
@@ -66,43 +64,54 @@ const Clientes = () => {
       </button>
 
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
-        <thead>
+      <thead>
           <tr className="bg-gray-100">
-            <th className="px-4 py-2  border">Nome</th>
-            <th className="px-4 py-2  border">Email</th>
-            <th className="px-4 py-2  border">Telefone</th>
-            <th className="px-4 py-2  border">Endereço</th>
-            <th className="px-4 py-2  border">CPF</th>
-            <th className="px-4 py-2  border">Data de Nascimento</th>
-            <th className="px-4 py-2  border">Ações</th>
+            <th className="px-4 py-2 border">Orgão</th>
+            <th className="px-4 py-2 border">CNPJ</th>
+            <th className="px-4 py-2 border">Endereço</th>
+            <th colSpan={4} className="px-4 py-2 border text-center">Responsável</th>
+           
+          </tr>
+          <tr className="bg-gray-200">
+            <th className="px-4 py-2 border"></th>
+            <th className="px-4 py-2 border"></th>
+            <th className="px-4 py-2 border"></th>
+            <th className="px-4 py-2 border">Email</th>
+            <th className="px-4 py-2 border">Telefone</th>
+            <th className="px-4 py-2 border">Data de Cadastro</th>
+            <th className="px-4 py-2 border">Ações</th>
           </tr>
         </thead>
+
         <tbody>
-          {queryClientes.data?.map((cliente: ClienteIrteface) => (
-            <tr key={cliente.idCliente} className="border-t">
-              <td className="px-4 py-2 text-center border">{cliente.nome}</td>
-              <td className="px-4 py-2 text-center border">{cliente.email}</td>
-              <td className="px-4 py-2 text-center border">{cliente.telefone}</td>
-              <td className="px-4 py-2 text-center border">{cliente.endereco}</td>
-              <td className="px-4 py-2 text-center border">{cliente.cpf}</td>
-              <td className="px-4 py-2 text-center border">{new Date(cliente.dataNascimento).toLocaleDateString('pt-BR')}</td>
-              <td className="px-4 py-2 text-center border flex gap-2">
-                <button
-                  onClick={() => { setClienteEditado(cliente); setMostrarModal(true); }}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleExcluirCliente(cliente.idCliente!)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                >
-                  Excluir
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+            {queryClientes.data?.map((cliente: ClienteIrteface) => (
+              <tr key={cliente.idCliente} className="border-t">
+                <td className="px-4 py-2 text-center border">{cliente.nome}</td>
+                <td className="px-4 py-2 text-center border">{cliente.cnpj}</td>
+                <td className="px-4 py-2 text-center border">{cliente.endereco}</td>
+                <td className="px-4 py-2 text-center border">{cliente.email}</td>
+                <td className="px-4 py-2 text-center border">{cliente.telefone}</td>
+                <td className="px-4 py-2 text-center border">
+                  {cliente.dataCadastro ? new Date(cliente.dataCadastro).toLocaleDateString('pt-BR') : 'Data não disponível'}
+                </td>
+                <td className="px-4 py-2 text-center border flex gap-2">
+                  <button
+                    onClick={() => { setClienteEditado(cliente); setMostrarModal(true); }}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleExcluirCliente(cliente.idCliente!)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+
       </table>
 
       {mostrarModal && <ClienteForm clienteEditado={clienteEditado} aoFechar={() => setMostrarModal(false)} aoSalvar={handleSalvarCliente} />}

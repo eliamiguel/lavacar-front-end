@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../axios";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { EstabelecimentoInterface } from "../interface";
+import { EstabelecimentoInterface, LavacarInterface } from "../interface";
 
 
 
@@ -33,6 +33,7 @@ export const useEstabelecimentos = () => {
             telefone: string;
             email: string;
             cnpj: string;
+            senhaHash:string;
          }) => {
             return await makeRequest.post(`/estabelecimento/criar`, data).then((res)=>{
                 return res.data;
@@ -40,7 +41,8 @@ export const useEstabelecimentos = () => {
             )},
         onSuccess: (data) => {
          toast.success(data.message||"Cartão criado com sucesso.")
-          queryClient.invalidateQueries({ queryKey: ['estabelecimento'] }); 
+          queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
+          queryClient.invalidateQueries({ queryKey: ['dashboard'] }); 
         },
         onError: (error: AxiosError<{ message: string }>) => {
           const errorMessage = error.response?.data?.message || 'Erro ao criar cartão. Tente novamente.';
@@ -69,7 +71,8 @@ export const useEstabelecimentos = () => {
       },
       onSuccess: (data) => {
         toast.success(data.message || 'Cliente atualizado com sucesso!');
-        queryClient.invalidateQueries({ queryKey: ['estabelecimento'] }); 
+        queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] }); 
       },
       onError: (error: AxiosError<{ message: string }>) => {
         const errorMessage = error.response?.data?.message || 'Erro ao editar Estabelecimentos. Tente novamente.';
@@ -93,6 +96,7 @@ export const useEstabelecimentos = () => {
       onSuccess: (data) => {
         toast.success(data.message || "Excluido o Estabelecimentos com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       },onError: (error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'erro ao excluir o carro.';
           console.log('erro ao excluir o carro', errorMessage);
@@ -101,3 +105,14 @@ export const useEstabelecimentos = () => {
     });
     return mutate
   }
+
+  export const useLavacar = (idLavacar: number) => {
+    const { data, isLoading, isError, error } = useQuery<LavacarInterface>({
+      queryKey: ["lavacar", idLavacar],
+      queryFn: async () =>
+        await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
+      enabled: !!idLavacar, 
+    });
+  
+    return { data, isLoading, isError, error };
+  };

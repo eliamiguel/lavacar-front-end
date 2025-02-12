@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useBuscarCartao, usePagarCartao } from "../../../hooks/useCartao";
-import { CreditCard, Lock, CheckCircle, Eye, EyeOff, Menu } from "lucide-react";
+import { CreditCard, Lock, CheckCircle, Eye, EyeOff } from "lucide-react";
+import { UserContext } from "@/context/UserContext";
 
 function Dashboard() {
   const [cardNumber, setCardNumber] = useState<string>("");
@@ -12,7 +13,7 @@ function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCardNumber, setShowCardNumber] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const { isLavacar, user } = useContext(UserContext); 
   useEffect(() => {
     setSidebarOpen(true);
   }, []);
@@ -43,18 +44,10 @@ function Dashboard() {
   };
 
   return (
-    <div className={`p-6 transition-all duration-300 sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
+    <div className={`p-6 transition-all duration-300 mt-20  sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
       
-      <button
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2"
-        onClick={() => setSidebarOpen((prev) => !prev)}
-      >
-        <Menu size={18} />
-        {sidebarOpen ? "Recolher Sidebar" : "Expandir Sidebar"}
-      </button>
-
       
-      <h1 className="text-2xl mt-4 font-bold text-gray-800 mb-6">Painel do Estabelecimento</h1>
+      <h1 className="text-2xl mt-4 font-bold  mb-6"><span className="text-gray-700">Painel do Estabelecimento</span> {isLavacar &&( <span className="text-black-800">`{user?.nome}`</span>)}</h1>
 
       
       <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200">

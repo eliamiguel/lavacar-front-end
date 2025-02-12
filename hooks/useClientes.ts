@@ -26,8 +26,7 @@ export const useCleintes = () => {
           email: string;
           telefone: string;
           endereco: string;
-          cpf: string;
-          dataNascimento: string;
+          cnpj: string;
          }) => {
             return await makeRequest.post(`/clientes/criar-cliente`, data).then((res)=>{
                 return res.data;
@@ -35,7 +34,8 @@ export const useCleintes = () => {
             )},
         onSuccess: (data) => {
          toast.success(data.message ||"Cliente criado com sucesso.")
-          queryClient.invalidateQueries({ queryKey: ['cliente'] }); 
+          queryClient.invalidateQueries({ queryKey: ['cliente'] });
+          queryClient.invalidateQueries({ queryKey: ['dashboard'] }); 
         },
         onError: (error: AxiosError<{ message: string }>) => {
           const errorMessage = error.response?.data?.message || 'Erro ao criar cliente. Tente novamente.';
@@ -58,6 +58,7 @@ export const useCleintes = () => {
       onSuccess: (data) => {
         toast.success(data.message || "Excluido cliente com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['cliente'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       },onError: (error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'erro ao excluir cliente.';
         console.log('erro ao excluir cliente', errorMessage);
@@ -78,8 +79,8 @@ export const useEditarCliente = () => {
       email: string;
       telefone: string;
       endereco: string;
-      cpf: string;
-      dataNascimento: string;
+      cnpj: string;
+      dataCadastro?: string;
     }) => {
       return await makeRequest.put(`/clientes/edit/`, data)
         .then((res) => res.data);
@@ -87,6 +88,7 @@ export const useEditarCliente = () => {
     onSuccess: (data) => {
       toast.success(data.message ||'Cliente atualizado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['cliente'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
     onError: (error: AxiosError<{ message: string }>) => {
       console.error('Erro ao editar cliente. Tente novamente.', error); 

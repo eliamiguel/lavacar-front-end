@@ -32,8 +32,8 @@ export interface IAuthInput{
   email: string;
   telefone: string;
   endereco: string;
-  cpf: string;
-  dataNascimento: string;
+  cnpj: string;
+  dataCadastro?: string | Date;
   }
 
   export interface CarroInterface {
@@ -51,6 +51,7 @@ export interface IAuthInput{
       telefone: string;
       email: string;
       cnpj: string;
+      senhaHash:string;
     }
   export interface InterfaceLavacar {
     idLavacar?: number;
@@ -117,4 +118,36 @@ export interface VincularCartaoParams {
   idLavacar: number;
   idCliente: number;
 }
-  
+
+
+export interface LavacarInterface {
+  idLavacar: number;
+  nome: string;
+  endereco: string;
+  telefone: string;
+  email: string;
+  cnpj: string;
+  cartoesPermitidos: {
+    idCartao: number;
+    numeroCartao: string;
+    saldo: number;
+  }[];
+  transacoes: {
+    idTransacao: number;
+    valorDesconto: number;
+    dataTransacao: string;
+    status: string;
+  }[];
+}
+export interface IntefacePermitidos {
+  idCartao: number;
+  numeroCartao: string;
+  saldo: number;
+}
+
+export  interface IterfacetransacoesSeuEstabelecimento {
+  idTransacao: number;
+  valorDesconto: number;
+  dataTransacao: string;
+  status: string;
+}
