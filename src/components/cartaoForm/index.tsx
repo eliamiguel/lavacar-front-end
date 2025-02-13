@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import { CartaoInterface } from '../../../interface';
 import { useCleintes } from '../../../hooks/useClientes';
-import { useCartoes } from '../../../hooks/useCartao';
 import { useCarros } from '../../../hooks/useCarros';
+import { useCartoes } from '../../../hooks/useCartao';
 
 interface CartaoFormProps {
   cartaoEditado?: CartaoInterface;
@@ -16,17 +16,25 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
     cartaoEditado || { idCartao: 0, idCliente: 0, idCarro: 0, numeroCartao: '', saldo: 0 , senha: '', estabelcimento:'', idLavacar:0 }
   );
 
-  const queryClientes = useCleintes();
+  const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [erroSenha, setErroSenha] = useState('');
+
+  const queryClientes =  useCleintes();
   const queryCartoes = useCartoes();
   const queryCarros = useCarros();
-  
 
+ 
   useEffect(() => {
     if (cartaoEditado) {
-      setCartao(cartaoEditado);
+      setCartao(prevCartao => ({
+        ...prevCartao,
+        ...cartaoEditado
+      }));
     }
   }, [cartaoEditado]);
 
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setCartao(prevCartao => ({
@@ -36,6 +44,27 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
   };
 
   
+  const validarSenha = (senha: string) => {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(senha);
+  };
+
+  const handleSenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSenha(value);
+
+    if (!validarSenha(value)) {
+      setErroSenha('A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.');
+    } else {
+      setErroSenha('');
+    }
+  };
+
+  const handleConfirmarSenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmarSenha(e.target.value);
+  };
+
+ 
   const carrosDisponiveis = queryCarros.data
   ? queryCarros.data.filter(
       (carro) =>
@@ -45,9 +74,26 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
   : [];
 
 
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    aoSalvar(cartao);
+
+   
+    if (!cartaoEditado) {
+      if (senha !== confirmarSenha) {
+        setErroSenha('As senhas não coincidem.');
+        return;
+      }
+      if (!validarSenha(senha)) {
+        setErroSenha('A senha não atende aos requisitos.');
+        return;
+      }
+    }
+
+    
+    const cartaoParaSalvar = cartaoEditado ? { ...cartao } : { ...cartao, senha };
+
+    aoSalvar(cartaoParaSalvar);
     aoFechar();
   };
 
@@ -56,7 +102,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-xl font-bold mb-4">{cartaoEditado ? 'Editar Cartão' : 'Adicionar Cartão'}</h2>
         <form onSubmit={handleSubmit}>
-          {/* Número do Cartão */}
+      
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Número do Cartão</label>
             <input
@@ -69,22 +115,38 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
             />
           </div>
 
-          {/* Senha */}
+        
           {!cartaoEditado && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Senha</label>
-              <input
-                type="password"
-                name="senha"
-                value={cartao.senha ?? ""}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-            </div>
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Senha</label>
+                <input
+                  type="password"
+                  name="senha"
+                  value={senha}
+                  onChange={handleSenhaChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                <input
+                  type="password"
+                  name="confirmarSenha"
+                  value={confirmarSenha}
+                  onChange={handleConfirmarSenhaChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              {erroSenha && <p className="text-red-500 text-sm">{erroSenha}</p>}
+            </>
           )}
 
-          {/* Saldo */}
+          
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Saldo</label>
             <input
@@ -97,7 +159,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
             />
           </div>
 
-          {/* Seleção de Cliente */}
+        
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Cliente</label>
             <select
@@ -115,15 +177,13 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
               ))}
             </select>
           </div>
-
-          {/* Seleção de Carro (Somente Carros Sem Cartão Vinculado) */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Carro</label>
             <select
               name="idCarro"
               required
               className="w-full p-2 border border-gray-300 rounded"
-              value={cartao.idCarro || 0} // ✅ Garante que um valor seja sempre atribuído
+              value={cartao.idCarro || 0} 
               onChange={handleChange}
             >
               <option value={0}>Selecione o carro</option>
@@ -136,7 +196,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
 
           </div>
 
-          {/* Botões */}
+        
           <div className="flex justify-end space-x-2">
             <button type="button" onClick={aoFechar} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
               Cancelar

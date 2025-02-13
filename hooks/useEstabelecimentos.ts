@@ -72,7 +72,8 @@ export const useEstabelecimentos = () => {
       onSuccess: (data) => {
         toast.success(data.message || 'Cliente atualizado com sucesso!');
         queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] }); 
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+       
       },
       onError: (error: AxiosError<{ message: string }>) => {
         const errorMessage = error.response?.data?.message || 'Erro ao editar Estabelecimentos. Tente novamente.';
@@ -97,6 +98,7 @@ export const useEstabelecimentos = () => {
         toast.success(data.message || "Excluido o Estabelecimentos com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        
       },onError: (error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'erro ao excluir o carro.';
           console.log('erro ao excluir o carro', errorMessage);
@@ -108,7 +110,7 @@ export const useEstabelecimentos = () => {
 
   export const useLavacar = (idLavacar: number) => {
     const { data, isLoading, isError, error } = useQuery<LavacarInterface>({
-      queryKey: ["lavacar", idLavacar],
+      queryKey: ["seuEstabelecimento", idLavacar],
       queryFn: async () =>
         await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
       enabled: !!idLavacar, 

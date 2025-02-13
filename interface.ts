@@ -66,12 +66,12 @@ export interface IAuthInput{
     idCartao: number,
     idLavacar:number,
     estabelcimento:string,
-        idCliente: number,
-        idCarro: number,
-        numeroCartao: string,
-        saldo: number,
-        senha: string,
-        confirmSenha?:string
+    idCliente: number,
+    idCarro: number,
+    numeroCartao: string,
+    saldo: number,
+    senha: string,
+    confirmSenha?:string
   }
   export interface TransacaoInterface {
     idTransacao: number;

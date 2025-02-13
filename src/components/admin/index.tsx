@@ -59,9 +59,6 @@ export default function Dashboard() {
     return dataFormatada.includes(search);
   });
 
-  console.log("Transações Recentes:", dashboardData.transacoesRecentes);
-  console.log("Transações Filtradas:", transacoesFiltradas);
-
   // Função para exportar CSV
   const exportarCSV = () => {
     const csvContent = [

@@ -36,9 +36,14 @@ export const usePagarCartao = () => {
       return res.data;
     },
     onSuccess: (data) => {
-      toast.success(data.mensagem || "Pagamento realizado com sucesso!");
+      if (data.sucesso) {
+        toast.success(data.mensagem || "Pagamento realizado com sucesso!");
+      } else {
+        toast.error(data.mensagem || "Houve um problema no pagamento.");
+      }
       queryClient.invalidateQueries({ queryKey: ['transacao'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
     },
     onError: (error: AxiosError<{ message: string }>) => {
       const errorMessage = error.response?.data?.message || "Erro ao processar pagamento.";
@@ -82,9 +87,14 @@ export const useCartoes = () => {
               } 
             )},
         onSuccess: (data) => {
-         toast.success(data.mensagem || "Cartão criado com sucesso.")
+          if (data.sucesso) {
+            toast.success(data.mensagem || "Cartão criado com sucesso!");
+          } else {
+            toast.error(data.mensagem || "Erro ao criar cartão");
+          }
           queryClient.invalidateQueries({ queryKey: ['cartaos'] }); 
           queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+          queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
         },
         onError: (error: AxiosError<{ message: string }>) => {
           const errorMessage = error.response?.data?.message || 'Erro ao criar cartão. Tente novamente.';
@@ -105,7 +115,13 @@ export const useCartoes = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey:["lavacarsPermitidos"]});
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-        toast.success(data.message || "Cartão vinculado com sucesso" )
+        queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
+        if (data.sucesso) {
+          toast.success(data.mensagem || "Cartão vinculado com sucesso!");
+        } else {
+          toast.error(data.mensagem || "erro ao vincular o cartão");
+        }
+        
       },
       onError:(error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'erro ao vincular o cartão.';
@@ -131,9 +147,14 @@ export const useCartoes = () => {
           .then((res) => res.data);
       },
       onSuccess: (data) => {
-        toast.success(data.message || 'Saldo atualizado com sucesso!');
+        if (data.sucesso) {
+          toast.success(data.mensagem || "Cartão atualizado com sucesso!");
+        } else {
+          toast.error(data.mensagem || "Erro ao editar cartão.");
+        }
         queryClient.invalidateQueries({ queryKey: ['cartaos'] }); 
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
       },
       onError: (error: AxiosError<{ message: string }>) => {
         const errorMessage = error.response?.data?.message || 'Erro ao editar cliente. Tente novamente.';
@@ -155,7 +176,11 @@ export const useCartoes = () => {
             return res.data;
           }),
       onSuccess: (data) => {
-        toast.success(data.mensagem ||"Cartão Excluido com sucesso!")
+        if (data.sucesso) {
+          toast.success(data.mensagem || "Cartão Excluido com sucesso!");
+        } else {
+          toast.error(data.mensagem || "Houve um problema ao editar cartão.");
+        }
         queryClient.invalidateQueries({ queryKey: ['cartaos'] });
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       },onError: (error: AxiosError<{ message: string }>)=>{

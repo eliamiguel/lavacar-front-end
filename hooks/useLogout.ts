@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import {toast} from 'react-toastify';
 const useLogout = () => {
-  const { setUser } = useContext(UserContext);
+  const { setUser,logoutUser } = useContext(UserContext);
   const router = useRouter();
 
   const mutate = useMutation({
@@ -15,8 +15,11 @@ const useLogout = () => {
         localStorage.removeItem("orcamento:user");
         localStorage.removeItem("orcamento:token");
       }
+      
       setUser(undefined);
       router.push('/login');
+      logoutUser()
+      
     },
     onError: (error) => {
       console.error(error);

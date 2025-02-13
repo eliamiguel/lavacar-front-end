@@ -1,18 +1,22 @@
 "use client";
-
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Link from "next/link";
 import { UserContext } from "@/context/UserContext";
 import { LogOut, Users, Car, LayoutDashboard, ArrowLeft, ArrowRight, RefreshCw, UserCog, Building2 } from "lucide-react";
 import useLogout from "../../../hooks/useLogout";
 
 function Sidebar() {
-  const { isAdmin, isLavacar } = useContext(UserContext); 
+  const { user } = useContext(UserContext); 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const logout = useLogout();
+  const [forceRender, setForceRender] = useState(0);
+
+  useEffect(() => {
+    setForceRender((prev) => prev + 1); // 🔥 Força atualização ao mudar usuário
+  }, [user]); // 👀 Sempre que `user` mudar, a Sidebar será re-renderizada
 
   return (
-    <div className={`h-screen bg-gray-900 text-white fixed pt-20 top-0 left-0 z-20 transition-all shadow-lg ${isCollapsed ? "w-16" : "w-40"}`}>
+    <div key={forceRender} className={`h-screen bg-gray-900 text-white fixed pt-20 top-0 left-0 z-20 transition-all shadow-lg ${isCollapsed ? "w-16" : "w-40"}`}>
       {/* Botão de expandir/recolher Sidebar */}
       <div className="flex items-center justify-between p-4 mt-2">
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:text-gray-400 transition">
@@ -22,7 +26,6 @@ function Sidebar() {
 
       {/* Menu padrão */}
       <nav className="mt-4 space-y-2">
-        
         <Link href="/dashboard">
           <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
             <LayoutDashboard size={20} />
@@ -30,7 +33,7 @@ function Sidebar() {
           </div>
         </Link>
 
-        {isAdmin && (
+        {user?.tipoUsuario ==  "admin" && (
           <Link href="/clientes">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <Users size={20} />
@@ -39,7 +42,7 @@ function Sidebar() {
           </Link>
         )}
 
-        {isAdmin && (
+        {user?.tipoUsuario ==  "admin" && (
           <Link href="/carros">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <Car size={20} />
@@ -47,15 +50,17 @@ function Sidebar() {
             </div>
           </Link>
         )}
-        {isAdmin &&(
-        <Link href="/transacoes">
-          <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
-            <RefreshCw size={20} />
-            {!isCollapsed && <span>Transações</span>}
-          </div>
-        </Link>
+        
+        {user?.tipoUsuario ==  "admin" &&(
+          <Link href="/transacoes">
+            <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
+              <RefreshCw size={20} />
+              {!isCollapsed && <span>Transações</span>}
+            </div>
+          </Link>
         )}
-        {isLavacar && (
+        
+        {user?.tipoUsuario ==  "funcionario" && (
           <Link href="/seuestalecimento">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <Building2 size={20} />
@@ -64,16 +69,13 @@ function Sidebar() {
           </Link>
         )}
 
-        {isAdmin && (
-          <>
-            <Link href="/admin">
-              <div className="flex items-center gap-3 p-3 bg-gray-800 text-yellow-400 rounded-lg cursor-pointer hover:bg-gray-700">
-                <UserCog size={20} />
-                {!isCollapsed && <span>Administrador</span>}
-              </div>
-            </Link>
-
-          </>
+        {user?.tipoUsuario ==  "admin" && (
+          <Link href="/admin">
+            <div className="flex items-center gap-3 p-3 bg-gray-800 text-yellow-400 rounded-lg cursor-pointer hover:bg-gray-700">
+              <UserCog size={20} />
+              {!isCollapsed && <span>Administrador</span>}
+            </div>
+          </Link>
         )}
       </nav>
 

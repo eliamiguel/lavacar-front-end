@@ -38,6 +38,7 @@ export const useCarros = () => {
          toast.success("Carro criado com sucesso.")
          queryClient.invalidateQueries({ queryKey: ['dashboard'] });
           queryClient.invalidateQueries({ queryKey: ['carros'] }); 
+          queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
         },
         onError: (error: AxiosError<{ mensagem: string }>) => {
           const errorMessage = error.response?.data?.mensagem || "Erro ao criar carro.";
@@ -67,6 +68,7 @@ export const useCarros = () => {
         toast.success("Carro atualizado com sucesso!");
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         queryClient.invalidateQueries({ queryKey: ["carros"] });
+        queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
       },
       onError: (error: AxiosError<{ mensagem: string }>) => {
         const errorMessage = error.response?.data?.mensagem || "Erro ao editar carro.";
@@ -91,6 +93,7 @@ export const useCarros = () => {
         toast.success("Excluido o carro com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         queryClient.invalidateQueries({ queryKey: ['carros'] });
+        queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
       },onError: (error: AxiosError<{ mensagem: string }>)=>{
         const errorMessage = error.response?.data?.mensagem || "Erro ao excluir carro.";
         console.log("Erro ao excluir carro:", errorMessage);
