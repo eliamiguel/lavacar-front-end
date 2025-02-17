@@ -40,7 +40,7 @@ function Header() {
         {/* Menu do Usuário */}
         <div className="relative">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center space-x-3">
-           {user?.tipoUsuario ==  "admin"  &&(<Image
+           {user?.tipoUsuario ==  "super"  &&(<Image
               className="rounded-full"
               src={user?.urlImagemPerfil || "https://img.freepik.com/free-icon/user_318-159711.jpg"}
               alt="User avatar"

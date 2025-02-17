@@ -12,9 +12,25 @@ interface CartaoFormProps {
 }
 
 const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalvar }) => {
-  const [cartao, setCartao] = useState<CartaoInterface>(
-    cartaoEditado || { idCartao: 0, idCliente: 0, idCarro: 0, numeroCartao: '', saldo: 0 , senha: '', estabelcimento:'', idLavacar:0 }
-  );
+  const [cartao, setCartao] = useState<CartaoInterface>(() => ({
+    idCartao: 0,
+    idCliente: 0,
+    idCarro: 0,
+    idLavacar: 0,
+    estabelcimento: '',
+    numeroCartao: '',
+    saldo: 0,
+    senha: '',
+    clienteNome: '', 
+    carroModelo: '', 
+    carroPlaca: '', 
+    mensagem: undefined,
+    sucesso: undefined,
+    confirmSenha: '',
+    idLavacarLogado: undefined,
+    tipoCartao: 'NORMAL'
+  }));
+  
 
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -27,21 +43,34 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
  
   useEffect(() => {
     if (cartaoEditado) {
-      setCartao(prevCartao => ({
+      console.log("Cartão editado recebido:", cartaoEditado); // Debug
+  
+      setCartao((prevCartao) => ({
         ...prevCartao,
-        ...cartaoEditado
+        ...cartaoEditado,
+        clienteNome: cartaoEditado.clienteNome || '',
+        carroModelo: cartaoEditado.carroModelo || '',
+        carroPlaca: cartaoEditado.carroPlaca || '',
+        mensagem: cartaoEditado.mensagem || undefined,
+        sucesso: cartaoEditado.sucesso || undefined,
+        confirmSenha: cartaoEditado.confirmSenha || '',
+        idLavacarLogado: cartaoEditado.idLavacarLogado || undefined
       }));
     }
   }, [cartaoEditado]);
-
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setCartao(prevCartao => ({
+  
+    setCartao((prevCartao) => ({
       ...prevCartao,
-      [name]: name === "idCliente" || name === "idCarro" ? Number(value) : value
+      [name]: name === "idCliente" || name === "idCarro" || name === "saldo"
+        ? Number(value) || 0 
+        : value || "" 
     }));
   };
+  
+  
 
   
   const validarSenha = (senha: string) => {
@@ -146,20 +175,32 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
             </>
           )}
 
-          
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Saldo</label>
             <input
               type="number"
               name="saldo"
-              value={cartao.saldo}
+              value={cartao.saldo ?? 0} // 🔥 Garante que nunca seja `NaN`
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
 
-        
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Tipo de Cartão</label>
+            <select
+              name="tipoCartao"
+              value={cartao.tipoCartao || "NORMAL"} // 🔥 Garante que sempre tenha um valor válido
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="NORMAL">Normal (Limite: R$500,00)</option>
+              <option value="CORINGA">Coringa (Sem Limite)</option>
+            </select>
+          </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Cliente</label>
             <select

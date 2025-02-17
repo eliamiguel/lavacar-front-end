@@ -68,10 +68,18 @@ export interface IAuthInput{
     estabelcimento:string,
     idCliente: number,
     idCarro: number,
+    tipoCartao:string,
     numeroCartao: string,
+    mensagem?:string,
+    sucesso?:boolean,
     saldo: number,
     senha: string,
-    confirmSenha?:string
+    confirmSenha?:string,
+    idLavacarLogado?:number,
+    clienteNome: string;
+  carroModelo: string;
+  carroPlaca: string;
+  
   }
   export interface TransacaoInterface {
     idTransacao: number;

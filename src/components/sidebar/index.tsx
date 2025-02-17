@@ -33,7 +33,7 @@ function Sidebar() {
           </div>
         </Link>
 
-        {user?.tipoUsuario ==  "admin" && (
+        {user?.tipoUsuario ==  "admin" || user?.tipoUsuario == "super"  && (
           <Link href="/clientes">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <Users size={20} />
@@ -42,7 +42,7 @@ function Sidebar() {
           </Link>
         )}
 
-        {user?.tipoUsuario ==  "admin" && (
+        {user?.tipoUsuario ==  "admin" || user?.tipoUsuario == "super"  && (
           <Link href="/carros">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <Car size={20} />
@@ -51,7 +51,7 @@ function Sidebar() {
           </Link>
         )}
         
-        {user?.tipoUsuario ==  "admin" &&(
+        {user?.tipoUsuario ==  "admin" || user?.tipoUsuario == "super"  &&(
           <Link href="/transacoes">
             <div className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg cursor-pointer">
               <RefreshCw size={20} />
@@ -69,7 +69,7 @@ function Sidebar() {
           </Link>
         )}
 
-        {user?.tipoUsuario ==  "admin" && (
+        {user?.tipoUsuario ==  "admin" || user?.tipoUsuario == "super"  && (
           <Link href="/admin">
             <div className="flex items-center gap-3 p-3 bg-gray-800 text-yellow-400 rounded-lg cursor-pointer hover:bg-gray-700">
               <UserCog size={20} />

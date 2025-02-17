@@ -1,26 +1,27 @@
 import { useState } from "react";
-import { useEstabelecimentos } from "../../../hooks/useEstabelecimentos";
-import { Lavacar } from "../../../interface";
+import { useVincularEstabelecimentoCliente } from "../../../hooks/useEstabelecimentos";
+import { ClienteIrteface } from "../../../interface";
 import { toast } from "react-toastify";
-import { useVincularCartao } from "../../../hooks/useCartao";
+import { useCleintes } from "../../../hooks/useClientes";
+
 
 interface Props {
-  idCartao: number;
-  idCliente: number;
+  idLavacar :number
 }
 
-const VincularCartaoLavacar: React.FC<Props> = ({ idCartao, idCliente }) => {
-  const { data: lavacars, isLoading, isError } = useEstabelecimentos();
-  const { mutate, isPending } = useVincularCartao();
+const VincularEstabelecimentoCliente: React.FC<Props> = ({idLavacar }) => {
+  const { data: clienteQuery, isLoading, isError } = useCleintes();
+  const { mutate, isPending } = useVincularEstabelecimentoCliente();
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const handleVincularCartaoLavacar = (idLavacar: number) => {
-    if (!idLavacar) {
-      toast.info("O Id do credenciado é obrigatório");
+  const handleVincularEstabelecimentoCliente= (idCliente: number) => {
+    if (!idCliente) {
+      toast.info("O Id do cliente é obrigatório");
       setShowModal(false);
       return;
     }
-    mutate({ idCartao, idCliente, idLavacar });
+    
+    mutate({ idCliente: Number(idCliente), idLavacar: Number(idLavacar) });
     setShowModal(false);
   };
 
@@ -30,32 +31,32 @@ const VincularCartaoLavacar: React.FC<Props> = ({ idCartao, idCliente }) => {
         onClick={() => setShowModal(true)}
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
       >
-        Vincular a um Credenciado
+        Vincular Cliente a um credenciado
       </button>
 
       {showModal && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Escolha Credenciado</h2>
+            <h2 className="text-lg font-bold mb-4">Escolha Cliente</h2>
 
             {isLoading && <p>Carregando...</p>}
-            {isError && <p className="text-red-500">Erro ao carregar lavacars.</p>}
-            {!isLoading && !isError && (lavacars ?? []).length === 0 && (
-              <p className="text-gray-500">Nenhum credenciado disponível.</p>
+            {isError && <p className="text-red-500">Erro ao carregar cliente.</p>}
+            {!isLoading && !isError && (clienteQuery ?? []).length === 0 && (
+              <p className="text-gray-500">Nenhum cliente disponível.</p>
             )}
 
-            {!isLoading && !isError && (lavacars ?? []).length > 0 && (
+            {!isLoading && !isError && (clienteQuery ?? []).length > 0 && (
               <ul className="space-y-2">
-                {(lavacars ?? []).map((lavacar: Lavacar) => (
+                {(clienteQuery ?? []).map((cliente: ClienteIrteface) => (
                   <li
-                    key={lavacar.idLavacar}
+                    key={cliente.idCliente}
                     className="flex justify-between items-center p-2 border rounded-md"
                   >
-                    <span>{lavacar.nome}</span>
+                    <span>{cliente.nome}</span>
                     <button
-                      onClick={() => handleVincularCartaoLavacar(lavacar.idLavacar)}
+                      onClick={() => handleVincularEstabelecimentoCliente(Number(cliente.idCliente))}
                       className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
-                      disabled={isPending} 
+                      disabled={isPending}
                     >
                       {isPending ? "Vinculando..." : "Vincular"}
                     </button>
@@ -77,4 +78,4 @@ const VincularCartaoLavacar: React.FC<Props> = ({ idCartao, idCliente }) => {
   );
 };
 
-export default VincularCartaoLavacar;
+export default VincularEstabelecimentoCliente;

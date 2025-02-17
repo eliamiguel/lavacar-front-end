@@ -14,11 +14,11 @@ function Dashboard() {
   const [showCardNumber, setShowCardNumber] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { isLavacar, user } = useContext(UserContext); 
+
   useEffect(() => {
     setSidebarOpen(true);
   }, []);
 
-  
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSearchValue(cardNumber.trim()); 
@@ -27,14 +27,23 @@ function Dashboard() {
     return () => clearTimeout(timeout); 
   }, [cardNumber]);
 
-  
-  const { data: cardData, isError, isLoading } = useBuscarCartao(searchValue || "");
+  // Buscar os dados do cartão
+  const { data: cardData, isLoading } = useBuscarCartao(
+    searchValue || "",
+    user?.idLavacar ? Number(user.idLavacar) : 0
+  );
+
+  // Verifica se há erro e exibe a mensagem correspondente
+  const erroMensagem = cardData && !cardData.sucesso ? cardData.mensagem : "";
+
+  // Define se os dados do cartão devem ser exibidos
+  const exibirDadosCartao = cardData?.sucesso === true;
 
   const pagarCartao = usePagarCartao();
 
   const handlePayment = async () => {
     pagarCartao.mutate(
-      { numeroCartao: cardNumber, senha },
+      { numeroCartao: cardNumber, senha, idLavacarLogado: Number(user?.idLavacar) },
       {
         onSuccess: (data) => {
           setMensagem(data.mensagem);
@@ -44,12 +53,13 @@ function Dashboard() {
   };
 
   return (
-    <div className={`p-6 transition-all duration-300 mt-20  sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
+    <div className={`p-6 transition-all duration-300 mt-20 sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
       
-      
-      <h1 className="text-2xl mt-4 font-bold  mb-6"><span className="text-gray-700">Painel do Estabelecimento</span> {isLavacar &&( <span className="text-black-800">`{user?.nome}`</span>)}</h1>
+      <h1 className="text-2xl mt-4 font-bold mb-6">
+        <span className="text-gray-700">Painel do Estabelecimento</span> 
+        {isLavacar && (<span className="text-black-800">`{user?.nome}`</span>)}
+      </h1>
 
-      
       <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200">
         <h2 className="text-lg font-semibold text-gray-700 mb-3">Verificar Cartão</h2>
         <div className="relative">
@@ -61,7 +71,6 @@ function Dashboard() {
             value={cardNumber}
             onChange={(e) => setCardNumber(e.target.value)}
           />
-          
           <button
             type="button"
             className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
@@ -72,27 +81,23 @@ function Dashboard() {
         </div>
       </div>
 
-      
-      {isError && <p className="text-red-500 font-bold text-lg">{"Cartão não encontrado."}</p>}
+      {/* Exibir mensagem de erro apenas se houver erro */}
+      {erroMensagem && <p className="text-red-500 font-bold text-lg">{erroMensagem}</p>}
 
-     
       {isLoading && (
-        
-          <div className="flex justify-center items-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-          </div>
-      
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+        </div>
       )}
 
-      
-      {cardData && (
+      {/* Exibir os dados do cartão apenas se for válido */}
+      {exibirDadosCartao && (
         <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-700 mb-3">Dados do Cartão</h2>
           <p className="text-gray-700"><strong>Cliente:</strong> {cardData.clienteNome}</p>
           <p className="text-gray-700"><strong>Carro:</strong> {cardData.carroModelo} - {cardData.carroPlaca}</p>
           <p className="text-gray-700"><strong>Saldo:</strong> R$ {cardData.saldo?.toFixed(2) ?? "0.00"}</p>
 
-          
           <div className="relative mt-4">
             <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
             <input
@@ -102,7 +107,6 @@ function Dashboard() {
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
-            
             <button
               type="button"
               className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
@@ -112,7 +116,6 @@ function Dashboard() {
             </button>
           </div>
 
-          
           <button
             className="mt-4 w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 transition"
             onClick={handlePayment}
@@ -120,11 +123,11 @@ function Dashboard() {
             <CheckCircle size={18} />
             Enter
           </button>
-
-          
-          {mensagem && <p className="mt-3  font-bold text-lg text-green-500">{mensagem}</p>}
         </div>
       )}
+
+      {/* Mensagem de pagamento */}
+      {mensagem && <p className="mt-3 font-bold text-lg text-green-500">{mensagem}</p>}
     </div>
   );
 }

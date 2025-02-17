@@ -16,7 +16,7 @@ export default function SeuEstabelecimentoDashboard() {
 
   return (
     <div className="min-h-screen mt-20 space-y-6 sm:ml-40 flex flex-col bg-white p-8">  
-      <h1 className="text-4xl font-bold text-gray-800 text-center mb-6">lavacar.nome</h1>
+      <h1 className="text-4xl font-bold text-gray-800 text-center mb-6">{lavacar.nome}</h1>
       <div className="bg-white p-6 rounded-lg shadow-md space-y-3">
         <p className="text-xl"><strong>Nome:</strong> {lavacar.nome}</p>
         <p className="text-xl"><strong>Endereço:</strong> {lavacar.endereco}</p>

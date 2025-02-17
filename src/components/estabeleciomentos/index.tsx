@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 
 import EstabelecimentoForm from '../estabelecimentoForm';
 import { EstabelecimentoInterface } from '../../../interface';
-import { useCriarEstabelecimento, useEditarEstabelecimento, useEstabelecimentos, useExcluirEstabelecimento } from '../../../hooks/useEstabelecimentos';
+import { useCriarEstabelecimento, useEditarEstabelecimento, useEstabelecimentos, useExcluirEstabelecimento} from '../../../hooks/useEstabelecimentos';
+import VincularEstabelecimentoCliente from '../vincularEstabelecimentoAocliente';
+import { UserContext } from '@/context/UserContext';
 
 const Estabelecimentos = () => {
   const queryEstabelecimentos = useEstabelecimentos();
@@ -13,11 +15,10 @@ const Estabelecimentos = () => {
   const excluirEstabelecimento = useExcluirEstabelecimento();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [estabelecimentoEditando, setEstabelecimentoEditando] = useState<EstabelecimentoInterface | undefined>(undefined);
-
+  const { user } = useContext(UserContext); 
   
   const handleSalvarEstabelecimento = (estabelecimento: EstabelecimentoInterface) => {
     if (estabelecimento.idLavacar) {
-      
       mutateEditar.mutate({ ...estabelecimento });
     } else {
       mutateCriar.mutate({ ...estabelecimento });
@@ -25,6 +26,13 @@ const Estabelecimentos = () => {
   };
 
   const handleExcluirEstabelecimento = (idLavacar: number) => {
+    
+    if (user?.tipoUsuario === "admin") {
+      alert("Você não tem permissão para excluir este estabelecimento. Contate o super usuário.");
+      return; // Impede a exclusão
+    }
+
+
     if (confirm('Tem certeza que deseja excluir este estabelecimento?')) {
       excluirEstabelecimento.mutate({idLavacar});
     }
@@ -47,10 +55,10 @@ const Estabelecimentos = () => {
 
   return (
     <div className="p-6 space-y-6 sm:ml-40">
-      <h1 className="text-2xl font-bold text-gray-800 mt-20 mb-4">Estabelecimentos</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mt-20 mb-4">Credenciados</h1>
 
       <button onClick={() => { setEstabelecimentoEditando(undefined); setMostrarFormulario(true); }} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-        Adicionar Estabelecimento
+        Adicionar Credenciado
       </button>
 
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
@@ -81,12 +89,14 @@ const Estabelecimentos = () => {
                         >
                           Editar
                         </button>
+                      
                         <button
                           onClick={() => handleExcluirEstabelecimento(estabelecimento.idLavacar)}
-                          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                        >
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg desable hover:bg-red-600"
+                           >
                           Excluir
                         </button>
+                        <VincularEstabelecimentoCliente  idLavacar={estabelecimento.idLavacar} />
                       </td>
                     </tr>
             )

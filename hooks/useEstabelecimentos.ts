@@ -18,8 +18,6 @@ export const useEstabelecimentos = () => {
     
       return { data, isLoading, isError, error };
   };
-  
-  // Hook para criar um novo cartão
 
 
   export const useCriarEstabelecimento = ()=>{
@@ -76,8 +74,8 @@ export const useEstabelecimentos = () => {
        
       },
       onError: (error: AxiosError<{ message: string }>) => {
-        const errorMessage = error.response?.data?.message || 'Erro ao editar Estabelecimentos. Tente novamente.';
-          console.log('Erro ao editar Estabelecimentos', errorMessage);
+        const errorMessage = error.response?.data?.message || 'Erro ao editar credenciado. Tente novamente.';
+          console.log('Erro ao editar credenciado', errorMessage);
           toast.error(errorMessage);
       }
     });
@@ -95,13 +93,12 @@ export const useEstabelecimentos = () => {
             return res.data;
           }),
       onSuccess: (data) => {
-        toast.success(data.message || "Excluido o Estabelecimentos com sucesso!")
+        toast.success(data.message || "Excluido o credenciado com sucesso!")
         queryClient.invalidateQueries({ queryKey: ['estabelecimento'] });
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
         
       },onError: (error: AxiosError<{ message: string }>)=>{
         const errorMessage = error.response?.data?.message || 'erro ao excluir o carro.';
-          console.log('erro ao excluir o carro', errorMessage);
           toast.error(errorMessage);
       }
     });
@@ -118,3 +115,31 @@ export const useEstabelecimentos = () => {
   
     return { data, isLoading, isError, error };
   };
+
+  export const useVincularEstabelecimentoCliente = () => {
+    const queryClient = useQueryClient();
+  
+    const mutate = useMutation({
+      mutationFn: async (data: { idCliente: number; idLavacar: number }) => {
+        return await makeRequest
+          .post(`/estabelecimento/vincular-estabelecimento`, data)
+          .then((res) => res.data);
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["clientesVinculados"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["lavacars"] });
+  
+          toast.success(data.mensagem || "credenciado vinculado ao cliente com sucesso!");
+      },
+      onError: (error: AxiosError<{ message: string }>) => {
+        const errorMessage = error.response?.data?.message || "Erro ao vincular o cliente ao credenciado.";
+        
+        toast.error(`Erro: ${errorMessage}`);
+      },
+    });
+  
+    return mutate;
+  };
+  
+  

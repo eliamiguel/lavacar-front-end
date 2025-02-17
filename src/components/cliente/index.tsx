@@ -13,7 +13,7 @@ const Clientes = () => {
   const excluirCliente = useExcluirCliente();
   const [mostrarModal, setMostrarModal] = useState(false);
   const [clienteEditado, setClienteEditado] = useState<ClienteIrteface | undefined>(undefined);
-
+  
   const handleSalvarCliente = (cliente: ClienteIrteface) => {
     if (cliente.idCliente) {
       mutateAdicionar.mutate({cnpj:cliente.cnpj,
@@ -36,6 +36,12 @@ const Clientes = () => {
   };
 
   const handleExcluirCliente = (idCliente: number) => {
+   
+    if (user?.tipoUsuario === "admin") {
+      alert("Você não tem permissão para excluir este estabelecimento. Contate o super usuário.");
+      return; 
+    }
+
     if (confirm('Tem certeza que deseja excluir este cliente?')) {
       excluirCliente.mutate({idCliente});
     }

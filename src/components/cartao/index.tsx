@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { CartaoInterface } from '../../../interface';
 import CartaoForm from '../cartaoForm';
 import { useCartoes, useCriarCartao, useEditarCartao, useExcluirCartao } from '../../../hooks/useCartao';
-import VincularCartaoLavacar from '../vincularCrataoEstabelecimento';
+
 
 const Cartoes = () => {
   const queryCartoes = useCartoes();
@@ -22,7 +22,8 @@ const Cartoes = () => {
         idCliente: cartao.idCliente,
         idCarro: cartao.idCarro,
         numeroCartao: cartao.numeroCartao,
-        saldo: cartao.saldo
+        saldo: cartao.saldo,
+        tipoCartao:cartao.tipoCartao as "NORMAL" | "CORINGA",
       });
     } else {
   
@@ -32,7 +33,8 @@ const Cartoes = () => {
         idCarro: cartao.idCarro,
         numeroCartao: cartao.numeroCartao,
         saldo: cartao.saldo,
-        senha:cartao.senha
+        senha:cartao.senha,
+        tipoCartao:cartao.tipoCartao
       });
     }
   };
@@ -72,7 +74,7 @@ const Cartoes = () => {
             <th className="px-4 py-2 border">Saldo</th>
             <th className="px-4 py-2 border">Cliente</th>
             <th className="px-4 py-2 border">Carro</th>
-            <th className="px-4 py-2 border">Estabelecimento</th>
+            <th className="px-4 py-2 border">Tipo Cartão</th>
             <th className="px-4 py-2 border">Ações</th>
           </tr>
         </thead>
@@ -83,7 +85,7 @@ const Cartoes = () => {
               <td className="px-4 py-2 text-center border">R$ {cartao.saldo.toFixed(2)}</td>
               <td className="px-4 py-2 text-center border">{cartao.idCliente}</td>
               <td className="px-4 py-2 text-center border">{cartao.idCarro}</td>
-              <td className="px-4 py-2 text-center border">{cartao.estabelcimento}</td>
+              <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
               <td className="px-4 py-2 text-center border flex gap-2">
                 <button
                   onClick={() => { setCartaoEditado(cartao); setMostrarModal(true); }}
@@ -98,7 +100,7 @@ const Cartoes = () => {
                   Excluir
                 </button>
 
-                <VincularCartaoLavacar idCartao={cartao.idCartao} idCliente={cartao.idCliente} />
+                {/*<VincularCartaoLavacar idCartao={cartao.idCartao} idCliente={cartao.idCliente} />*/}
               </td>
             </tr>
           ))}

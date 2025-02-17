@@ -1,10 +1,10 @@
 'use client'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { CarroInterface } from '../../../interface';
 import CarroForm from '../carroForm';
 import { useCarros, useCriarCarro, useEditarCarro, useExcluirCarro } from '../../../hooks/useCarros';
-
+import { UserContext } from '@/context/UserContext';
 
 
 const Carros = () => {
@@ -14,7 +14,8 @@ const Carros = () => {
   const excluirCarro = useExcluirCarro();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [carroEditando, setCarroEditando] = useState<CarroInterface | undefined>(undefined);
-
+  const { user } = useContext(UserContext); 
+  
   const handleSalvarCarro = (carro: CarroInterface) => {
 
     
@@ -26,6 +27,11 @@ const Carros = () => {
   };
 
   const handleExcluirCarro = (idCarro : number) => {
+    if (user?.tipoUsuario === "admin") {
+      alert("Você não tem permissão para excluir este estabelecimento. Contate o super usuário.");
+      return; 
+    }
+
     if (confirm('Tem certeza que deseja excluir este carro?')) {
       excluirCarro.mutate({ idCarro });
     }

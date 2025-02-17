@@ -23,29 +23,34 @@ export const useCarros = () => {
     const queryClient = useQueryClient();
     
     const mutate = useMutation({
-        mutationFn: async (data: { 
-          idCliente:number,
-            modelo: string;
-            placa: string;
-            ano: number;
-            cor: string;
-         }) => {
-            return await makeRequest.post(`/carro/criar-Carro`, data).then((res)=>{
-                return res.data;
-              } 
-            )},
-        onSuccess: () => {
-         toast.success("Carro criado com sucesso.")
-         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-          queryClient.invalidateQueries({ queryKey: ['carros'] }); 
-          queryClient.invalidateQueries({ queryKey: ['seuEstabelecimento'] });
-        },
-        onError: (error: AxiosError<{ mensagem: string }>) => {
-          const errorMessage = error.response?.data?.mensagem || "Erro ao criar carro.";
-          console.log("Erro ao criar carro:", errorMessage);
-          toast.error(errorMessage);
+      mutationFn: async (data: { 
+        idCliente: number;
+        modelo: string;
+        placa: string;
+        ano: number;
+        cor: string;
+      }) => {
+        return await makeRequest.post(`/carro/criar-Carro`, data).then((res) => {
+          return res.data;
+        });
+      },
+      onSuccess: (data) => {
+        if (data.sucesso) {
+          toast.success(data.mensagem || "Carro criado com sucesso.");
+          queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+          queryClient.invalidateQueries({ queryKey: ["carros"] });
+          queryClient.invalidateQueries({ queryKey: ["seuEstabelecimento"] });
+        } else {
+          toast.error(data.mensagem || "Erro ao criar carro.");
         }
-          })
+      },
+      onError: (error: AxiosError<{ mensagem: string }>) => {
+        const errorMessage = error.response?.data?.mensagem || "Erro ao criar carro.";
+        console.log("Erro ao criar carro:", errorMessage);
+        toast.error(errorMessage);
+      },
+    });
+    
       return mutate
   }
  
