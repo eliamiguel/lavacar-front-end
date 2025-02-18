@@ -56,7 +56,7 @@ function Dashboard() {
     <div className={`p-6 transition-all duration-300 mt-20 sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
       
       <h1 className="text-2xl mt-4 font-bold mb-6">
-        <span className="text-gray-700">Painel do Estabelecimento</span> 
+        <span className="text-black">Painel do Estabelecimento</span> 
         {isLavacar && (<span className="text-black-800">`{user?.nome}`</span>)}
       </h1>
 

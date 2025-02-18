@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+
 import React, { useContext, useState, useEffect } from 'react';
 import { AxiosError } from "axios";
 import { makeRequest } from '../../../../axios';
@@ -8,14 +8,13 @@ import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import InputAuth from '@/components/inputAuth';
 import { motion } from 'framer-motion';
-import { Building, User } from 'lucide-react';
+import { Building } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
-const LoginPage = () => {
+const LoginEstabelecimento = () => {
   const [email, setEmail] = useState('');
   const [senhaHash, setSenhaHash] = useState('');
   const [error, setError] = useState('');
-  const [isEstabelecimento, setIsEstabelecimento] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const { setUser } = useContext(UserContext);
@@ -41,14 +40,12 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      const endpoint = isEstabelecimento ? "/lavacar/login" : "/auth/login";
-      const res = await makeRequest.post(endpoint, { email, senhaHash });
+      const res = await makeRequest.post("/lavacar/login", { email, senhaHash });
 
       if (typeof window !== "undefined") {
-        localStorage.setItem("orcamento:user", JSON.stringify(res.data.usuario || res.data.lavacar));
+        localStorage.setItem("orcamento:user", JSON.stringify(res.data.lavacar));
         localStorage.setItem("orcamento:token", res.data.token);
 
-        
         if (rememberMe) {
           localStorage.setItem("orcamento:rememberEmail", email);
         } else {
@@ -56,7 +53,7 @@ const LoginPage = () => {
         }
       }
 
-      setUser(res.data.usuario || res.data.lavacar);
+      setUser(res.data.lavacar);
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -66,7 +63,6 @@ const LoginPage = () => {
         setError("Erro inesperado ao fazer login");
         toast.error("Erro inesperado ao fazer login");
       }
-
     } finally {
       setLoading(false);
     }
@@ -80,32 +76,30 @@ const LoginPage = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl bg-white-100 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl flex"
       >
-        
+        {/* Seção de boas-vindas */}
         <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-gradient-to-r from-gray-900 to-black p-8 text-white rounded-l-2xl">
           <h2 className="text-3xl font-bold">Bem vindo !</h2>
           <p className="mt-2 text-sm text-center">A BC Gestão de Serviços.</p>
           <div className="flex space-x-4 mt-4">
-           <a href="https://api.whatsapp.com/send?phone=5541995310129&text=Ol%C3%A1!" className="text-white text-2xl hover:text-gray-300"><FaWhatsapp /></a>
+            <a href="https://api.whatsapp.com/send?phone=5541995310129&text=Ol%C3%A1!" className="text-white text-2xl hover:text-gray-300">
+              <FaWhatsapp />
+            </a>
           </div>
         </div>
 
-        
+        {/* Seção do formulário */}
         <div className="flex-1 p-8">
           <h2 className="text-3xl font-semibold text-center text-white">
-            {isEstabelecimento ? "Login do Credenciado" : "Login do Usuário"}
+            Login do Credenciado
           </h2>
 
           <div className="flex justify-center mt-4">
-            <button
-              onClick={() => setIsEstabelecimento(!isEstabelecimento)}
-              className="p-3 bg-gray-200 rounded-full hover:bg-gray-300 transition-all"
-            >
-              {isEstabelecimento ? <Building size={24} /> : <User size={24} />}
+            <button className="p-3 bg-gray-200 rounded-full hover:bg-gray-300 transition-all">
+              <Building size={24} />
             </button>
           </div>
 
           <motion.div
-            key={isEstabelecimento ? "estabelecimento" : "usuario"}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -119,6 +113,7 @@ const LoginPage = () => {
               <InputAuth placeholder="Digite sua senha" label="Senha" newState={setSenhaHash} Ispassword />
             </div>
 
+            {/* Opções de login */}
             <div className="flex justify-between items-center text-sm text-white mt-3">
               <label className="flex items-center">
                 <input 
@@ -145,18 +140,11 @@ const LoginPage = () => {
             </button>
           </motion.div>
 
-          <p className="text-center text-sm font-bold text-white mt-4">
-            Não tem uma conta? {" "}
-            <Link href="/register" className="text-gray-500 hover:underline">
-              Criar uma conta
-            </Link>
-          </p>
+          
         </div>
       </motion.div>
     </div>
   );
 };
 
-export default LoginPage;
-
-
+export default LoginEstabelecimento;

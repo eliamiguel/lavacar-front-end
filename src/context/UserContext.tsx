@@ -40,39 +40,45 @@ export const UserContextProvider = ({ children }: ContextProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLavacar, setIsLavacar] = useState(false);
-  const [forceUpdate, setForceUpdate] = useState(0);  // 🔥 Estado para forçar re-render
+    
 
   useEffect(() => {
     const loadUser = () => {
-      const UserJSON = localStorage.getItem("orcamento:user");
-      if (UserJSON) {
-        const parsedUser: User = JSON.parse(UserJSON);
-        setUser(parsedUser);
-        setIsAdmin(parsedUser.tipoUsuario === 'admin');
-        setIsLavacar(!!parsedUser.idLavacar);
-      } else {
+      try {
+        const userJSON = localStorage.getItem("orcamento:user");
+
+        if (userJSON) {
+          const parsedUser: User = JSON.parse(userJSON);
+
+          setUser(parsedUser);
+          setIsAdmin(parsedUser.tipoUsuario === 'admin');
+          setIsLavacar(!!parsedUser.idLavacar);
+        } else {
+          setUser(undefined);
+          setIsAdmin(false);
+          setIsLavacar(false);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar usuário do localStorage:", error);
         setUser(undefined);
-        setIsAdmin(false);
-        setIsLavacar(false);
       }
-      setForceUpdate((prev) => prev + 1); // 🔥 Força a atualização
     };
 
     loadUser();
     window.addEventListener("storage", loadUser);
+
     return () => window.removeEventListener("storage", loadUser);
   }, []);
 
   const logoutUser = () => {
     localStorage.removeItem("orcamento:user");
+    localStorage.removeItem("orcamento:token");
     setUser(undefined);
     setIsAdmin(false);
     setIsLavacar(false);
-    setForceUpdate((prev) => prev + 1); // 🔥 Força a atualização ao fazer logout
   };
-
   return (
-    <UserContext.Provider key={forceUpdate} value={{ user, setUser, isAdmin, isLavacar, logoutUser }}>
+    <UserContext.Provider value={{ user, setUser, isAdmin, isLavacar, logoutUser }}>
       {children}
     </UserContext.Provider>
   );

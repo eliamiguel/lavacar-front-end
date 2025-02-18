@@ -31,7 +31,7 @@ const VincularEstabelecimentoCliente: React.FC<Props> = ({idLavacar }) => {
         onClick={() => setShowModal(true)}
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
       >
-        Vincular Cliente a um credenciado
+        Vincular credenciado a um cliente
       </button>
 
       {showModal && (

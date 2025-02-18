@@ -1,10 +1,9 @@
 'use client'
 import { useContext, useState } from 'react';
-
-
+import { FaCheckCircle } from 'react-icons/fa'; // Ícone de "check"
 import EstabelecimentoForm from '../estabelecimentoForm';
 import { EstabelecimentoInterface } from '../../../interface';
-import { useCriarEstabelecimento, useEditarEstabelecimento, useEstabelecimentos, useExcluirEstabelecimento} from '../../../hooks/useEstabelecimentos';
+import { useCriarEstabelecimento, useEditarEstabelecimento, useEstabelecimentos, useExcluirEstabelecimento } from '../../../hooks/useEstabelecimentos';
 import VincularEstabelecimentoCliente from '../vincularEstabelecimentoAocliente';
 import { UserContext } from '@/context/UserContext';
 
@@ -15,8 +14,8 @@ const Estabelecimentos = () => {
   const excluirEstabelecimento = useExcluirEstabelecimento();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [estabelecimentoEditando, setEstabelecimentoEditando] = useState<EstabelecimentoInterface | undefined>(undefined);
-  const { user } = useContext(UserContext); 
-  
+  const { user } = useContext(UserContext);
+
   const handleSalvarEstabelecimento = (estabelecimento: EstabelecimentoInterface) => {
     if (estabelecimento.idLavacar) {
       mutateEditar.mutate({ ...estabelecimento });
@@ -26,32 +25,28 @@ const Estabelecimentos = () => {
   };
 
   const handleExcluirEstabelecimento = (idLavacar: number) => {
-    
     if (user?.tipoUsuario === "admin") {
       alert("Você não tem permissão para excluir este estabelecimento. Contate o super usuário.");
-      return; // Impede a exclusão
+      return;
     }
 
-
     if (confirm('Tem certeza que deseja excluir este estabelecimento?')) {
-      excluirEstabelecimento.mutate({idLavacar});
+      excluirEstabelecimento.mutate({ idLavacar });
     }
   };
 
-  if (queryEstabelecimentos.isLoading){
-    return(
-    <div className="flex justify-center items-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-    </div>
-    )
+  if (queryEstabelecimentos.isLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
-  
   if (queryEstabelecimentos.isError) {
     console.error("Erro ao carregar os dados:", queryEstabelecimentos.error);
-    return <div className="text-red-500">Erro ao carregar os exibir os Estabelecimentos.</div>;
+    return <div className="text-red-500">Erro ao carregar os Estabelecimentos.</div>;
   }
-    
 
   return (
     <div className="p-6 space-y-6 sm:ml-40">
@@ -69,37 +64,47 @@ const Estabelecimentos = () => {
             <th className="px-4 py-2 border">Telefone</th>
             <th className="px-4 py-2 border">Email</th>
             <th className="px-4 py-2 border">CNPJ</th>
+            <th className="px-4 py-2 border">Status</th>
             <th className="px-4 py-2 border">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {queryEstabelecimentos.data?.map((estabelecimento: EstabelecimentoInterface) =>{
-            return(
-                
-                    <tr key={estabelecimento.idLavacar} className="border-t">
-                      <td className="px-4 py-2 border">{estabelecimento.nome}</td>
-                      <td className="px-4 py-2 border">{estabelecimento.endereco}</td>
-                      <td className="px-4 py-2 border">{estabelecimento.telefone}</td>
-                      <td className="px-4 py-2 border">{estabelecimento.email}</td>
-                      <td className="px-4 py-2 border">{estabelecimento.cnpj}</td>
-                      <td className="px-4 py-2 border flex gap-2">
-                        <button
-                          onClick={() => { setEstabelecimentoEditando(estabelecimento); setMostrarFormulario(true); }}
-                          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-                        >
-                          Editar
-                        </button>
-                      
-                        <button
-                          onClick={() => handleExcluirEstabelecimento(estabelecimento.idLavacar)}
-                          className="bg-red-500 text-white px-4 py-2 rounded-lg desable hover:bg-red-600"
-                           >
-                          Excluir
-                        </button>
-                        <VincularEstabelecimentoCliente  idLavacar={estabelecimento.idLavacar} />
-                      </td>
-                    </tr>
-            )
+          {queryEstabelecimentos.data?.map((estabelecimento: EstabelecimentoInterface) => {
+            const jaVinculado = estabelecimento.clientesVinculados && estabelecimento.clientesVinculados.length > 0;
+
+            return (
+              <tr key={estabelecimento.idLavacar} className="border-t">
+                <td className="px-4 py-2 border">{estabelecimento.nome}</td>
+                <td className="px-4 py-2 border">{estabelecimento.endereco}</td>
+                <td className="px-4 py-2 border">{estabelecimento.telefone}</td>
+                <td className="px-4 py-2 border">{estabelecimento.email}</td>
+                <td className="px-4 py-2 border">{estabelecimento.cnpj}</td>
+                <td className="px-4 py-2 border text-center">
+                  {jaVinculado ? (
+                    <div className="flex items-center justify-center text-green-600">
+                      <FaCheckCircle className="mr-2" /> Já Vinculado
+                    </div>
+                  ) : (
+                    <VincularEstabelecimentoCliente idLavacar={estabelecimento.idLavacar} />
+                  )}
+                </td>
+                <td className="px-4 py-2 border flex gap-2">
+                  <button
+                    onClick={() => { setEstabelecimentoEditando(estabelecimento); setMostrarFormulario(true); }}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    onClick={() => handleExcluirEstabelecimento(estabelecimento.idLavacar)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            );
           })}
         </tbody>
       </table>

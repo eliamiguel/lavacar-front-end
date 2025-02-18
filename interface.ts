@@ -52,6 +52,7 @@ export interface IAuthInput{
       email: string;
       cnpj: string;
       senhaHash:string;
+      clientesVinculados?: { idCliente: number; nome: string }[];
     }
   export interface InterfaceLavacar {
     idLavacar?: number;

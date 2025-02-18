@@ -48,7 +48,7 @@ const Carros = () => {
 
   
   if (queryCarros.isError) {
-    console.error("Erro ao carregar os dados:", queryCarros.error);
+    console.log("Erro ao carregar os dados:", queryCarros.error);
     return <div className="text-red-500">Erro ao carregar os exibir os Carros.</div>;
   }
 
@@ -80,13 +80,13 @@ const Carros = () => {
               <td className="px-4 py-2 text-center border flex gap-2">
                 <button
                   onClick={() => { setCarroEditando(carro); setMostrarFormulario(true); }}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  className="bg-yellow-500 text-center text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
                 >
                   Editar
                 </button>
                 <button
                   onClick={() => handleExcluirCarro(carro.idCarro )}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  className="bg-red-500 text-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
                 >
                   Excluir
                 </button>

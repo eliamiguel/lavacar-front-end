@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import InputAuth from '@/components/inputAuth';
 import { motion } from 'framer-motion';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 const RegisterPage = () => {
   const [nome, setNome] = useState('');
@@ -74,7 +74,9 @@ const RegisterPage = () => {
           <h2 className="text-3xl font-bold">Crie uma Conta</h2>
           <p className="mt-2 text-sm text-center">Bem-vindo à BC Gestão de Serviços.</p>
           <div className="flex space-x-4 mt-4">
-           <a href="https://api.whatsapp.com/send?phone=5541995310129&text=Ol%C3%A1!" className="text-white text-2xl hover:text-gray-300"><FaWhatsapp /></a>
+            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaFacebook /></a>
+            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaInstagram /></a>
+            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaTwitter /></a>
           </div>
         </div>
 
