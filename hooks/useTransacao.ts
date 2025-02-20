@@ -4,7 +4,7 @@ import { makeRequest } from "../axios";
 import { TransacaoInterface } from "../interface";
 
 export const useTransacao= () => {
-    const { data, isLoading, isError, error } = useQuery<TransacaoInterface[]>({
+    const { data, isLoading, isError, error, refetch } = useQuery<TransacaoInterface[]>({
         queryKey: ['transacao'],
         queryFn: async () => await makeRequest.get('/transacao')
         .then((res)=>{
@@ -12,5 +12,5 @@ export const useTransacao= () => {
         })
       });
     
-      return { data, isLoading, isError, error };
+      return { data, isLoading, isError, error,refetch };
   };

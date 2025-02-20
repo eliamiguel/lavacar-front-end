@@ -3,7 +3,7 @@ import { makeRequest } from "../axios";
 import { DashboardData } from "../interface";
 
 export const useDashboardTotaladmin = () => {
-  const { data, isLoading, isError, error } = useQuery<DashboardData>({
+  const { data, isLoading, isError, error,refetch } = useQuery<DashboardData>({
     queryKey: ["dashboard"],
     queryFn: async () => {
       const res = await makeRequest.get("/dashboard");
@@ -11,5 +11,5 @@ export const useDashboardTotaladmin = () => {
     },
   });
 
-  return { data, isLoading, isError, error };
+  return { data, isLoading, isError, error,refetch };
 };

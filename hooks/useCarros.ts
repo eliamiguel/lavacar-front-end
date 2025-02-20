@@ -7,7 +7,7 @@ import { CarroInterface } from "../interface";
 
 
 export const useCarros = () => {
-    const { data, isLoading, isError, error } = useQuery<CarroInterface[]>({
+    const { data, isLoading, isError, error, refetch } = useQuery<CarroInterface[]>({
         queryKey: ['carros'],
         queryFn: async () => await makeRequest.get('/carros')
         .then((res)=>{
@@ -15,7 +15,7 @@ export const useCarros = () => {
         })
       });
     
-      return { data, isLoading, isError, error };
+      return { data, isLoading, isError, error, refetch };
   };
   
 

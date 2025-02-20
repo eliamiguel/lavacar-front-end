@@ -8,7 +8,7 @@ import { EstabelecimentoInterface, LavacarInterface } from "../interface";
 
 
 export const useEstabelecimentos = () => {
-    const { data, isLoading, isError, error } = useQuery<EstabelecimentoInterface[]>({
+    const { data, isLoading, isError, error,refetch } = useQuery<EstabelecimentoInterface[]>({
         queryKey: ['estabelecimento'],
         queryFn: async () => await makeRequest.get('/estabelecimento')
         .then((res)=>{
@@ -16,7 +16,7 @@ export const useEstabelecimentos = () => {
         })
       });
     
-      return { data, isLoading, isError, error };
+      return { data, isLoading, isError, error,refetch };
   };
 
 
@@ -106,14 +106,14 @@ export const useEstabelecimentos = () => {
   }
 
   export const useLavacar = (idLavacar: number) => {
-    const { data, isLoading, isError, error } = useQuery<LavacarInterface>({
+    const { data, isLoading, isError, error,refetch } = useQuery<LavacarInterface>({
       queryKey: ["seuEstabelecimento", idLavacar],
       queryFn: async () =>
         await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
       enabled: !!idLavacar, 
     });
   
-    return { data, isLoading, isError, error };
+    return { data, isLoading, isError, error,refetch };
   };
 
   export const useVincularEstabelecimentoCliente = () => {
@@ -129,7 +129,8 @@ export const useEstabelecimentos = () => {
         queryClient.invalidateQueries({ queryKey: ["clientesVinculados"] });
         queryClient.invalidateQueries({ queryKey: ["dashboard"] });
         queryClient.invalidateQueries({ queryKey: ["lavacars"] });
-  
+        queryClient.invalidateQueries({ queryKey: ["estabelecimento"] });
+        
           toast.success(data.mensagem || "credenciado vinculado ao cliente com sucesso!");
       },
       onError: (error: AxiosError<{ message: string }>) => {

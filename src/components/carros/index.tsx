@@ -1,11 +1,10 @@
-'use client'
-import { useContext, useState } from 'react';
+"use client";
 
-import { CarroInterface } from '../../../interface';
-import CarroForm from '../carroForm';
-import { useCarros, useCriarCarro, useEditarCarro, useExcluirCarro } from '../../../hooks/useCarros';
-import { UserContext } from '@/context/UserContext';
-
+import { useContext, useState } from "react";
+import { useCarros, useCriarCarro, useEditarCarro, useExcluirCarro } from "../../../hooks/useCarros";
+import CarroForm from "../carroForm";
+import { CarroInterface } from "../../../interface";
+import { UserContext } from "@/context/UserContext";
 
 const Carros = () => {
   const queryCarros = useCarros();
@@ -14,52 +13,85 @@ const Carros = () => {
   const excluirCarro = useExcluirCarro();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [carroEditando, setCarroEditando] = useState<CarroInterface | undefined>(undefined);
-  const { user } = useContext(UserContext); 
-  
-  const handleSalvarCarro = (carro: CarroInterface) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const { user } = useContext(UserContext);
 
-    
-    if (carro.idCarro ) {
+  
+  const filteredCarros = queryCarros.data?.filter(carro =>
+    carro.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    carro.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    carro.cor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  
+  const handleRecarregar = () => {
+    queryCarros.refetch();
+  };
+
+  const handleSalvarCarro = (carro: CarroInterface) => {
+    if (carro.idCarro) {
       mutateEditar.mutate({ ...carro });
     } else {
       mutateCriar.mutate({ ...carro });
     }
   };
 
-  const handleExcluirCarro = (idCarro : number) => {
+  const handleExcluirCarro = (idCarro: number) => {
     if (user?.tipoUsuario === "admin") {
-      alert("Você não tem permissão para excluir este estabelecimento. Contate o super usuário.");
-      return; 
+      alert("Você não tem permissão para excluir este carro. Contate o super usuário.");
+      return;
     }
 
-    if (confirm('Tem certeza que deseja excluir este carro?')) {
+    if (confirm("Tem certeza que deseja excluir este carro?")) {
       excluirCarro.mutate({ idCarro });
     }
   };
 
- 
-  if (queryCarros.isLoading){
-    return(
-    <div className="flex justify-center items-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-    </div>
-    )
+  if (queryCarros.isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
   }
 
-  
   if (queryCarros.isError) {
-    console.log("Erro ao carregar os dados:", queryCarros.error);
-    return <div className="text-red-500">Erro ao carregar os exibir os Carros.</div>;
+    console.error("Erro ao carregar os dados:", queryCarros.error);
+    return <div className="text-red-500">Erro ao carregar os carros.</div>;
   }
 
   return (
-    <div className="p-6 space-y-6 sm:ml-40">
-      <h1 className="text-2xl font-bold text-gray-800 mt-20 mb-4">Carros</h1>
+    <div className="p-6 space-y-6 sm:ml-40 mt-20">
+     
+      <div className="flex justify-between items-center mb-6"> 
+        <button
+          onClick={() => { setCarroEditando(undefined); setMostrarFormulario(true); }}
+          className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-700"
+        >
+          <span className="mr-2">+</span> Novo Carro
+        </button>
+      </div>
 
-      <button onClick={() => { setCarroEditando(undefined); setMostrarFormulario(true); }} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-        Adicionar Carro
-      </button>
+     
+      <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
+        
+        <input
+          type="text"
+          placeholder="Busca rápida"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
 
+        <button
+          onClick={handleRecarregar}
+          className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
+        >
+          🔄 Recarregar
+        </button>
+      </div>
+
+      {/* Tabela */}
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-100">
@@ -71,22 +103,22 @@ const Carros = () => {
           </tr>
         </thead>
         <tbody>
-          {queryCarros.data?.map((carro: CarroInterface) => (
-            <tr key={carro.idCarro } className="border-t">
+          {filteredCarros?.map((carro: CarroInterface) => (
+            <tr key={carro.idCarro} className="border-t hover:bg-gray-50">
               <td className="px-4 py-2 text-center border">{carro.modelo}</td>
               <td className="px-4 py-2 text-center border">{carro.placa}</td>
               <td className="px-4 py-2 text-center border">{carro.ano}</td>
               <td className="px-4 py-2 text-center border">{carro.cor}</td>
-              <td className="px-4 py-2 text-center border flex gap-2">
+              <td className="px-4 py-2 text-center border flex justify-center gap-2">
                 <button
                   onClick={() => { setCarroEditando(carro); setMostrarFormulario(true); }}
-                  className="bg-yellow-500 text-center text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
                 >
                   Editar
                 </button>
                 <button
-                  onClick={() => handleExcluirCarro(carro.idCarro )}
-                  className="bg-red-500 text-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  onClick={() => handleExcluirCarro(carro.idCarro!)}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                 >
                   Excluir
                 </button>
@@ -96,6 +128,7 @@ const Carros = () => {
         </tbody>
       </table>
 
+      {/* Modal */}
       {mostrarFormulario && <CarroForm carroEditado={carroEditando} aoFechar={() => setMostrarFormulario(false)} aoSalvar={handleSalvarCarro} />}
     </div>
   );

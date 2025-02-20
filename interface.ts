@@ -160,3 +160,37 @@ export  interface IterfacetransacoesSeuEstabelecimento {
   dataTransacao: string;
   status: string;
 }
+
+export interface PerfilUser {
+  idUsuario?: number;
+  idLavacar?: number;
+  nome: string;
+  email: string;
+  senhaHash?: string; 
+  urlImagemPerfil?: string;
+  tipoUsuario: "admin" | "funcionario" | "super";
+  telefone?: string;
+  endereco?: string;
+  cnpj?: string; 
+  dataCriacao?: Date;
+  dataAtualizacao?: Date;
+}
+
+export interface PerfilUsuario {
+  idUsuario?: number;
+  nome: string;
+  email: string;
+  telefone?: string;
+  endereco?: string;
+  urlImagemPerfil?: string;
+}
+
+export interface PerfilLavacar {
+  idLavacar?: number;
+  nome: string;
+  email: string;
+  telefone?: string;
+  endereco?: string;
+  cnpj: string;
+  urlImagemPerfil?: string;
+}

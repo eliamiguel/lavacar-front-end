@@ -127,128 +127,141 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">{cartaoEditado ? 'Editar Cartão' : 'Adicionar Cartão'}</h2>
-        <form onSubmit={handleSubmit}>
-      
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Número do Cartão</label>
-            <input
-              type="text"
-              name="numeroCartao"
-              value={cartao.numeroCartao}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
+    <div className="fixed inset-0 mt-20 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+    <h2 className="text-2xl font-bold mb-6">{cartaoEditado ? 'Editar Cartão' : 'Adicionar Cartão'}</h2>
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        
-          {!cartaoEditado && (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Senha</label>
-                <input
-                  type="password"
-                  name="senha"
-                  value={senha}
-                  onChange={handleSenhaChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
-                <input
-                  type="password"
-                  name="confirmarSenha"
-                  value={confirmarSenha}
-                  onChange={handleConfirmarSenhaChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  required
-                />
-              </div>
-
-              {erroSenha && <p className="text-red-500 text-sm">{erroSenha}</p>}
-            </>
-          )}
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Saldo</label>
-            <input
-              type="number"
-              name="saldo"
-              value={cartao.saldo ?? 0} // 🔥 Garante que nunca seja `NaN`
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Tipo de Cartão</label>
-            <select
-              name="tipoCartao"
-              value={cartao.tipoCartao || "NORMAL"} // 🔥 Garante que sempre tenha um valor válido
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            >
-              <option value="NORMAL">Normal (Limite: R$500,00)</option>
-              <option value="CORINGA">Coringa (Sem Limite)</option>
-            </select>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Cliente</label>
-            <select
-              name="idCliente"
-              required
-              className="w-full p-2 border border-gray-300 rounded"
-              value={cartao.idCliente}
-              onChange={handleChange}
-            >
-              <option value={0}>Selecione o cliente</option>
-              {queryClientes.data?.map((client) => (
-                <option key={client.idCliente} value={client.idCliente}>
-                  {client.nome}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Carro</label>
-            <select
-              name="idCarro"
-              required
-              className="w-full p-2 border border-gray-300 rounded"
-              value={cartao.idCarro || 0} 
-              onChange={handleChange}
-            >
-              <option value={0}>Selecione o carro</option>
-              {carrosDisponiveis.map((car) => (
-                <option key={car.idCarro} value={car.idCarro}>
-                  {car.modelo} - {car.placa}
-                </option>
-              ))}
-            </select>
-
-          </div>
-
-        
-          <div className="flex justify-end space-x-2">
-            <button type="button" onClick={aoFechar} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-              Cancelar
-            </button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-              Salvar
-            </button>
-          </div>
-        </form>
+      {/* Número do Cartão */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Número do Cartão</label>
+        <input
+          type="text"
+          name="numeroCartao"
+          value={cartao.numeroCartao}
+          onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
       </div>
-    </div>
+
+      {/* Tipo de Cartão */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Cartão</label>
+        <select
+          name="tipoCartao"
+          value={cartao.tipoCartao || "NORMAL"}
+          onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="NORMAL">Normal (Limite: R$500,00)</option>
+          <option value="CORINGA">Coringa (Sem Limite)</option>
+        </select>
+      </div>
+
+      {/* Saldo */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Saldo</label>
+        <input
+          type="number"
+          name="saldo"
+          value={cartao.saldo ?? 0}
+          onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      {/* Cliente */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
+        <select
+          name="idCliente"
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          value={cartao.idCliente}
+          onChange={handleChange}
+        >
+          <option value={0}>Selecione o cliente</option>
+          {queryClientes.data?.map((client) => (
+            <option key={client.idCliente} value={client.idCliente}>
+              {client.nome}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Carro */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Carro</label>
+        <select
+          name="idCarro"
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          value={cartao.idCarro || 0}
+          onChange={handleChange}
+        >
+          <option value={0}>Selecione o carro</option>
+          {carrosDisponiveis.map((car) => (
+            <option key={car.idCarro} value={car.idCarro}>
+              {car.modelo} - {car.placa}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Senha e Confirmação */}
+      {!cartaoEditado && (
+        <>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+            <input
+              type="password"
+              name="senha"
+              value={senha}
+              onChange={handleSenhaChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
+            <input
+              type="password"
+              name="confirmarSenha"
+              value={confirmarSenha}
+              onChange={handleConfirmarSenhaChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {erroSenha && <p className="text-red-500 text-sm col-span-2">{erroSenha}</p>}
+        </>
+      )}
+      
+      {/* Botões de Ação */}
+      <div className="col-span-2 flex justify-end space-x-4 mt-4">
+        <button
+          type="button"
+          onClick={aoFechar}
+          className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
   );
 };
 

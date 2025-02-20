@@ -63,7 +63,7 @@ export const usePagarCartao = () => {
 
 
 export const useCartoes = () => {
-    const { data, isLoading, isError, error } = useQuery<CartaoInterface[]>({
+    const { data, isLoading, isError, error, refetch } = useQuery<CartaoInterface[]>({
         queryKey: ['cartaos'],
         queryFn: async () => await makeRequest.get('/cartao')
         .then((res)=>{
@@ -71,7 +71,7 @@ export const useCartoes = () => {
         })
       });
     
-      return { data, isLoading, isError, error };
+      return { data, isLoading, isError, error, refetch };
   };
   
 

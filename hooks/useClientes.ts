@@ -4,17 +4,19 @@ import { ClienteIrteface} from "../interface";
 import {toast} from 'react-toastify';
 import { AxiosError } from "axios";
 
+
 export const useCleintes = () => {
-    const { data, isLoading, isError, error } = useQuery<ClienteIrteface[]>({
-      queryKey: ['cliente'],
-      queryFn: async () => await makeRequest.get('/clientes')
-      .then((res)=>{
+  const { data, isLoading, isError, error, refetch } = useQuery<ClienteIrteface[]>({
+    queryKey: ["cliente"],
+    queryFn: async () =>
+      await makeRequest.get("/clientes").then((res) => {
         return res.data || [];
-      })
-    });
-  
-    return { data, isLoading, isError, error };
-  };
+      }),
+  });
+
+  return { data, isLoading, isError, error, refetch }; // 🔥 Agora retorna `refetch`
+};
+
 
   export const useCriarCliente = ()=>{
     const queryClient = useQueryClient();
