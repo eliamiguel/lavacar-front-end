@@ -152,6 +152,8 @@ export interface IntefacePermitidos {
   idCartao: number;
   numeroCartao: string;
   saldo: number;
+  modelo?: string;
+  placa?: string;
 }
 
 export  interface IterfacetransacoesSeuEstabelecimento {
@@ -193,4 +195,22 @@ export interface PerfilLavacar {
   endereco?: string;
   cnpj: string;
   urlImagemPerfil?: string;
+}
+
+
+export interface UsuarioPerfilPayload {
+  idUsuario: number;
+  nome: string;
+  email: string;
+  urlImagemPerfil: string;
+}
+
+export interface CredenciadoPerfilPayload {
+  idLavacar: number;
+  nome: string;
+  email: string;
+  telefone?: string;
+  endereco?: string;
+  cnpj: string;
+  urlImagemPerfil: string;
 }

@@ -8,10 +8,9 @@ import Sidebar from '@/components/sidebar';
 import Header from '@/components/header';
 
 
-
-
 export default function MainHome({children}:{children:ReactNode}) {
     const router = useRouter()
+
     const { data, isError, error, isSuccess}= useQuery({
       queryKey:["refresh"],
       queryFn:async ()=> await makeRequest.get('/auth/refresh')
@@ -32,13 +31,14 @@ export default function MainHome({children}:{children:ReactNode}) {
         router.push('/login')
       }
     }, [isError, error, router])
+
   return (
     <div>
       <Sidebar/>
       <Header/>
         {children}
-     </div>
-    
+
+    </div>
     
   );
 }

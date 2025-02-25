@@ -17,7 +17,7 @@ export const useEstabelecimentos = () => {
       });
     
       return { data, isLoading, isError, error,refetch };
-  };
+};
 
 
   export const useCriarEstabelecimento = ()=>{

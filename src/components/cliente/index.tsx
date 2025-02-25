@@ -16,7 +16,7 @@ const Clientes = () => {
   const [clienteEditado, setClienteEditado] = useState<ClienteIrteface | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filtragem dos clientes com base na busca
+  
   const filteredClientes = queryClientes.data?.filter(cliente =>
     cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     cliente.cnpj.includes(searchTerm) ||
@@ -24,7 +24,7 @@ const Clientes = () => {
   );
 
   const handleRecarregar = () => {
-    queryClientes.refetch(); // Recarrega os dados
+    queryClientes.refetch(); 
   };
 
   const handleSalvarCliente = (cliente: ClienteIrteface) => {
@@ -75,11 +75,9 @@ const Clientes = () => {
 
   return (
     <div className="p-6 space-y-6 sm:ml-40 mt-20">
-      {/* Cabeçalho com Abas */}
+      
       <div className="flex justify-between items-center mb-6">
        
-
-        {/* Botão Adicionar Cliente */}
         <button
           onClick={() => { setClienteEditado(undefined); setMostrarModal(true); }}
           className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-700"
@@ -88,9 +86,9 @@ const Clientes = () => {
         </button>
       </div>
 
-      {/* Barra de Busca e Botão de Recarregar */}
+     
       <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
-        {/* Campo de Busca */}
+        
         <input
           type="text"
           placeholder="Busca rápida"
@@ -99,7 +97,7 @@ const Clientes = () => {
           className="p-2 w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />
         
-        {/* Botão Recarregar */}
+       
         <button
           onClick={handleRecarregar}
           className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
@@ -108,7 +106,7 @@ const Clientes = () => {
         </button>
       </div>
 
-      {/* Tabela */}
+     
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-100">
@@ -158,7 +156,7 @@ const Clientes = () => {
         </tbody>
       </table>
 
-      {/* Modal */}
+      
       {mostrarModal && <ClienteForm clienteEditado={clienteEditado} aoFechar={() => setMostrarModal(false)} aoSalvar={handleSalvarCliente} />}
     </div>
   );

@@ -8,8 +8,7 @@ import {
   useCriarEstabelecimento,
   useEditarEstabelecimento,
   useEstabelecimentos,
-  useExcluirEstabelecimento,
-} from "../../../hooks/useEstabelecimentos";
+  useExcluirEstabelecimento,} from "../../../hooks/useEstabelecimentos";
 import VincularEstabelecimentoCliente from "../vincularEstabelecimentoAocliente";
 import { UserContext } from "@/context/UserContext";
 
@@ -19,12 +18,11 @@ const Estabelecimentos = () => {
   const mutateEditar = useEditarEstabelecimento();
   const excluirEstabelecimento = useExcluirEstabelecimento();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [estabelecimentoEditando, setEstabelecimentoEditando] =
-    useState<EstabelecimentoInterface | undefined>(undefined);
+  const [estabelecimentoEditando, setEstabelecimentoEditando] = useState<EstabelecimentoInterface | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useContext(UserContext);
 
-  // Filtragem dos estabelecimentos em tempo real
+  
   const filteredEstabelecimentos = queryEstabelecimentos.data?.filter(
     (estabelecimento) =>
       estabelecimento.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -32,11 +30,10 @@ const Estabelecimentos = () => {
       estabelecimento.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // ✅ Contagem corrigida de estabelecimentos vinculados e não vinculados
+  
   const vinculados = queryEstabelecimentos.data?.filter((e) => (e.clientesVinculados ?? []).length > 0).length || 0;
   const naoVinculados = queryEstabelecimentos.data?.filter((e) => (e.clientesVinculados ?? []).length === 0).length || 0;
 
-  // Função para recarregar os dados
   const handleRecarregar = () => {
     queryEstabelecimentos.refetch();
   };
@@ -75,7 +72,7 @@ const Estabelecimentos = () => {
 
   return (
     <div className="p-6 space-y-6 sm:ml-40 mt-20">
-      {/* Cabeçalho com Abas */}
+     
       <div className="flex justify-between items-center mb-6">
         <div className="flex space-x-6 text-gray-800 font-semibold">
           <span className="border-b-4 border-black pb-2">
@@ -101,9 +98,9 @@ const Estabelecimentos = () => {
         </button>
       </div>
 
-      {/* Barra de Busca e Botão de Recarregar */}
+     
       <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
-        {/* Campo de Busca */}
+        
         <input
           type="text"
           placeholder="Busca rápida"
@@ -112,7 +109,7 @@ const Estabelecimentos = () => {
           className="p-2 w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />
 
-        {/* Botão Recarregar */}
+        
         <button
           onClick={handleRecarregar}
           className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
@@ -121,7 +118,7 @@ const Estabelecimentos = () => {
         </button>
       </div>
 
-      {/* Tabela */}
+      
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-100">

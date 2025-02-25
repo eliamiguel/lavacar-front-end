@@ -2,14 +2,13 @@
 
 import Clientes from "@/components/cliente";
 
-
-
 function ClientesPage(){
     
     return(
-   <div  >
-    <Clientes/>
-    </div>
+
+        <div>
+            <Clientes/>
+        </div>
     )
 }
 export default ClientesPage;

@@ -74,7 +74,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               </select>
             </div>
 
-            {/* Modelo */}
+           
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
               <input
@@ -88,7 +88,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            {/* Placa */}
+            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Placa</label>
               <input
@@ -102,7 +102,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            {/* Ano */}
+            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ano</label>
               <input
@@ -116,7 +116,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            {/* Cor */}
+            
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Cor</label>
               <input
@@ -130,7 +130,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            {/* Botões de Ação */}
+            
             <div className="md:col-span-2 flex justify-end space-x-4 mt-4">
               <button
                 type="button"

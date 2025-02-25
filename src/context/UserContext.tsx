@@ -5,6 +5,9 @@ export interface User {
   idUsuario?: number;
   email: string;
   nome: string;
+  telefone?:string;
+  cnpj?:string;
+  endereco?:string;
   urlImagemPerfil: string;
   tipoUsuario: string;
   nomeEstabelecimento?: string;
@@ -24,7 +27,7 @@ export interface ContextProps {
 
 const initialValue: UserContextType = {
   user: undefined,
-  setUser: () => {}, 
+  setUser: () => {},
   isAdmin: false,
   isLavacar: false,
   logoutUser: () => {},
@@ -36,35 +39,36 @@ export const UserContextProvider = ({ children }: ContextProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLavacar, setIsLavacar] = useState(false);
+  const [isClient, setIsClient] = useState(false); 
 
+ 
   useEffect(() => {
-    const loadUser = () => {
+    setIsClient(true);
+  }, []);
+
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       try {
         const userJSON = sessionStorage.getItem("perfil:user");
-
         if (userJSON) {
           const parsedUser: User = JSON.parse(userJSON);
           setUser(parsedUser);
           setIsAdmin(parsedUser.tipoUsuario === "admin");
           setIsLavacar(!!parsedUser.idLavacar);
-        } else {
-          setUser(undefined);
-          setIsAdmin(false);
-          setIsLavacar(false);
         }
       } catch (error) {
         console.error("Erro ao carregar usuário do sessionStorage:", error);
-        setUser(undefined);
       }
-    };
-
-    loadUser();
-
-    // Adicionando um evento para escutar mudanças no sessionStorage
-    window.addEventListener("perfilAtualizado", loadUser);
-
-    return () => window.removeEventListener("perfilAtualizado", loadUser);
+    }
   }, []);
+
+  
+  useEffect(() => {
+    if (user && isClient) {
+      sessionStorage.setItem("perfil:user", JSON.stringify(user));
+    }
+  }, [user, isClient]);
 
   const logoutUser = () => {
     sessionStorage.removeItem("perfil:user");

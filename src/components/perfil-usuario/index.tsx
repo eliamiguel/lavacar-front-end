@@ -5,6 +5,8 @@ import { PerfilUser } from "../../../interface";
 import { useEditarPerfilUsuario } from "../../../hooks/usePerfil";
 import { toast } from "react-toastify";
 import { UserContext } from "@/context/UserContext";
+import { useUploadImagemPerfil } from "../../../hooks/useUpload";
+
 
 const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState<PerfilUser | null>(null);
@@ -12,8 +14,10 @@ const PerfilUsuario = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [urlImagemPerfil, setUrlImagemPerfil] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const mutate = useEditarPerfilUsuario();
+  const editarPerfil = useEditarPerfilUsuario();
+  const uploadImagem = useUploadImagemPerfil();
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("perfil:user");
@@ -26,28 +30,48 @@ const PerfilUsuario = () => {
     }
   }, []);
 
+
   const handleSave = async () => {
     if (!usuario?.idUsuario) {
       toast.error("Erro: Usuário inválido.");
       return;
     }
 
-    await mutate.mutateAsync({
+
+    let finalUrlImagem = urlImagemPerfil;
+
+    if (selectedFile) {
+      
+        const response = await uploadImagem.mutateAsync(selectedFile);
+        finalUrlImagem = response.imageUrl; 
+        return;
+      
+    }
+
+    await editarPerfil.mutateAsync({
       idUsuario: usuario.idUsuario,
       nome,
       email,
-      urlImagemPerfil,
+      urlImagemPerfil: finalUrlImagem,
     });
 
-    const updatedUser = { ...usuario, nome, email, urlImagemPerfil };
-
+    const updatedUser = { ...usuario, nome, email, urlImagemPerfil: finalUrlImagem };
     sessionStorage.setItem("perfil:user", JSON.stringify(updatedUser));
-    setUser(updatedUser); // Atualiza o estado global
+    setUser(updatedUser); 
+  };
+
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-20 p-8 bg-white shadow-lg rounded-xl flex items-center">
-      {/* Lado esquerdo - Informações do usuário */}
+     
       <div className="w-1/3 flex flex-col items-center text-center border-r border-gray-300 pr-6">
         <Image
           className="rounded-full border-4 border-gray-300 shadow-lg"
@@ -60,7 +84,7 @@ const PerfilUsuario = () => {
         <p className="text-gray-500 text-lg">{email || "Email não disponível"}</p>
       </div>
 
-      {/* Lado direito - Formulário de edição */}
+      
       <div className="w-2/3 pl-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Perfil</h2>
         <div className="space-y-4">
@@ -89,6 +113,16 @@ const PerfilUsuario = () => {
               value={urlImagemPerfil}
               onChange={(e) => setUrlImagemPerfil(e.target.value)}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-700 font-semibold block mb-1">Enviar Imagem</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded-lg"
             />
           </div>
         </div>

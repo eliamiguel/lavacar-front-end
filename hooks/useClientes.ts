@@ -14,7 +14,7 @@ export const useCleintes = () => {
       }),
   });
 
-  return { data, isLoading, isError, error, refetch }; // 🔥 Agora retorna `refetch`
+  return { data, isLoading, isError, error, refetch }; 
 };
 
 
@@ -41,7 +41,7 @@ export const useCleintes = () => {
         },
         onError: (error: AxiosError<{ message: string }>) => {
           const errorMessage = error.response?.data?.message || 'Erro ao criar cliente. Tente novamente.';
-          console.log('Erro ao criar cliente', errorMessage);
+          console.log('Erro ao criar cliente');
           toast.error(errorMessage);
         }
           })

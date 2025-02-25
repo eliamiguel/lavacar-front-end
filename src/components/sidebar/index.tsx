@@ -21,7 +21,6 @@ function Sidebar() {
   return (
     <div key={forceRender} className={`h-screen  bg-black text-white fixed top-0 left-0 z-50 transition-all shadow-lg pt-4 ${isCollapsed ? "w-16" : "w-40"}`}>
       
-      {/* Imagem no topo */}
       <div className="flex items-center justify-center transition-all">
         <Image 
           src="/images/BC-fundo.png" 
@@ -32,14 +31,12 @@ function Sidebar() {
         />
       </div>
 
-      {/* Botão de expandir/retrair */}
       <div className="flex items-center justify-between p-4 mt-2">
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:text-gray-400 transition">
           {isCollapsed ? <ArrowRight size={20} /> : <ArrowLeft size={20} />}
         </button>
       </div>
 
-      {/* Menu de Navegação */}
       <nav className="mt-4 space-y-2">
         <Link href="/dashboard">
           <div className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition ${pathname === "/dashboard" ? "bg-gray-700 text-white" : "hover:bg-gray-800"}`}>
@@ -94,7 +91,6 @@ function Sidebar() {
         )}
       </nav>
 
-      {/* Botão de Logout */}
       <div onClick={() => logout.mutate()} className="absolute bottom-4 left-4 flex items-center gap-3 cursor-pointer text-red-400 hover:text-red-300 transition">
         <LogOut size={20} />
         {!isCollapsed && <span>Sair</span>}

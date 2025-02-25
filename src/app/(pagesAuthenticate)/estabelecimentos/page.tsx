@@ -7,9 +7,12 @@ import Estabelecimentos from "@/components/estabeleciomentos";
 function EstabelecimentoPage(){
     
     return(
-   <div  >
-    <Estabelecimentos/>
-    </div>
+
+        <div>
+            <Estabelecimentos/>
+        </div>
+
     )
 }
+
 export default EstabelecimentoPage;

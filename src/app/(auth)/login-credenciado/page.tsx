@@ -76,7 +76,7 @@ const LoginEstabelecimento = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl bg-white-100 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl flex"
       >
-        {/* Seção de boas-vindas */}
+
         <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-gradient-to-r from-gray-900 to-black p-8 text-white rounded-l-2xl">
           <h2 className="text-3xl font-bold">Bem vindo !</h2>
           <p className="mt-2 text-sm text-center">A BC Gestão de Serviços.</p>
@@ -87,7 +87,6 @@ const LoginEstabelecimento = () => {
           </div>
         </div>
 
-        {/* Seção do formulário */}
         <div className="flex-1 p-8">
           <h2 className="text-3xl font-semibold text-center text-white">
             Login do Credenciado
@@ -113,7 +112,6 @@ const LoginEstabelecimento = () => {
               <InputAuth placeholder="Digite sua senha" label="Senha" newState={setSenhaHash} Ispassword />
             </div>
 
-            {/* Opções de login */}
             <div className="flex justify-between items-center text-sm text-white mt-3">
               <label className="flex items-center">
                 <input 

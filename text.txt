@@ -1,134 +1,81 @@
-'use client';
-import Link from 'next/link';
-import React, { useContext, useState } from 'react';
-import { AxiosError } from "axios";
-import { makeRequest } from '../../../../axios';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-import { UserContext } from '@/context/UserContext';
-import InputAuth from '@/components/inputAuth';
-import { motion } from 'framer-motion';
-import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { createContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 
-const RegisterPage = () => {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senhaHash, setSenhaHash] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
-  const router = useRouter();
+export interface User {
+  idLavacar?: number;
+  idUsuario?: number;
+  email: string;
+  nome: string;
+  urlImagemPerfil: string;
+  tipoUsuario: string;
+  nomeEstabelecimento?: string;
+}
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+export interface UserContextType {
+  user: User | undefined;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
+  isAdmin: boolean;
+  isLavacar: boolean;
+  logoutUser: () => void;
+}
 
-   
-    if (user?.tipoUsuario !== 'super') {
-      toast.error("Você não tem permissão para criar novos usuários.");
-      return;
-    }
+export interface ContextProps {
+  children: React.ReactNode;
+}
 
-    if (!nome || !email || !senhaHash || !confirmarSenha) {
-      toast.error("Preencha todos os campos!");
-      return;
-    }
+const initialValue: UserContextType = {
+  user: undefined,
+  setUser: () => {}, 
+  isAdmin: false,
+  isLavacar: false,
+  logoutUser: () => {},
+};
 
-    if (senhaHash.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
+export const UserContext = createContext<UserContextType>(initialValue);
 
-    if (senhaHash !== confirmarSenha) {
-      toast.error("As senhas não coincidem.");
-      return;
-    }
+export const UserContextProvider = ({ children }: ContextProps) => {
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLavacar, setIsLavacar] = useState(false);
 
-    setLoading(true);
-    try {
-      await makeRequest.post('/auth/register', { nome, email, senhaHash });
+  useEffect(() => {
+    const loadUser = () => {
+      try {
+        const userJSON = sessionStorage.getItem("perfil:user");
 
-      toast.success("Usuário criado com sucesso!");
-      setTimeout(() => router.push('/login'), 3000);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || "Erro ao registrar usuário");
-      } else {
-        toast.error("Erro inesperado ao registrar usuário");
+        if (userJSON) {
+          const parsedUser: User = JSON.parse(userJSON);
+          setUser(parsedUser);
+          setIsAdmin(parsedUser.tipoUsuario === "admin");
+          setIsLavacar(!!parsedUser.idLavacar);
+        } else {
+          setUser(undefined);
+          setIsAdmin(false);
+          setIsLavacar(false);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar usuário do sessionStorage:", error);
+        setUser(undefined);
       }
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    loadUser();
+
+    // Adicionando um evento para escutar mudanças no sessionStorage
+    window.addEventListener("perfilAtualizado", loadUser);
+
+    return () => window.removeEventListener("perfilAtualizado", loadUser);
+  }, []);
+
+  const logoutUser = () => {
+    sessionStorage.removeItem("perfil:user");
+    setUser(undefined);
+    setIsAdmin(false);
+    setIsLavacar(false);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-transparent p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-4xl bg-white-100 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl flex"
-      >
-        {/* Seção de boas-vindas */}
-        <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-gradient-to-r from-gray-900 to-black p-8 text-white rounded-l-2xl">
-          <h2 className="text-3xl font-bold">Crie uma Conta</h2>
-          <p className="mt-2 text-sm text-center">Bem-vindo à BC Gestão de Serviços.</p>
-          <div className="flex space-x-4 mt-4">
-            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaFacebook /></a>
-            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaInstagram /></a>
-            <a href="#" className="text-white text-2xl hover:text-gray-300"><FaTwitter /></a>
-          </div>
-        </div>
-
-        {/* Seção do formulário */}
-        <div className="flex-1 p-8">
-          <h2 className="text-3xl font-semibold text-center text-white">Cadastro de Usuário</h2>
-
-          {/* 🚨 Aviso se o usuário não for super */}
-          {user?.tipoUsuario !== 'super' && (
-            <p className="text-center text-red-500 font-bold my-2">
-              Você não tem permissão para criar usuários.
-            </p>
-          )}
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4 }}
-            className="mt-6"
-          >
-            <InputAuth placeholder="Digite seu nome" label="Nome" newState={setNome} />
-            <InputAuth placeholder="Digite seu email" label="E-mail" newState={setEmail} />
-            <InputAuth placeholder="Digite sua senha" label="Senha" newState={setSenhaHash} Ispassword />
-            <InputAuth placeholder="Confirme sua senha" label="Confirmar Senha" newState={setConfirmarSenha} Ispassword />
-
-            {/* Botão de Cadastro */}
-            <button
-              onClick={(e) => handleRegister(e)}
-              className={`w-full py-3 mt-3 text-white rounded-lg transition-all ${
-                user?.tipoUsuario !== "super"
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : loading
-                  ? "bg-black cursor-not-allowed"
-                  : "bg-black hover:bg-gray-700"
-              }`}
-              disabled={user?.tipoUsuario !== "super" || loading}
-            >
-              {loading ? "Criando Conta..." : "Criar Conta"}
-            </button>
-          </motion.div>
-
-          <p className="text-center text-sm font-bold text-white mt-4">
-            Já tem uma conta? {" "}
-            <Link href="/login" className="text-gray-500 hover:underline">
-              Faça login
-            </Link>
-          </p>
-        </div>
-      </motion.div>
-    </div>
+    <UserContext.Provider value={{ user, setUser, isAdmin, isLavacar, logoutUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
-
-export default RegisterPage;

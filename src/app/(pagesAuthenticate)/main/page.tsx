@@ -2,9 +2,8 @@
 
 function Main() {
     return(
-        <main className='sm:ml-40  relative'>
-            
-        </main> 
+        <main className='sm:ml-40  relative'></main> 
+        
     )
 }
 

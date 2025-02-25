@@ -26,7 +26,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
     }
   }, [estabelecimentoEditado]);
 
-  // 🔥 Formata o CNPJ enquanto digita
+ 
   const formatarCNPJ = (value: string) => {
     value = value.replace(/\D/g, "");
     return value.length === 14
@@ -34,7 +34,6 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
       : value;
   };
 
-  // 🔥 Formata o telefone enquanto digita
   const formatarTelefone = (value: string) => {
     value = value.replace(/\D/g, "");
     return value.length === 11
@@ -68,7 +67,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white w-full max-w-2xl mx-4 rounded-lg shadow-lg relative">
-        {/* Botão Fechar */}
+    
         <button
           onClick={aoFechar}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition duration-150"
@@ -82,7 +81,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
           </h2>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Nome */}
+           
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
               <input
@@ -96,7 +95,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               />
             </div>
 
-            {/* Endereço */}
+            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
               <input
@@ -110,7 +109,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               />
             </div>
 
-            {/* Telefone */}
+           
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
               <input
@@ -125,7 +124,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               />
             </div>
 
-            {/* Email */}
+            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
@@ -139,7 +138,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               />
             </div>
 
-            {/* CNPJ */}
+            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
               <input
@@ -154,7 +153,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               />
             </div>
 
-            {/* Senha (apenas para criação) */}
+            
             {!estabelecimentoEditado && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
@@ -170,7 +169,6 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               </div>
             )}
 
-            {/* Botões de Ação */}
             <div className="md:col-span-2 flex justify-end space-x-4 mt-4">
               <button
                 type="button"

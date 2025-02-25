@@ -132,7 +132,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
     <h2 className="text-2xl font-bold mb-6">{cartaoEditado ? 'Editar Cartão' : 'Adicionar Cartão'}</h2>
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-      {/* Número do Cartão */}
+      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Número do Cartão</label>
         <input
@@ -145,7 +145,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
         />
       </div>
 
-      {/* Tipo de Cartão */}
+      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Cartão</label>
         <select
@@ -160,7 +160,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
         </select>
       </div>
 
-      {/* Saldo */}
+      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Saldo</label>
         <input
@@ -173,7 +173,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
         />
       </div>
 
-      {/* Cliente */}
+      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
         <select
@@ -220,6 +220,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
               type="password"
               name="senha"
               value={senha}
+              placeholder='exemplo: Teste@123'
               onChange={handleSenhaChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               required

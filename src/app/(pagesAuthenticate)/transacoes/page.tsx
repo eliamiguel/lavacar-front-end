@@ -4,8 +4,11 @@ import Transacoes from "@/components/trasansoes";
 
 
 function TransacoesPage() {
+    
     return(
-    <Transacoes/>
+        <Transacoes/>
+
     )
 }
+
 export default TransacoesPage;

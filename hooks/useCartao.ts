@@ -17,7 +17,7 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
     queryKey: ["cartao", numeroCartao, idLavacarLogado],
     queryFn: async () => {
       if (!numeroCartao || numeroCartao.trim() === "" || numeroCartao === "0" || !idLavacarLogado) {
-        return { sucesso: false, mensagem: "Número do cartão inválido." }; // Retorno seguro
+        return { sucesso: false, mensagem: "Número do cartão inválido." }; 
       }
 
       const res = await makeRequest.get(`/cartao/verificar?numeroCartao=${numeroCartao}&idLavacarLogado=${idLavacarLogado}`);
@@ -29,8 +29,6 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
 
   return { data, isLoading, isError, error };
 };
-
-
 
 
 export const usePagarCartao = () => {
@@ -189,6 +187,7 @@ export const useCartoes = () => {
       onSuccess: (data) => {
         if (data.sucesso) {
           toast.success(data.mensagem || "Cartão Excluido com sucesso!");
+          console.log(data.mensagem);
         } else {
           toast.error(data.mensagem || "Houve um problema ao excluir cartão.");
         }

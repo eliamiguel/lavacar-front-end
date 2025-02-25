@@ -5,6 +5,8 @@ import { PerfilUser } from "../../../interface";
 import { useEditarPerfilcredenciado } from "../../../hooks/usePerfil";
 import { toast } from "react-toastify";
 import { UserContext } from "@/context/UserContext";
+import { useUploadImagemPerfil } from "../../../hooks/useUpload";
+
 
 const PerfilCredenciado = () => {
   const { setUser } = useContext(UserContext);
@@ -15,8 +17,10 @@ const PerfilCredenciado = () => {
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
   const [urlImagemPerfil, setUrlImagemPerfil] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const mutate = useEditarPerfilcredenciado();
+  const editarPerfil = useEditarPerfilcredenciado();
+  const uploadImagem = useUploadImagemPerfil();
 
   useEffect(() => {
     const storedLavacar = sessionStorage.getItem("perfil:user");
@@ -32,31 +36,51 @@ const PerfilCredenciado = () => {
     }
   }, []);
 
+  
   const handleSave = async () => {
     if (!lavacar?.idLavacar) {
       toast.error("Erro: Credenciado inválido.");
       return;
     }
 
-    await mutate.mutateAsync({
+    
+    let finalUrlImagem = urlImagemPerfil;
+
+    if (selectedFile) {
+        const response = await uploadImagem.mutateAsync(selectedFile);
+        finalUrlImagem = response.imageUrl; 
+
+        return;
+      
+    }
+
+    await editarPerfil.mutateAsync({
       idLavacar: lavacar.idLavacar,
       nome,
       email,
       cnpj,
       telefone,
       endereco,
-      urlImagemPerfil,
+      urlImagemPerfil: finalUrlImagem,
     });
 
-    const updatedLavacar = { ...lavacar, nome, email, cnpj, telefone, endereco, urlImagemPerfil };
-
+    const updatedLavacar = { ...lavacar, nome, email, cnpj, telefone, endereco, urlImagemPerfil: finalUrlImagem };
     sessionStorage.setItem("perfil:user", JSON.stringify(updatedLavacar));
     setUser(updatedLavacar);
   };
 
+  
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setUrlImagemPerfil(URL.createObjectURL(file)); 
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-20 p-8 bg-white shadow-lg rounded-xl flex items-center">
-      {/* Lado esquerdo - Informações do Estabelecimento */}
+    
       <div className="w-1/3 flex flex-col items-center text-center border-r border-gray-300 pr-6">
         <Image
           className="rounded-full border-4 border-gray-300 shadow-lg"
@@ -71,7 +95,7 @@ const PerfilCredenciado = () => {
         <p className="text-gray-500 text-md">{telefone ? `Telefone: ${telefone}` : "Telefone não informado"}</p>
       </div>
 
-      {/* Lado direito - Formulário de edição */}
+    
       <div className="w-2/3 pl-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Perfil</h2>
         <div className="space-y-4">
@@ -129,11 +153,22 @@ const PerfilCredenciado = () => {
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          
+          <div>
+            <label className="text-gray-700 font-semibold block mb-1">Enviar Imagem</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded-lg"
+            />
+          </div>
         </div>
 
         <button
           onClick={handleSave}
-          className="w-full bg-black text-white p-3 rounded-lg mt-6 font-bold transition-all"
+          className="w-full bg-black text-white p-3 rounded-lg mt-6 font-bold transition-all hover:bg-gray-900"
         >
           Salvar Alterações
         </button>

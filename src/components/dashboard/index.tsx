@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { useBuscarCartao, usePagarCartao } from "../../../hooks/useCartao";
 import { CreditCard, Lock, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
+import { XCircle } from "lucide-react";
 
 function Dashboard() {
   const [cardNumber, setCardNumber] = useState<string>("");
@@ -14,6 +15,7 @@ function Dashboard() {
   const [showCardNumber, setShowCardNumber] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { isLavacar, user } = useContext(UserContext); 
+  
 
   useEffect(() => {
     setSidebarOpen(true);
@@ -56,7 +58,16 @@ function Dashboard() {
   </h1>
 
   <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200 relative z-10">
-    <h2 className="text-lg font-semibold text-gray-700 mb-3">Verificar Cartão</h2>
+    <div className="flex justify-between items-center">
+      <h2 className="text-lg font-semibold text-gray-700 mb-3">Verificar Cartão</h2>
+      <button className="bg-black text-white p-2 h-8 gap-2 rounded-md mb-2 flex items-center"
+      onClick={()=>setCardNumber("")}
+      >
+        <XCircle size={15}/>
+          Limpar
+      </button>
+    </div>
+    
     <div className="relative">
       <CreditCard className="absolute left-3 top-3 text-gray-400" size={20} />
       <input
@@ -74,6 +85,7 @@ function Dashboard() {
         {showCardNumber ? <EyeOff size={20} /> : <Eye size={20} />}
       </button>
     </div>
+    
   </div>
   <div
     className="absolute  inset-x-0 h-[50vh] bg-no-repeat border-spacing-x-64 opacity-20 pointer-events-none"

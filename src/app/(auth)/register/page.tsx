@@ -69,7 +69,7 @@ const RegisterPage = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-4xl bg-white-100 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl flex"
       >
-        {/* Seção de boas-vindas */}
+        
         <div className="hidden md:flex flex-1 flex-col items-center justify-center bg-gradient-to-r from-gray-900 to-black p-8 text-white rounded-l-2xl">
           <h2 className="text-3xl font-bold">Crie uma Conta</h2>
           <p className="mt-2 text-sm text-center">Bem-vindo à BC Gestão de Serviços.</p>
@@ -78,11 +78,11 @@ const RegisterPage = () => {
           </div>
         </div>
 
-        {/* Seção do formulário */}
+        
         <div className="flex-1 p-8">
           <h2 className="text-3xl font-semibold text-center text-white">Cadastro de Usuário</h2>
 
-          {/* 🚨 Aviso se o usuário não for super */}
+          
           {user?.tipoUsuario !== 'super' && (
             <p className="text-center text-red-500 font-bold my-2">
               Você não tem permissão para criar usuários.
@@ -101,7 +101,6 @@ const RegisterPage = () => {
             <InputAuth placeholder="Digite sua senha" label="Senha" newState={setSenhaHash} Ispassword />
             <InputAuth placeholder="Confirme sua senha" label="Confirmar Senha" newState={setConfirmarSenha} Ispassword />
 
-            {/* Botão de Cadastro */}
             <button
               onClick={(e) => handleRegister(e)}
               className={`w-full py-3 mt-3 text-white rounded-lg transition-all ${

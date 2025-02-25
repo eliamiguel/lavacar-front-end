@@ -3,8 +3,10 @@
 import PerfilUsuario from "@/components/perfil-usuario";
 
 function PerfilPage() {
+    
     return(
-    <PerfilUsuario/>
+        <PerfilUsuario/>
+
     )
 }
 export default PerfilPage;

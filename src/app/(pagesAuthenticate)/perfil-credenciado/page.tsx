@@ -5,7 +5,9 @@ import PerfilCredenciado from "@/components/perfil-credenciado";
 
 function PerfilLavacarPage () {
     return(
-    <PerfilCredenciado/>
+        <PerfilCredenciado/>
+
     )
 }
+
 export default PerfilLavacarPage ;

@@ -40,11 +40,10 @@ const Transacoes = () => {
 
   return (
     <div className="p-6 space-y-6 sm:ml-40 mt-20">
-      {/* Cabeçalho */}
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
 
-        {/* Botão Recarregar */}
         <button
           onClick={handleRecarregar}
           className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
@@ -53,7 +52,7 @@ const Transacoes = () => {
         </button>
       </div>
 
-      {/* Barra de Busca */}
+      
       <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
         <input
           type="text"
@@ -64,7 +63,7 @@ const Transacoes = () => {
         />
       </div>
 
-      {/* Tabela */}
+      
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-100">

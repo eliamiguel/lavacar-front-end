@@ -91,7 +91,6 @@ const Cartoes = () => {
           className="p-2 w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />
 
-        {/* Botão Recarregar */}
         <button
           onClick={handleRecarregar}
           className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
@@ -100,7 +99,7 @@ const Cartoes = () => {
         </button>
       </div>
 
-      {/* Tabela */}
+      
       <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-100">
@@ -139,7 +138,7 @@ const Cartoes = () => {
         </tbody>
       </table>
 
-      {/* Modal */}
+      
       {mostrarModal && <CartaoForm cartaoEditado={cartaoEditado} aoFechar={() => setMostrarModal(false)} aoSalvar={handleSalvarCartao} />}
     </div>
   );
