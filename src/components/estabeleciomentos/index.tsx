@@ -75,7 +75,7 @@ const Estabelecimentos = () => {
 
   return (
     <div className="p-6 space-y-6 md:ml-40 mt-20">
-      {/* Cabeçalho com informações e botão */}
+      
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-gray-800 font-semibold">
           <span className="border-b-4 border-black pb-2">
@@ -109,7 +109,7 @@ const Estabelecimentos = () => {
         </button>
       </div>
 
-      {/* Seção de busca e recarregar */}
+     
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
@@ -126,7 +126,7 @@ const Estabelecimentos = () => {
         </button>
       </div>
 
-      {/* Tabela com rolagem horizontal em telas pequenas */}
+      
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
           <thead>

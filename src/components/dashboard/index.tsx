@@ -53,7 +53,7 @@ function Dashboard() {
   return (
     <div className={`relative p-6 transition-all duration-300 mt-20 sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
       <h1 className="flex items-center whitespace-nowrap text-xl sm:text-2xl md:text-3xl mt-4 font-bold mb-6 relative z-10">
-        <span className="text-black">Painel do Estabelecimento</span>
+        <span className="text-black">Painel Credenciado</span>
         {isLavacar && (
           <span className="text-gray-800 ml-3">{user?.nome}</span>
         )}

@@ -46,8 +46,7 @@ const PerfilCredenciado = () => {
     if (selectedFile) {
       const response = await uploadImagem.mutateAsync(selectedFile);
       finalUrlImagem = response.imageUrl;
-      // Se deseja atualizar imediatamente a imagem após o upload,
-      // remova o "return" abaixo.
+      
       return;
     }
 
@@ -76,7 +75,7 @@ const PerfilCredenciado = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-20 p-8 bg-white shadow-lg rounded-xl flex flex-col md:flex-row items-center">
-      {/* Seção do perfil (foto e informações) */}
+      
       <div className="w-full md:w-1/3 flex flex-col items-center text-center md:border-r md:border-gray-300 md:pr-6">
         <Image
           className="rounded-full border-4 border-gray-300 shadow-lg object-cover"
@@ -91,7 +90,6 @@ const PerfilCredenciado = () => {
         <p className="text-gray-500 text-md">{telefone ? `Telefone: ${telefone}` : "Telefone não informado"}</p>
       </div>
 
-      {/* Seção de edição */}
       <div className="w-full md:w-2/3 md:pl-6 mt-8 md:mt-0">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Perfil</h2>
         <div className="space-y-4">
