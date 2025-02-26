@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCartoes, useCriarCartao, useEditarCartao, useExcluirCartao } from "../../../hooks/useCartao";
 import CartaoForm from "../cartaoForm";
 import { CartaoInterface } from "../../../interface";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const Cartoes = () => {
   const queryCartoes = useCartoes();
@@ -20,7 +21,6 @@ const Cartoes = () => {
     cartao.tipoCartao.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
- 
   const handleRecarregar = () => {
     queryCartoes.refetch();
   };
@@ -68,10 +68,9 @@ const Cartoes = () => {
   }
 
   return (
-    <div className="p-6 space-y-6 sm:ml-40 mt-20">
-     
+    <div className="p-6 space-y-6 md:ml-40 mt-20">
+      
       <div className="flex justify-between items-center mb-6">
-       
         <button
           onClick={() => { setCartaoEditado(undefined); setMostrarModal(true); }}
           className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-700"
@@ -81,16 +80,14 @@ const Cartoes = () => {
       </div>
 
       
-      <div className="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
-        
+      <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
           placeholder="Busca rápida"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />
-
         <button
           onClick={handleRecarregar}
           className="bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center"
@@ -99,44 +96,48 @@ const Cartoes = () => {
         </button>
       </div>
 
-      
-      <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 border">Número do Cartão</th>
-            <th className="px-4 py-2 border">Saldo</th>
-            <th className="px-4 py-2 border">Cliente</th>
-            <th className="px-4 py-2 border">Carro</th>
-            <th className="px-4 py-2 border">Tipo Cartão</th>
-            <th className="px-4 py-2 border">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCartoes?.map((cartao: CartaoInterface) => (
-            <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
-              <td className="px-4 py-2 text-center border">{cartao.numeroCartao}</td>
-              <td className="px-4 py-2 text-center border">R$ {cartao.saldo.toFixed(2)}</td>
-              <td className="px-4 py-2 text-center border">{cartao.idCliente}</td>
-              <td className="px-4 py-2 text-center border">{cartao.idCarro}</td>
-              <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
-              <td className="px-4 py-2 text-center border flex justify-center gap-2">
-                <button
-                  onClick={() => { setCartaoEditado(cartao); setMostrarModal(true); }}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleExcluirCartao(cartao.idCartao!)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                >
-                  Excluir
-                </button>
-              </td>
+     
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-2 border">Número do Cartão</th>
+              <th className="px-4 py-2 border">Saldo</th>
+              <th className="px-4 py-2 border">Cliente</th>
+              <th className="px-4 py-2 border">Carro</th>
+              <th className="px-4 py-2 border">Tipo Cartão</th>
+              <th className="px-4 py-2 border">Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredCartoes?.map((cartao: CartaoInterface) => (
+              <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-2 text-center border">{cartao.numeroCartao}</td>
+                <td className="px-4 py-2 text-center border">R$ {cartao.saldo.toFixed(2)}</td>
+                <td className="px-4 py-2 text-center border">{cartao.idCliente}</td>
+                <td className="px-4 py-2 text-center border">{cartao.idCarro}</td>
+                <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
+                <td className="px-4 py-2 text-center border flex justify-center gap-2">
+                  <button
+                    onClick={() => { setCartaoEditado(cartao); setMostrarModal(true); }}
+                    className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                  >
+                    <FaEdit className="mr-2" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleExcluirCartao(cartao.idCartao!)}
+                    className="bg-red-500 flex items-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  >
+                    <FaTrash className="mr-2" />
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       
       {mostrarModal && <CartaoForm cartaoEditado={cartaoEditado} aoFechar={() => setMostrarModal(false)} aoSalvar={handleSalvarCartao} />}

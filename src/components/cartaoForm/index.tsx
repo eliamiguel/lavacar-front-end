@@ -127,7 +127,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
   };
 
   return (
-    <div className="fixed inset-0 mt-20 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed p-3 inset-0 mt-20 flex items-center justify-center bg-black bg-opacity-50 z-50">
   <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
     <h2 className="text-2xl font-bold mb-6">{cartaoEditado ? 'Editar Cartão' : 'Adicionar Cartão'}</h2>
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">

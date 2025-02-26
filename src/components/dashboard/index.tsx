@@ -52,10 +52,14 @@ function Dashboard() {
 
   return (
     <div className={`relative p-6 transition-all duration-300 mt-20 sm:${sidebarOpen ? "ml-40" : "ml-16"}`}>
-  <h1 className="text-2xl mt-4 font-bold mb-6 relative z-10">
-    <span className="text-black">Painel do Estabelecimento</span> 
-    {isLavacar && (<span className="text-black-800">{user?.nome}</span>)}
-  </h1>
+      <h1 className="flex items-center whitespace-nowrap text-xl sm:text-2xl md:text-3xl mt-4 font-bold mb-6 relative z-10">
+        <span className="text-black">Painel do Estabelecimento</span>
+        {isLavacar && (
+          <span className="text-gray-800 ml-3">{user?.nome}</span>
+        )}
+      </h1>
+
+
 
   <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200 relative z-10">
     <div className="flex justify-between items-center">
