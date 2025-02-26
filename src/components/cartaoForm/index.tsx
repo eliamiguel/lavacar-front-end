@@ -43,7 +43,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
  
   useEffect(() => {
     if (cartaoEditado) {
-      console.log("Cartão editado recebido:", cartaoEditado); // Debug
+    
   
       setCartao((prevCartao) => ({
         ...prevCartao,
