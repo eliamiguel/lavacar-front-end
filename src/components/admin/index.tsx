@@ -112,7 +112,7 @@ export default function Dashboard() {
           title: "Credenciados",
           icon: <Store className="text-purple-500 w-6 h-6" />,
           total: dashboardData.totalEstabelecimentos,
-          link: "/estabelecimentos",
+          link: "/credenciados",
         },
         {
           title: "Transações",
