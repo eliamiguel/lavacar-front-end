@@ -21,6 +21,7 @@ const Cartoes = () => {
     cartao.tipoCartao.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  
   const handleRecarregar = () => {
     queryCartoes.refetch();
   };
@@ -114,8 +115,8 @@ const Cartoes = () => {
               <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2 text-center border">{cartao.numeroCartao}</td>
                 <td className="px-4 py-2 text-center border">R$ {cartao.saldo.toFixed(2)}</td>
-                <td className="px-4 py-2 text-center border">{cartao.idCliente}</td>
-                <td className="px-4 py-2 text-center border">{cartao.idCarro}</td>
+                <td className="px-4 py-2 text-center border">{cartao.cliente?.nome}</td>
+                <td className="px-4 py-2 text-center border">{cartao.carro?.modelo}</td>
                 <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
                 <td className="px-4 py-2 text-center border flex justify-center gap-2">
                   <button

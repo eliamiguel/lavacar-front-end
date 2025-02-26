@@ -81,6 +81,24 @@ export interface IAuthInput{
   carroModelo: string;
   carroPlaca: string;
   
+  cliente?: {
+    idCliente: number;
+    nome: string;
+    email: string;
+    telefone: string;
+    endereco: string;
+    cnpj: string;
+  };
+
+  
+  carro?: {
+    idCarro: number;
+    modelo: string;
+    placa: string;
+    ano: number;
+    cor: string;
+  };
+  
   }
   export interface TransacaoInterface {
     idTransacao: number;
