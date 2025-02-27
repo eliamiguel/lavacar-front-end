@@ -143,16 +143,7 @@ export interface IAuthInput{
     totalTransacoes: number;
     transacoesRecentes: TransacaoRecente[];
   }
-  export interface Lavacar {
-    idLavacar: number;
-    nome: string;
-    endereco: string;
-    telefone: string;
-    email: string;
-    razaoSocial?:string;
-    cidade?:string;
-    atividadePrincipal?:string;
-}
+ 
 
 export interface VincularCartaoParams {
   idCartao: number;
@@ -310,3 +301,4 @@ export interface Lavacar {
   cartoesPermitidos: Cartao[];
   transacoes: Transacao[];
 }
+

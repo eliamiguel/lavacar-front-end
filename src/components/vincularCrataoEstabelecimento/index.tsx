@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEstabelecimentos } from "../../../hooks/useEstabelecimentos";
-import { Lavacar } from "../../../interface";
+import { EstabelecimentoInterface } from "../../../interface";
 import { toast } from "react-toastify";
 import { useVincularCartao } from "../../../hooks/useCartao";
 
@@ -46,7 +46,7 @@ const VincularCartaoLavacar: React.FC<Props> = ({ idCartao, idCliente }) => {
 
             {!isLoading && !isError && (lavacars ?? []).length > 0 && (
               <ul className="space-y-2">
-                {(lavacars ?? []).map((lavacar: Lavacar) => (
+                {(lavacars ?? []).map((lavacar: EstabelecimentoInterface) => (
                   <li
                     key={lavacar.idLavacar}
                     className="flex justify-between items-center p-2 border rounded-md"
