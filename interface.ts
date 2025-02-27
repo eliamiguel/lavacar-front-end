@@ -43,6 +43,11 @@ export interface IAuthInput{
       ano: number;
       cor: string;
       idCliente:number;
+      marca?: string,
+      chassis?: string,
+      renavam?: string,
+      lotacao?: string,
+      desembargador?: string,
     }
     export interface EstabelecimentoInterface {
       idLavacar: number;
@@ -52,6 +57,9 @@ export interface IAuthInput{
       email: string;
       cnpj: string;
       senhaHash:string;
+      razaoSocial?:string;
+      cidade?:string;
+      atividadePrincipal?:string;
       clientesVinculados?: { idCliente: number; nome: string }[];
     }
   export interface InterfaceLavacar {
@@ -61,7 +69,10 @@ export interface IAuthInput{
     endereco: string;
     telefone: string;
     email: string;
-    idUsuario:number
+    idUsuario:number,
+    razaoSocial?:string;
+    cidade?:string;
+    atividadePrincipal?:string;
   }
   export interface CartaoInterface{
     idCartao: number,
@@ -80,7 +91,7 @@ export interface IAuthInput{
     clienteNome: string;
   carroModelo: string;
   carroPlaca: string;
-  
+
   cliente?: {
     idCliente: number;
     nome: string;
@@ -138,6 +149,9 @@ export interface IAuthInput{
     endereco: string;
     telefone: string;
     email: string;
+    razaoSocial?:string;
+    cidade?:string;
+    atividadePrincipal?:string;
 }
 
 export interface VincularCartaoParams {
@@ -154,6 +168,10 @@ export interface LavacarInterface {
   telefone: string;
   email: string;
   cnpj: string;
+  atividadePrincipal:string,
+  ramoAtuacao:string,
+  razaoSocial:string,
+  cidade:string,
   cartoesPermitidos: {
     idCartao: number;
     numeroCartao: string;
@@ -172,6 +190,8 @@ export interface IntefacePermitidos {
   saldo: number;
   modelo?: string;
   placa?: string;
+  tipoCartao?: string;
+  limiteSaldo?:number
 }
 
 export  interface IterfacetransacoesSeuEstabelecimento {
@@ -187,6 +207,10 @@ export interface PerfilUser {
   nome: string;
   email: string;
   senhaHash?: string; 
+  atividadePrincipal?: string,
+  ramoAtuacao?: string,
+  razaoSocial?: string,
+  cidade?: string,
   urlImagemPerfil?: string;
   tipoUsuario: "admin" | "funcionario" | "super";
   telefone?: string;
@@ -212,6 +236,10 @@ export interface PerfilLavacar {
   telefone?: string;
   endereco?: string;
   cnpj: string;
+  atividadePrincipal?: string,
+  ramoAtuacao?: string,
+  razaoSocial?: string,
+  cidade?: string,
   urlImagemPerfil?: string;
 }
 
@@ -231,4 +259,54 @@ export interface CredenciadoPerfilPayload {
   endereco?: string;
   cnpj: string;
   urlImagemPerfil: string;
+}
+
+
+export interface Cliente {
+  idCliente: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  endereco: string;
+  cnpj: string;
+}
+
+export interface Carro {
+  idCarro: number;
+  modelo: string;
+  placa: string;
+  ano: number;
+  cor: string;
+}
+
+export interface Cartao {
+  idCartao: number;
+  saldo: number;
+  tipoCartao: string;
+  limiteSaldo?: number;
+  placa?: string;
+  modelo?: string;
+}
+
+export interface Transacao {
+  idTransacao: number;
+  idCartao?: number;
+  idLavacar: number;
+  valorDesconto: number;
+  dataTransacao: string;
+  status: string;
+  cartao?: { cliente?: Cliente };
+}
+
+export interface Lavacar {
+  idLavacar: number;
+  nome: string;
+  endereco: string;
+  telefone: string;
+  email: string;
+  cnpj: string;
+  urlImagemPerfil?: string;
+  clientes: Cliente[];
+  cartoesPermitidos: Cartao[];
+  transacoes: Transacao[];
 }

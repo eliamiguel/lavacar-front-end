@@ -8,6 +8,10 @@ export interface User {
   telefone?:string;
   cnpj?:string;
   endereco?:string;
+  atividadePrincipal?:string;
+  ramoAtuacao?:string;
+  razaoSocial?:string;
+  cidade?:string;
   urlImagemPerfil: string;
   tipoUsuario: string;
   nomeEstabelecimento?: string;

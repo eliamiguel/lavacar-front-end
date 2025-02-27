@@ -136,6 +136,9 @@ const Estabelecimentos = () => {
               <th className="px-4 py-2 border">Telefone</th>
               <th className="px-4 py-2 border">Email</th>
               <th className="px-4 py-2 border">CNPJ</th>
+              <th className="px-4 py-2 border">Razão Social</th>
+              <th className="px-4 py-2 border">Atividade Principal</th>
+              <th className="px-4 py-2 border">Cidade</th>
               <th className="px-4 py-2 border">Status</th>
               <th className="px-4 py-2 border">Ações</th>
             </tr>
@@ -150,6 +153,10 @@ const Estabelecimentos = () => {
                   <td className="px-4 py-2 border">{estabelecimento.telefone}</td>
                   <td className="px-4 py-2 border">{estabelecimento.email}</td>
                   <td className="px-4 py-2 border">{estabelecimento.cnpj}</td>
+                  <td className="px-4 py-2 border">{estabelecimento.razaoSocial}</td>
+                  <td className="px-4 py-2 border">{estabelecimento.atividadePrincipal}</td>
+                  <td className="px-4 py-2 border">{estabelecimento.cidade}</td>
+                  
                   <td className="px-4 py-2 border text-center">
                     {jaVinculado ? (
                       <div className="flex items-center justify-center text-green-600">

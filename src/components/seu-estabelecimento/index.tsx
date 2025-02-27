@@ -12,7 +12,7 @@ export default function SeuEstabelecimentoDashboard() {
  
   if (isLoading) return <p className="text-center text-gray-600 mt-10 text-lg">Carregando informações...</p>;
   if (!lavacar) return <p className="text-center text-red-500 mt-10 text-lg">Nenhuma informação encontrada.</p>;
-
+   
   return (
     <div className="min-h-screen mt-20 sm:ml-40 bg-gray-100 p-8">
       
@@ -20,15 +20,19 @@ export default function SeuEstabelecimentoDashboard() {
 
       
       <div className="bg-white p-6 rounded-xl shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-lg text-gray-800 space-y-2">
+      <div className="text-lg text-gray-800 space-y-2">
+          <p><strong className="text-gray-700">Atividade Principal:</strong> {lavacar.atividadePrincipal}</p>
+          <p><strong className="text-gray-700">Ramo de Atuação:</strong> {lavacar.ramoAtuacao}</p>
+          <p><strong className="text-gray-700">Razão Social:</strong> {lavacar.razaoSocial}</p>
           <p><strong className="text-gray-700">Endereço:</strong> {lavacar.endereco}</p>
+          <p><strong className="text-gray-700">Cidade:</strong> {lavacar.cidade}</p>
           <p><strong className="text-gray-700">Telefone:</strong> {lavacar.telefone}</p>
           <p><strong className="text-gray-700">E-mail:</strong> {lavacar.email}</p>
           <p><strong className="text-gray-700">CNPJ:</strong> {lavacar.cnpj}</p>
         </div>
       </div>
 
-      
+   
       <div className="mt-10">
         <h2 className="text-3xl font-semibold text-gray-900 mb-4">Cartões Permitidos</h2>
         {lavacar.cartoesPermitidos.length === 0 ? (
@@ -37,15 +41,17 @@ export default function SeuEstabelecimentoDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {lavacar.cartoesPermitidos.map((cartao: IntefacePermitidos) => (
               <div key={cartao.idCartao} className="p-6 bg-blue-100 rounded-lg shadow-md border-l-4 border-blue-500">
-                <p className="text-lg text-gray-900 font-semibold">Cartão: {"**********"}</p>
-                <p className="text-xl text-green-700 font-bold">Saldo: R$ {cartao.saldo.toFixed(2)}</p>
-                <p className="text-lg text-gray-700">
-                  <strong>Placa:</strong> <span className={`font-bold text-gray-800`}>
+                <p className="text-md text-gray-900 font-semibold">Cartão: {"**********"}</p>
+              
+                <p className="text-md text-green-700 font-bold">Saldo: R$ {cartao.saldo.toFixed(2)}</p>
+                <p className="text-md text-gray-700"><strong>Tipo:</strong> {cartao.tipoCartao}</p>
+                <p className="text-md text-gray-700">
+                  <strong>Placa:</strong> <span className={` text-md text-gray-800`}>
                     {cartao.placa}
                   </span>
                 </p>
-                <p className="text-lg text-gray-700">
-                  <strong>Modelo:</strong> <span className={`font-bold text-gray-800 `}>
+                <p className="text-md text-gray-700">
+                  <strong>Modelo:</strong> <span className={` text-gray-800 text-md`}>
                     {cartao.modelo}
                   </span>
                 </p>

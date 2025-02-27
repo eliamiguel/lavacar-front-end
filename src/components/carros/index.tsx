@@ -29,7 +29,21 @@ const Carros = () => {
 
   const handleSalvarCarro = (carro: CarroInterface) => {
     if (carro.idCarro) {
-      mutateEditar.mutate({ ...carro });
+      mutateEditar.mutate(
+        { 
+          idCliente: carro.idCliente,
+          ano:carro.ano,
+          cor:carro.cor,
+          idCarro:carro.idCarro,
+          modelo:carro.modelo,
+          placa:carro.placa,
+          chassis:carro.chassis,
+          desembargador:carro.desembargador,
+          lotacao:carro.lotacao,
+          marca:carro.marca,
+          renavam:carro.renavam
+        }
+      );
     } else {
       mutateCriar.mutate({ ...carro });
     }
@@ -94,26 +108,34 @@ const Carros = () => {
         <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
           <thead>
             <tr className="bg-gray-100">
+            <th className="px-4 py-2 border">Marca</th>
               <th className="px-4 py-2 border">Modelo</th>
               <th className="px-4 py-2 border">Placa</th>
-              <th className="px-4 py-2 border">Ano</th>
+              <th className="px-4 py-2 border">Chassis</th>
+              <th className="px-4 py-2 border">Renavam</th>
               <th className="px-4 py-2 border">Cor</th>
+              <th className="px-4 py-2 border">Lotação</th>
+              <th className="px-4 py-2 border">Desembargador</th>
               <th className="px-4 py-2 border">Ações</th>
             </tr>
           </thead>
           <tbody>
             {filteredCarros?.map((carro: CarroInterface) => (
               <tr key={carro.idCarro} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-2 text-center border">{carro.marca}</td>
                 <td className="px-4 py-2 text-center border">{carro.modelo}</td>
                 <td className="px-4 py-2 text-center border">{carro.placa}</td>
-                <td className="px-4 py-2 text-center border">{carro.ano}</td>
+                <td className="px-4 py-2 text-center border">{carro.chassis}</td>
+                <td className="px-4 py-2 text-center border">{carro.renavam}</td>
                 <td className="px-4 py-2 text-center border">{carro.cor}</td>
+                <td className="px-4 py-2 text-center border">{carro.lotacao}</td>
+                <td className="px-4 py-2 text-center border">{carro.desembargador}</td>
                 <td className="px-4 py-2 text-center border flex justify-center gap-2">
                   <button
                     onClick={() => { setCarroEditando(carro); setMostrarFormulario(true); }}
                     className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                  > 
-                   <FaEdit className="mr-2" />
+                  >
+                    <FaEdit className="mr-2" />
                     Editar
                   </button>
                   <button

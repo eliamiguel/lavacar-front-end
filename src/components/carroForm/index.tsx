@@ -16,8 +16,13 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
     carroEditado || {
       idCarro: 0,
       idCliente: 0,
+      marca: "",
       modelo: "",
       placa: "",
+      chassis: "",
+      renavam: "",
+      lotacao: "",
+      desembargador: "",
       ano: new Date().getFullYear(),
       cor: "",
     }
@@ -31,11 +36,13 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+  
     setCarro((prev: CarroInterface) => ({
       ...prev,
-      [name]: name === "ano" || name === "idCliente" ? Number(value) : value,
+      [name]: ["idCliente", "ano"].includes(name) ? Number(value) || 0 : value,
     }));
   };
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +52,7 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity">
-      <div className="bg-white w-full max-w-2xl mx-4 rounded-lg shadow-lg relative">
+      <div className="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-lg relative">
         <button
           onClick={aoFechar}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition duration-150"
@@ -54,8 +61,8 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
         </button>
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-6">{carroEditado ? "Editar Carro" : "Adicionar Carro"}</h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Cliente */}
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
               <select
@@ -76,6 +83,31 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
 
            
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+              <input
+                type="text"
+                name="marca"
+                value={carro.marca}
+                onChange={handleChange}
+                placeholder="Marca do Carro"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cor</label>
+              <input
+                type="text"
+                name="cor"
+                value={carro.cor}
+                onChange={handleChange}
+                placeholder="Cor do carro"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
               <input
                 type="text"
@@ -88,7 +120,6 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Placa</label>
               <input
@@ -102,7 +133,59 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
               />
             </div>
 
-            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Chassis</label>
+              <input
+                type="text"
+                name="chassis"
+                value={carro.chassis}
+                onChange={handleChange}
+                placeholder="Número do Chassis"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Renavam</label>
+              <input
+                type="text"
+                name="renavam"
+                value={carro.renavam}
+                onChange={handleChange}
+                placeholder="Número do Renavam"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Lotação</label>
+              <input
+                type="text"
+                name="lotacao"
+                value={carro.lotacao}
+                onChange={handleChange}
+                placeholder="Lotação"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Desembargador</label>
+              <input
+                type="text"
+                name="desembargador"
+                value={carro.desembargador}
+                onChange={handleChange}
+                placeholder="Nome do Desembargador"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ano</label>
               <input
@@ -111,20 +194,6 @@ const CarroForm: React.FC<CarroFormProps> = ({ carroEditado, aoFechar, aoSalvar 
                 value={carro.ano}
                 onChange={handleChange}
                 placeholder="Ano do Carro"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-
-            
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cor</label>
-              <input
-                type="text"
-                name="cor"
-                value={carro.cor}
-                onChange={handleChange}
-                placeholder="Cor do Carro"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />

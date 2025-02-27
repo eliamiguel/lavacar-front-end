@@ -15,6 +15,7 @@ export const useEditarPerfilUsuario = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Perfil atualizado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["perfilUsuario", data.idUsuario] });
+      
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error.response?.data?.message || "Erro ao atualizar perfil");
@@ -27,11 +28,13 @@ export const useEditarPerfilcredenciado = () => {
   
     return useMutation({
       mutationFn: async (data: PerfilLavacar) => {
+        console.log(data)
         return await makeRequest.put(`/credenciado/perfil/editar`, data).then((res) => res.data);
       },
       onSuccess: (data) => {
         toast.success(data.message || "Perfil do Credenciado atualizado!");
         queryClient.invalidateQueries({ queryKey: ["perfilLavacar", data.idLavacar] });
+        queryClient.invalidateQueries({ queryKey: ["seuEstabelecimento", data.idLavacar] });
       },
       onError: (error: AxiosError<{ message: string }>) => {
         toast.error(error.response?.data?.message || "Erro ao atualizar perfil do Credenciado");

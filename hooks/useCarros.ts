@@ -29,6 +29,11 @@ export const useCarros = () => {
         placa: string;
         ano: number;
         cor: string;
+        marca?: string,
+        chassis?: string,
+        renavam?: string,
+        lotacao?: string,
+        desembargador?: string,
       }) => {
         return await makeRequest.post(`/carro/criar-Carro`, data).then((res) => {
           return res.data;
@@ -41,6 +46,7 @@ export const useCarros = () => {
           queryClient.invalidateQueries({ queryKey: ["carros"] });
           queryClient.invalidateQueries({ queryKey: ["seuEstabelecimento"] });
         } else {
+          console.log(data.mensagem )
           toast.error(data.mensagem || "Erro ao criar carro.");
         }
       },
@@ -59,12 +65,18 @@ export const useCarros = () => {
     const queryClient = useQueryClient();
   
     return useMutation({
-      mutationFn: async (data: {  
+      mutationFn: async (data: {
+        idCliente: number;
         idCarro: number;
         modelo: string;
         placa: string;
         ano: number;
         cor: string;
+        marca?: string,
+        chassis?: string,
+        renavam?: string,
+        lotacao?: string,
+        desembargador?: string,
       }) => {
         return await makeRequest.put(`/carros/edit/`, data)
           .then((res) => res.data);

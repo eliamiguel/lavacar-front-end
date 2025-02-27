@@ -15,6 +15,10 @@ const PerfilCredenciado = () => {
   const [cnpj, setCnpj] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
+  const [atividadePrincipal, setAtividadePrincipal] = useState("");
+  const [ramoAtuacao, setRamoAtuacao] = useState("");
+  const [razaoSocial, setRazaoSocial] = useState("");
+  const [cidade, setCidade] = useState("");
   const [urlImagemPerfil, setUrlImagemPerfil] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -31,6 +35,10 @@ const PerfilCredenciado = () => {
       setCnpj(parsedLavacar.cnpj || "");
       setTelefone(parsedLavacar.telefone || "");
       setEndereco(parsedLavacar.endereco || "");
+      setAtividadePrincipal(parsedLavacar.atividadePrincipal || "");
+      setRamoAtuacao(parsedLavacar.ramoAtuacao || "");
+      setRazaoSocial(parsedLavacar.razaoSocial || "");
+      setCidade(parsedLavacar.cidade || "");
       setUrlImagemPerfil(parsedLavacar.urlImagemPerfil || "");
     }
   }, []);
@@ -45,8 +53,7 @@ const PerfilCredenciado = () => {
 
     if (selectedFile) {
       const response = await uploadImagem.mutateAsync(selectedFile);
-      finalUrlImagem = response.imageUrl;
-      
+      finalUrlImagem = response.imageUrl; 
       return;
     }
 
@@ -57,10 +64,15 @@ const PerfilCredenciado = () => {
       cnpj,
       telefone,
       endereco,
+      atividadePrincipal: atividadePrincipal || "", 
+      ramoAtuacao: ramoAtuacao || "", 
+      razaoSocial: razaoSocial || "", 
+      cidade: cidade || "", 
       urlImagemPerfil: finalUrlImagem,
     });
 
-    const updatedLavacar = { ...lavacar, nome, email, cnpj, telefone, endereco, urlImagemPerfil: finalUrlImagem };
+    const updatedLavacar = { ...lavacar, nome, email, cnpj, telefone, endereco, 
+      urlImagemPerfil: finalUrlImagem, ramoAtuacao, cidade, atividadePrincipal, razaoSocial};
     sessionStorage.setItem("perfil:user", JSON.stringify(updatedLavacar));
     setUser(updatedLavacar);
   };
@@ -91,93 +103,150 @@ const PerfilCredenciado = () => {
       </div>
 
       <div className="w-full md:w-2/3 md:pl-6 mt-8 md:mt-0">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Perfil</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">Nome</label>
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">E-mail</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">CNPJ</label>
-            <input
-              type="text"
-              value={cnpj}
-              onChange={(e) => setCnpj(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">Telefone</label>
-            <input
-              type="text"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">Endereço</label>
-            <input
-              type="text"
-              value={endereco}
-              onChange={(e) => setEndereco(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">URL da Imagem</label>
-            <input
-              type="text"
-              value={urlImagemPerfil}
-              onChange={(e) => setUrlImagemPerfil(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-gray-700 font-semibold block mb-1">Enviar Imagem</label>
-            <label className="flex items-center justify-center p-4 border-2 border-dashed rounded-lg cursor-pointer hover:border-gray-500 transition duration-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-500 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h4l2-3h4l2 3h4a2 2 0 012 2v10a2 2 0 01-2 2h-4l-2 3H9l-2-3H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11a3 3 0 110-6 3 3 0 010 6z" />
-              </svg>
-              <span className="text-gray-500">Selecionar imagem</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </label>
-          </div>
+      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Editar Perfil</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Nome</label>
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
         </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-black text-white p-3 rounded-lg mt-6 font-bold transition-all hover:bg-gray-900"
-        >
-          Salvar Alterações
-        </button>
+    
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">E-mail</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">CNPJ</label>
+          <input
+            type="text"
+            value={cnpj}
+            onChange={(e) => setCnpj(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Telefone</label>
+          <input
+            type="text"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Endereço</label>
+          <input
+            type="text"
+            value={endereco}
+            onChange={(e) => setEndereco(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+    
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Atividade Principal</label>
+          <input
+            type="text"
+            value={atividadePrincipal || ""}
+            onChange={(e) => setAtividadePrincipal(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Ramo de Atuação</label>
+          <input
+            type="text"
+            value={ramoAtuacao || ""}
+            onChange={(e) => setRamoAtuacao(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Razão Social</label>
+          <input
+            type="text"
+            value={razaoSocial || ""}
+            onChange={(e) => setRazaoSocial(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Cidade</label>
+          <input
+            type="text"
+            value={cidade || ""}
+            onChange={(e) => setCidade(e.target.value)}
+            className="w-full p-3 border rounded-lg"
+          />
+        </div>
+
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">URL da Imagem</label>
+          <input
+            type="text"
+            value={urlImagemPerfil}
+            onChange={(e) => setUrlImagemPerfil(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+      
+        <div>
+          <label className="text-gray-700 font-semibold block mb-1">Enviar Imagem</label>
+          <label className="flex items-center justify-center p-4 border-2 border-dashed rounded-lg cursor-pointer hover:border-gray-500 transition duration-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-gray-500 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h4l2-3h4l2 3h4a2 2 0 012 2v10a2 2 0 01-2 2h-4l-2 3H9l-2-3H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11a3 3 0 110-6 3 3 0 010 6z" />
+            </svg>
+            <span className="text-gray-500">Selecionar imagem</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
+        </div>
       </div>
+
+      <button
+        onClick={handleSave}
+        className="w-full bg-black text-white p-3 rounded-lg mt-6 font-bold transition-all hover:bg-gray-900"
+      >
+        Salvar Alterações
+      </button>
+    </div>
+
     </div>
   );
 };

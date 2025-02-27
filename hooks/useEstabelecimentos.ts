@@ -32,6 +32,9 @@ export const useEstabelecimentos = () => {
             email: string;
             cnpj: string;
             senhaHash:string;
+            razaoSocial?:string;
+            cidade?:string;
+            atividadePrincipal?:string;
          }) => {
             return await makeRequest.post(`/estabelecimento/criar`, data).then((res)=>{
                 return res.data;
@@ -63,6 +66,9 @@ export const useEstabelecimentos = () => {
         telefone: string;
         email: string;
         cnpj: string;
+        razaoSocial?:string;
+        cidade?:string;
+        atividadePrincipal?:string;
       }) => {
         return await makeRequest.put(`/estabelecimento/edit/`, data)
           .then((res) => res.data);
