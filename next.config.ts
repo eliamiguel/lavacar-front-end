@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
         port: "8002",
         pathname: "/upload/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "", 
+        pathname: "/**",
+      },
     ],
   },
   productionBrowserSourceMaps: false,

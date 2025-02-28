@@ -168,7 +168,7 @@ const EstabelecimentoForm: React.FC<EstabelecimentoFormProps> = ({ estabelecimen
               <input
                 type="text"
                 name="atividadePrincipal"
-                maxLength={14}
+                maxLength={100}
                 value={estabelecimento.atividadePrincipal}
                 onChange={handleChange}
                 placeholder="Atividade principal"
