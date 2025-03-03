@@ -85,6 +85,7 @@ const PerfilCredenciado = () => {
     }
   };
 
+  
   return (
     <div className="max-w-4xl mx-auto mt-20 p-8 bg-white shadow-lg rounded-xl flex flex-col md:flex-row items-center">
       

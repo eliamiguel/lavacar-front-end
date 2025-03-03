@@ -29,7 +29,7 @@ const PerfilUsuario = () => {
     }
   }, []);
 
-  const handleSave = async () => {
+const handleSave = async () => {
     if (!usuario?.idUsuario) {
       toast.error("Erro: Usuário inválido.");
       return;
