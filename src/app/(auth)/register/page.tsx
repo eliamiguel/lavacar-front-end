@@ -32,7 +32,7 @@ const RegisterPage = () => {
       toast.error("Preencha todos os campos!");
       return;
     }
-console.log(nome,email,senhaHash,confirmSenhaHash)
+
     if (senhaHash.length < 6) {
       toast.error("A senha deve ter pelo menos 6 caracteres.");
       return;
