@@ -14,7 +14,7 @@ const RegisterPage = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senhaHash, setSenhaHash] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [confirmSenhaHash, setConfirmarSenha] = useState('');
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
   const router = useRouter();
@@ -23,29 +23,29 @@ const RegisterPage = () => {
     e.preventDefault();
 
    
-    if (user?.tipoUsuario !== 'super') {
-      toast.error("Você não tem permissão para criar novos usuários.");
-      return;
-    }
+    //if (user?.tipoUsuario !== 'super') {
+    //  toast.error("Você não tem permissão para criar novos usuários.");
+    //  return;
+    //}
 
-    if (!nome || !email || !senhaHash || !confirmarSenha) {
+    if (!nome || !email || !senhaHash || !confirmSenhaHash) {
       toast.error("Preencha todos os campos!");
       return;
     }
-
+console.log(nome,email,senhaHash,confirmSenhaHash)
     if (senhaHash.length < 6) {
       toast.error("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
-    if (senhaHash !== confirmarSenha) {
+    if (senhaHash !== confirmSenhaHash) {
       toast.error("As senhas não coincidem.");
       return;
     }
 
-    setLoading(true);
+   // setLoading(true);
     try {
-      await makeRequest.post('/auth/register', { nome, email, senhaHash });
+      await makeRequest.post('/auth/register', { nome, email, senhaHash});
 
       toast.success("Usuário criado com sucesso!");
       setTimeout(() => router.push('/login'), 3000);
@@ -103,14 +103,8 @@ const RegisterPage = () => {
 
             <button
               onClick={(e) => handleRegister(e)}
-              className={`w-full py-3 mt-3 text-white rounded-lg transition-all ${
-                user?.tipoUsuario !== "super"
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : loading
-                  ? "bg-black cursor-not-allowed"
-                  : "bg-black hover:bg-gray-700"
-              }`}
-              disabled={user?.tipoUsuario !== "super" || loading}
+              className={`w-full py-3 mt-3 text-white rounded-lg transition-all bg-black hover:bg-gray-700 `}
+              //disabled={user?.tipoUsuario !== "super" || loading}
             >
               {loading ? "Criando Conta..." : "Criar Conta"}
             </button>
