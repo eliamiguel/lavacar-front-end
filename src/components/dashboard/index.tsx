@@ -108,8 +108,10 @@ function Dashboard() {
     <div className="p-6 mb-6 bg-white shadow-md rounded-lg border border-gray-200 relative z-10">
       <h2 className="text-lg font-semibold text-gray-700 mb-3">Dados do Cartão</h2>
       <p className="text-gray-700"><strong>Cliente:</strong> {cardData.clienteNome}</p>
-      <p className="text-gray-700"><strong>Carro:</strong> {cardData.carroModelo} - {cardData.carroPlaca}</p>
-      <p className="text-gray-700"><strong>Saldo:</strong> R$ {cardData.saldo?.toFixed(2) ?? "0.00"}</p>
+      <p className="text-gray-700"><strong>Carro:</strong> {cardData.carroModelo}</p>
+      <p className="text-gray-700"><strong>Placa:</strong> {cardData.carroPlaca}</p>
+      <p className="text-gray-700"><strong>Lotaçao:</strong> {cardData.carroLotacao}</p>
+      <p className="text-gray-700"><strong>Lavagem:</strong> {cardData.quantidadeServicosMensais ?? "0.00"}</p>
 
       <div className="relative mt-4">
         <Lock className="absolute left-3 top-3 text-gray-400" size={20} />

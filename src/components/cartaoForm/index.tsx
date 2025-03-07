@@ -19,7 +19,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
     idLavacar: 0,
     estabelcimento: '',
     numeroCartao: '',
-    saldo: 0,
+    quantidadeServicosMensais: 0,
     senha: '',
     clienteNome: '', 
     carroModelo: '', 
@@ -64,7 +64,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
   
     setCartao((prevCartao) => ({
       ...prevCartao,
-      [name]: name === "idCliente" || name === "idCarro" || name === "saldo"
+      [name]: name === "idCliente" || name === "idCarro" || name === "quantidadeServicosMensais"
         ? Number(value) || 0 
         : value || "" 
     }));
@@ -74,7 +74,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
 
   
   const validarSenha = (senha: string) => {
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex = /^\d{6}$/;
     return regex.test(senha);
   };
 
@@ -83,7 +83,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
     setSenha(value);
 
     if (!validarSenha(value)) {
-      setErroSenha('A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.');
+      setErroSenha('A senha deve ter pelo menos 6 numeros');
     } else {
       setErroSenha('');
     }
@@ -155,7 +155,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           required
         >
-          <option value="NORMAL">Normal (Limite: R$500,00)</option>
+          <option value="NORMAL">Normal (Limite: 2)</option>
           <option value="CORINGA">Coringa (Sem Limite)</option>
         </select>
       </div>
@@ -165,8 +165,8 @@ const CartaoForm: React.FC<CartaoFormProps> = ({ cartaoEditado, aoFechar, aoSalv
         <label className="block text-sm font-medium text-gray-700 mb-1">Saldo</label>
         <input
           type="number"
-          name="saldo"
-          value={cartao.saldo ?? 0}
+          name="quantidadeServicosMensais"
+          value={cartao.quantidadeServicosMensais ?? 0}
           onChange={handleChange}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           required

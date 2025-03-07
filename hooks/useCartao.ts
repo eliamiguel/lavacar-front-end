@@ -83,7 +83,7 @@ export const useCartoes = () => {
             idLavacar:number,
             senha: string,
             numeroCartao: string,
-            saldo: number,
+            quantidadeServicosMensais: number,
             tipoCartao:string
          }) => {
             return await makeRequest.post(`/cartao/criar-cartao`, data).then((res)=>{
@@ -149,7 +149,7 @@ export const useCartoes = () => {
         idCliente: number,
         idCarro: number,
         numeroCartao: string,
-        saldo: number,
+        quantidadeServicosMensais: number,
         tipoCartao:string
       }) => {
         return await makeRequest.put(`/cartoes/edit/`, data)

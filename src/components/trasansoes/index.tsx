@@ -66,7 +66,7 @@ const Transacoes = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Cliente</th>
               <th className="px-4 py-2 border">Estabelecimento</th>
-              <th className="px-4 py-2 border">Valor Desconto</th>
+              <th className="px-4 py-2 border">Lavagem</th>
               <th className="px-4 py-2 border">Data</th>
               <th className="px-4 py-2 border">Status</th>
             </tr>

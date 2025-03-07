@@ -43,7 +43,8 @@ export default function SeuEstabelecimentoDashboard() {
               <div key={cartao.idCartao} className="p-6 bg-blue-100 rounded-lg shadow-md border-l-4 border-blue-500">
                 <p className="text-md text-gray-900 font-semibold">Cartão: {"**********"}</p>
               
-                <p className="text-md text-green-700 font-bold">Saldo: R$ {cartao.saldo.toFixed(2)}</p>
+                <p className="text-md text-green-700 font-bold">Serviços Restantes:{cartao.quantidadeServicosMensais}</p>
+                {/* {cartao.saldo.toFixed(2)} */}
                 <p className="text-md text-gray-700"><strong>Tipo:</strong> {cartao.tipoCartao}</p>
                 <p className="text-md text-gray-700">
                   <strong>Placa:</strong> <span className={` text-md text-gray-800`}>
@@ -85,7 +86,7 @@ export default function SeuEstabelecimentoDashboard() {
             {lavacar.transacoes.map((transacao: IterfacetransacoesSeuEstabelecimento) => (
               <div key={transacao.idTransacao} className="py-4 border-b border-gray-300">
                 <p className="text-xl font-semibold text-gray-900">
-                  Valor: <span className="text-red-600 font-bold">R$ {transacao.valorDesconto.toFixed(2)}</span>
+                  Lavagem: <span className="text-red-600 font-bold">{transacao.valorDesconto}</span>
                 </p>
                 <p className="text-lg text-gray-700">
                   <strong>Status:</strong> <span className={`font-bold ${transacao.status === "Concluído" ? "text-green-600" : "text-red-500"}`}>

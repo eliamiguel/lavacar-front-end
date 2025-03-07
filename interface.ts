@@ -84,13 +84,14 @@ export interface IAuthInput{
     numeroCartao: string,
     mensagem?:string,
     sucesso?:boolean,
-    saldo: number,
+    quantidadeServicosMensais: number,
     senha: string,
     confirmSenha?:string,
     idLavacarLogado?:number,
     clienteNome: string;
   carroModelo: string;
   carroPlaca: string;
+  carroLotacao?: string;
 
   cliente?: {
     idCliente: number;
@@ -166,7 +167,7 @@ export interface LavacarInterface {
   cartoesPermitidos: {
     idCartao: number;
     numeroCartao: string;
-    saldo: number;
+    quantidadeServicosMensais: number;
   }[];
   transacoes: {
     idTransacao: number;
@@ -178,7 +179,7 @@ export interface LavacarInterface {
 export interface IntefacePermitidos {
   idCartao: number;
   numeroCartao: string;
-  saldo: number;
+  quantidadeServicosMensais: number;
   modelo?: string;
   placa?: string;
   tipoCartao?: string;
@@ -272,7 +273,7 @@ export interface Carro {
 
 export interface Cartao {
   idCartao: number;
-  saldo: number;
+  quantidadeServicosMensais: number;
   tipoCartao: string;
   limiteSaldo?: number;
   placa?: string;
