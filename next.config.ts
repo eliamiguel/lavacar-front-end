@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
     ],
   },
   productionBrowserSourceMaps: false,
-  webpack(config) {
+  webpack(config:any) {
     
     return config;
   },
