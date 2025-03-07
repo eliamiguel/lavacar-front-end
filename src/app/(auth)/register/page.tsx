@@ -23,11 +23,11 @@ const RegisterPage = () => {
     e.preventDefault();
 
    
-    //if (user?.tipoUsuario !== 'super') {
-    //  toast.error("Você não tem permissão para criar novos usuários.");
-    //  return;
-    //}
-
+    if (user?.tipoUsuario !== 'super') {
+     toast.error("Você não tem permissão para criar novos usuários.");
+     return;
+    }
+    setLoading(true);
     if (!nome || !email || !senhaHash || !confirmSenhaHash) {
       toast.error("Preencha todos os campos!");
       return;
@@ -43,7 +43,7 @@ const RegisterPage = () => {
       return;
     }
 
-   // setLoading(true);
+    
     try {
       await makeRequest.post('/auth/register', { nome, email, senhaHash});
 
@@ -103,8 +103,14 @@ const RegisterPage = () => {
 
             <button
               onClick={(e) => handleRegister(e)}
-              className={`w-full py-3 mt-3 text-white rounded-lg transition-all bg-black hover:bg-gray-700 `}
-              //disabled={user?.tipoUsuario !== "super" || loading}
+              className={`w-full py-3 mt-3 text-white rounded-lg transition-all ${
+                user?.tipoUsuario !== "super"
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : loading
+                  ? "bg-black cursor-not-allowed"
+                  : "bg-black hover:bg-gray-700"
+              }`}
+              disabled={user?.tipoUsuario !== "super" || loading}
             >
               {loading ? "Criando Conta..." : "Criar Conta"}
             </button>
