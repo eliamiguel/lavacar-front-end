@@ -33,7 +33,7 @@ const Cartoes = () => {
         idCliente: cartao.idCliente,
         idCarro: cartao.idCarro,
         numeroCartao: cartao.numeroCartao,
-        saldo: cartao.saldo,
+        quantidadeServicosMensais: cartao.quantidadeServicosMensais,
         tipoCartao: cartao.tipoCartao as "NORMAL" | "CORINGA",
       });
     } else {
@@ -42,7 +42,7 @@ const Cartoes = () => {
         idCliente: cartao.idCliente,
         idCarro: cartao.idCarro,
         numeroCartao: cartao.numeroCartao,
-        saldo: cartao.saldo,
+        quantidadeServicosMensais: cartao.quantidadeServicosMensais,
         senha: cartao.senha,
         tipoCartao: cartao.tipoCartao,
       });
@@ -114,7 +114,7 @@ const Cartoes = () => {
             {filteredCartoes?.map((cartao: CartaoInterface) => (
               <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2 text-center border">{cartao.numeroCartao}</td>
-                <td className="px-4 py-2 text-center border">R$ {cartao.saldo.toFixed(2)}</td>
+                <td className="px-4 py-2 text-center border">{cartao.quantidadeServicosMensais}</td>
                 <td className="px-4 py-2 text-center border">{cartao.cliente?.nome}</td>
                 <td className="px-4 py-2 text-center border">{cartao.carro?.modelo}</td>
                 <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
