@@ -2,45 +2,60 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['localhost'],
+    domains: ["lavacar.gestaobc.net.br"],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**', 
-        port: '',
-        pathname: '/**', 
+        protocol: "https",
+        hostname: "**",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'example.com', 
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "example.com",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'cdn.example.com', 
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "lavacar.gestaobc.net.br",
+        pathname: "/api/upload/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.example.com",
+        pathname: "/**",
       },
       {
         protocol: "http",
         hostname: "localhost",
-        port: "8002",
+        pathname: "/upload/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lavacar.gestaobc.net.br",
         pathname: "/upload/**",
       },
       {
         protocol: "http",
-        hostname: "localhost",
-        port: "", 
+        hostname: "lavacar.gestaobc.net.br",
+        pathname: "/api/upload/**",
+      },
+      {
+        protocol: "http",
+        hostname: "lavacar.gestaobc.net.br",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "lavacar.gestaobc.net.br",
+        pathname: "/**",
+      }
     ],
   },
   productionBrowserSourceMaps: false,
-  webpack(config:any) {
-    
+  webpack(config) {
     return config;
   },
 };
 
 export default nextConfig;
+
