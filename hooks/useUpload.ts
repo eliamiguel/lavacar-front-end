@@ -20,7 +20,7 @@ export const useUploadImagemPerfil = () => {
     },
     onSuccess: async (data) => {
       if (user) {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8002";
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://lavacar.gestaobc.net.br/api";
         const imageUrl = `${backendUrl}/upload/${data.imageUrl}`;
 
         
