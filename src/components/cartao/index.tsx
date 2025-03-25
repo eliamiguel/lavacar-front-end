@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useCartoes, useCriarCartao, useEditarCartao, useExcluirCartao } from "../../../hooks/useCartao";
+import {
+  useCartoes,
+  useCriarCartao,
+  useEditarCartao,
+  useExcluirCartao,
+} from "../../../hooks/useCartao";
 import CartaoForm from "../cartaoForm";
 import { CartaoInterface } from "../../../interface";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -12,16 +17,18 @@ const Cartoes = () => {
   const mutateEditar = useEditarCartao();
   const excluirCartao = useExcluirCartao();
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [cartaoEditado, setCartaoEditado] = useState<CartaoInterface | undefined>(undefined);
+  const [cartaoEditado, setCartaoEditado] = useState<
+    CartaoInterface | undefined
+  >(undefined);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredCartoes = queryCartoes.data?.filter(cartao =>
-    cartao.numeroCartao.includes(searchTerm) || 
-    cartao.idCliente.toString().includes(searchTerm) ||
-    cartao.tipoCartao.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCartoes = queryCartoes.data?.filter(
+    (cartao) =>
+      cartao.numeroCartao.includes(searchTerm) ||
+      cartao.idCliente.toString().includes(searchTerm) ||
+      cartao.tipoCartao.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  
   const handleRecarregar = () => {
     queryCartoes.refetch();
   };
@@ -70,17 +77,18 @@ const Cartoes = () => {
 
   return (
     <div className="p-6 space-y-6 md:ml-40 mt-20">
-      
       <div className="flex justify-between items-center mb-6">
         <button
-          onClick={() => { setCartaoEditado(undefined); setMostrarModal(true); }}
+          onClick={() => {
+            setCartaoEditado(undefined);
+            setMostrarModal(true);
+          }}
           className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-700"
         >
           <span className="mr-2">+</span> Novo Cartão
         </button>
       </div>
 
-      
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
@@ -97,13 +105,12 @@ const Cartoes = () => {
         </button>
       </div>
 
-     
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border-collapse border border-gray-300 mt-4">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 border">Número do Cartão</th>
-              <th className="px-4 py-2 border">Saldo</th>
+              <th className="px-4 py-2 border">Lavagens Disponíveis</th>
               <th className="px-4 py-2 border">Cliente</th>
               <th className="px-4 py-2 border">Carro</th>
               <th className="px-4 py-2 border">Tipo Cartão</th>
@@ -113,14 +120,27 @@ const Cartoes = () => {
           <tbody>
             {filteredCartoes?.map((cartao: CartaoInterface) => (
               <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2 text-center border">{cartao.numeroCartao}</td>
-                <td className="px-4 py-2 text-center border">{cartao.quantidadeServicosMensais}</td>
-                <td className="px-4 py-2 text-center border">{cartao.cliente?.nome}</td>
-                <td className="px-4 py-2 text-center border">{cartao.carro?.modelo}</td>
-                <td className="px-4 py-2 text-center border">{cartao.tipoCartao}</td>
+                <td className="px-4 py-2 text-center border">
+                  {cartao.numeroCartao}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {cartao.quantidadeServicosMensais}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {cartao.cliente?.nome}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {cartao.carro?.modelo}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {cartao.tipoCartao}
+                </td>
                 <td className="px-4 py-2 text-center border flex justify-center gap-2">
                   <button
-                    onClick={() => { setCartaoEditado(cartao); setMostrarModal(true); }}
+                    onClick={() => {
+                      setCartaoEditado(cartao);
+                      setMostrarModal(true);
+                    }}
                     className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                   >
                     <FaEdit className="mr-2" />
@@ -140,8 +160,13 @@ const Cartoes = () => {
         </table>
       </div>
 
-      
-      {mostrarModal && <CartaoForm cartaoEditado={cartaoEditado} aoFechar={() => setMostrarModal(false)} aoSalvar={handleSalvarCartao} />}
+      {mostrarModal && (
+        <CartaoForm
+          cartaoEditado={cartaoEditado}
+          aoFechar={() => setMostrarModal(false)}
+          aoSalvar={handleSalvarCartao}
+        />
+      )}
     </div>
   );
 };
