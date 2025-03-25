@@ -10,8 +10,12 @@ const Transacoes = () => {
 
   const filteredTransacoes = transacoes.data?.filter((transacao) => {
     return (
-      transacao.cartao?.cliente?.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transacao.lavacar?.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transacao.cartao?.cliente?.nome
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      transacao.lavacar?.nome
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       transacao.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
@@ -38,7 +42,6 @@ const Transacoes = () => {
 
   return (
     <div className="p-6 space-y-6 md:ml-40 mt-20">
-      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
         <button
@@ -66,15 +69,20 @@ const Transacoes = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Cliente</th>
               <th className="px-4 py-2 border">Estabelecimento</th>
-              <th className="px-4 py-2 border">Lavagem</th>
+              <th className="px-4 py-2 border">Valor</th>
               <th className="px-4 py-2 border">Data</th>
               <th className="px-4 py-2 border">Status</th>
             </tr>
           </thead>
           <tbody>
             {filteredTransacoes?.map((transacao: TransacaoInterface) => (
-              <tr key={transacao.idTransacao} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2 text-center border">{transacao.idTransacao}</td>
+              <tr
+                key={transacao.idTransacao}
+                className="border-t hover:bg-gray-50"
+              >
+                <td className="px-4 py-2 text-center border">
+                  {transacao.idTransacao}
+                </td>
                 <td className="px-4 py-2 text-center border">
                   {transacao.cartao?.cliente?.nome || "Cliente Desconhecido"}
                 </td>
@@ -85,9 +93,13 @@ const Transacoes = () => {
                   {formatCurrency(transacao.valorDesconto)}
                 </td>
                 <td className="px-4 py-2 text-center border">
-                  {new Date(transacao.dataTransacao).toLocaleDateString("pt-BR")}
+                  {new Date(transacao.dataTransacao).toLocaleDateString(
+                    "pt-BR"
+                  )}
                 </td>
-                <td className="px-4 py-2 text-center border">{transacao.status}</td>
+                <td className="px-4 py-2 text-center border">
+                  {transacao.status}
+                </td>
               </tr>
             ))}
           </tbody>
