@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 const makeRequest = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`, 
+  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}`, 
   withCredentials: true // Importante para enviar cookies
 });
 
@@ -44,7 +44,7 @@ makeRequest.interceptors.response.use(
       try {
         // Tenta usar o refresh token dos cookies
         const refreshResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/refresh`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/refresh`,
           { withCredentials: true }
         );
         
