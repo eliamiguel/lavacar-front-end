@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useContext } from "react";
 import { useBuscarCartao, usePagarCartao } from "../../../hooks/useCartao";
-import { CreditCard, Lock, CheckCircle, Eye, EyeOff } from "lucide-react";
+import { CreditCard, Lock, CheckCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
 import { XCircle } from "lucide-react";
 
 function Dashboard() {
   const [cardNumber, setCardNumber] = useState<string>("");
+  const [isLoadings, setIsLoadings] = useState(false);
   const [searchValue, setSearchValue] = useState<string>(""); 
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
@@ -40,11 +41,26 @@ function Dashboard() {
   const pagarCartao = usePagarCartao();
 
   const handlePayment = async () => {
+    setIsLoadings(true);
     pagarCartao.mutate(
       { numeroCartao: cardNumber, senha, idLavacarLogado: Number(user?.idLavacar) },
       {
         onSuccess: (data) => {
-          setMensagem(data.mensagem);
+          setMensagem(data.mensagem || "Pagamento realizado com sucesso");
+          setSenha("");
+          setIsLoadings(false);
+          setTimeout(() => {
+            setMensagem("");
+          }, 10000);
+        },
+        onError: (error) => {
+          setMensagem(error.response?.data.message || "Erro ao pagar cartão");
+          setSenha("");
+          setIsLoadings(false);          
+          // Limpar mensagem após 10 segundos
+          setTimeout(() => {
+            setMensagem("");
+          }, 3000);
         },
       }
     );
@@ -135,8 +151,8 @@ function Dashboard() {
         className="mt-4 w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 transition"
         onClick={handlePayment}
       >
-        <CheckCircle size={18} />
-        Enter
+        {isLoadings ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />}
+        {isLoadings ? "Processando..." : "Pagar"}
       </button>
     </div>
   )}

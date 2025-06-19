@@ -20,7 +20,7 @@ export function formatInfoCarro(
   console.log({ type, info });
   if (!info) return "";
 
-  let infoFormat = info.toString().toUpperCase();
+  const infoFormat = info.toString().toUpperCase();
 
   switch (type.toLowerCase()) {
     case "placa":

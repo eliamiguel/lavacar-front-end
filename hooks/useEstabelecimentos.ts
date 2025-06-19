@@ -9,7 +9,7 @@ import { EstabelecimentoInterface, LavacarInterface } from "../interface";
 
 export const useEstabelecimentos = () => {
     const { data, isLoading, isError, error,refetch } = useQuery<EstabelecimentoInterface[]>({
-        queryKey: ['estabelecimento'],
+      queryKey: ['estabelecimento'],
         queryFn: async () => await makeRequest.get('/estabelecimento')
         .then((res)=>{
           return res.data || [];
@@ -118,7 +118,7 @@ export const useEstabelecimentos = () => {
         await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
       enabled: !!idLavacar, 
     });
-  
+
     return { data, isLoading, isError, error,refetch };
   };
 

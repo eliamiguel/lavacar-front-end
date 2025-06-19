@@ -18,16 +18,28 @@ const LoginPage = () => {
   const [isEstabelecimento, setIsEstabelecimento] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { setUser } = useContext(UserContext);
+  
+  const { loginUser } = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("orcamento:rememberEmail");
+    const savedEmail = localStorage.getItem("lavacar:rememberEmail");
     if (savedEmail) {
       setEmail(savedEmail);
       setRememberMe(true);
     }
   }, []);
+
+  // Função para extrair token dos cookies
+  const extractTokenFromCookies = (cookieName: string): string | null => {
+    if (typeof document === 'undefined') return null;
+    
+    const cookies = document.cookie.split(';');
+    const tokenCookie = cookies.find(cookie => 
+      cookie.trim().startsWith(`${cookieName}=`)
+    );
+    return tokenCookie ? tokenCookie.split('=')[1] : null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,37 +51,74 @@ const LoginPage = () => {
     }
 
     setLoading(true);
+    setError('');
     
     try {
       const endpoint = isEstabelecimento ? "/lavacar/login" : "/auth/login";
       const res = await makeRequest.post(endpoint, { email, senhaHash });
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("orcamento:user", JSON.stringify(res.data.usuario || res.data.lavacar));
-        localStorage.setItem("orcamento:token", res.data.token);
+      // Extrai o token da resposta ou dos cookies
+      let token = res.data.tokens?.accessToken || res.data.token;
+      
+      if (!token || token === 'undefined') {
+        // Tenta extrair dos cookies se não vier na resposta
+        token = extractTokenFromCookies('accessToken');
+      }
 
-        
+      // Armazena tokens no localStorage apenas se existirem
+      if (res.data.tokens?.accessToken) {
+        localStorage.setItem("lavacar:tokenEstabelecimento", res.data.tokens.accessToken);
+      }
+      if (res.data.tokens?.refreshToken) {
+        localStorage.setItem("lavacar:refreshTokenEstabelecimento", res.data.tokens.refreshToken);
+      }
+
+      // Prepara os dados do usuário
+      const userData = res.data.usuario || res.data.lavacar;
+      
+      if (!userData) {
+        throw new Error('Dados do usuário não recebidos');
+      }
+
+      // Usa a função loginUser do contexto para armazenar os dados corretamente
+      loginUser(userData, token, res.data);
+
+      // Gerencia o "lembrar-me"
+      if (typeof window !== "undefined") {
         if (rememberMe) {
-          localStorage.setItem("orcamento:rememberEmail", email);
+          localStorage.setItem("lavacar:rememberEmail", email);
         } else {
-          localStorage.removeItem("orcamento:rememberEmail");
+          localStorage.removeItem("lavacar:rememberEmail");
         }
       }
 
-      setUser(res.data.usuario || res.data.lavacar);
+      toast.success("Login realizado com sucesso!");
+      
+      // Redireciona imediatamente sem delay
       router.push("/dashboard");
+
     } catch (error) {
+      console.error('Erro no login:', error);
+      
+      let errorMessage = "Erro inesperado ao fazer login";
+      
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || "Erro ao fazer login");
-        setError(error.response?.data?.message || "Erro ao fazer login");
-      } else {
-        setError("Erro inesperado ao fazer login");
-        toast.error("Erro inesperado ao fazer login");
+        errorMessage = error.response?.data?.message || "Erro ao fazer login";
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
 
+      toast.error(errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Função para alternar tipo de login e limpar erros
+  const toggleLoginType = () => {
+    setIsEstabelecimento(!isEstabelecimento);
+    setError('');
   };
 
   return (
@@ -85,7 +134,14 @@ const LoginPage = () => {
           <h2 className="text-3xl font-bold">Bem vindo !</h2>
           <p className="mt-2 text-sm text-center">A BC Gestão de Serviços.</p>
           <div className="flex space-x-4 mt-4">
-           <a href="https://api.whatsapp.com/send?phone=5541995310129&text=Ol%C3%A1!" className="text-white text-2xl hover:text-gray-300"><FaWhatsapp /></a>
+           <a 
+             href="https://api.whatsapp.com/send?phone=5541995310129&text=Ol%C3%A1!" 
+             className="text-white text-2xl hover:text-gray-300 transition-colors"
+             target="_blank"
+             rel="noopener noreferrer"
+           >
+             <FaWhatsapp />
+           </a>
           </div>
         </div>
 
@@ -97,26 +153,40 @@ const LoginPage = () => {
 
           <div className="flex justify-center mt-4">
             <button
-              onClick={() => setIsEstabelecimento(!isEstabelecimento)}
+              onClick={toggleLoginType}
               className="p-3 bg-gray-200 rounded-full hover:bg-gray-300 transition-all"
+              disabled={loading}
             >
               {isEstabelecimento ? <Building size={24} /> : <User size={24} />}
             </button>
           </div>
 
-          <motion.div
+          <motion.form
             key={isEstabelecimento ? "estabelecimento" : "usuario"}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
             className="mt-6"
+            onSubmit={handleSubmit}
           >
             <div>
-              <InputAuth placeholder="Digite seu email" label="E-mail" newState={setEmail} value={email} />
+              <InputAuth 
+                placeholder="Digite seu email" 
+                label="E-mail" 
+                newState={setEmail} 
+                value={email}
+               
+              />
             </div>
             <div>
-              <InputAuth placeholder="Digite sua senha" label="Senha" newState={setSenhaHash} Ispassword />
+              <InputAuth 
+                placeholder="Digite sua senha" 
+                label="Senha" 
+                newState={setSenhaHash} 
+                Ispassword
+               
+              />
             </div>
 
             <div className="flex justify-between items-center text-sm text-white mt-3">
@@ -126,24 +196,42 @@ const LoginPage = () => {
                   className="mr-2" 
                   checked={rememberMe} 
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  disabled={loading}
                 /> 
                 Lembrar-me
               </label>
-              <a href="/forgot-password" className="hover:underline">Esqueceu a senha?</a>
+              <Link href="/forgot-password" className="hover:underline">
+                Esqueceu a senha?
+              </Link>
             </div>
 
-            {error && <span className="text-red-500 my-3 text-sm text-center block">{error}</span>}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-500 my-3 text-sm text-center block bg-red-100 p-2 rounded"
+              >
+                {error}
+              </motion.div>
+            )}
 
             <button
-              onClick={(e) => handleSubmit(e)}
+              type="submit"
               className={`w-full py-3 mt-3 text-white rounded-lg transition-all ${
-                loading ? "bg-black cursor-not-allowed" : "bg-black hover:bg-gray-700"
+                loading ? "bg-gray-600 cursor-not-allowed" : "bg-black hover:bg-gray-700"
               }`}
               disabled={loading}
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Entrando...
+                </div>
+              ) : (
+                "Entrar"
+              )}
             </button>
-          </motion.div>
+          </motion.form>
 
           <p className="text-center text-sm font-bold text-white mt-4">
             Não tem uma conta? {" "}
@@ -151,6 +239,8 @@ const LoginPage = () => {
               Criar uma conta
             </Link>
           </p>
+
+        
         </div>
       </motion.div>
     </div>
@@ -158,5 +248,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-

@@ -1,11 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useTransacao } from "../../../hooks/useTransacao";
+import { useContext, useState } from "react";
+import { useTransacaoPorCliente, useTransacao } from "../../../hooks/useTransacao";
 import { TransacaoInterface } from "../../../interface";
+import { UserContext } from "@/context/UserContext";
+
 
 const Transacoes = () => {
-  const transacoes = useTransacao();
+    const {user } = useContext(UserContext);
+    const idCliente = user?.cliente?.idCliente || 0;
+    
+    const transacoesSuper = useTransacao();
+    const transacoesCliente = useTransacaoPorCliente({idCliente:idCliente});
+  
+    const transacoes = user?.tipoUsuario === "super" ? transacoesSuper : transacoesCliente;
+    
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredTransacoes = transacoes.data?.filter((transacao) => {
@@ -16,7 +25,15 @@ const Transacoes = () => {
       transacao.lavacar?.nome
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      transacao.status.toLowerCase().includes(searchTerm.toLowerCase())
+      transacao.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transacao.cartao?.numeroCartao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transacao.cartao?.carro?.placa?.includes(searchTerm) ||
+      transacao.cartao?.carro?.modelo?.includes(searchTerm) ||
+      transacao.cartao?.carro?.marca?.includes(searchTerm) ||
+      transacao.cartao?.carro?.chassis?.includes(searchTerm) ||
+      transacao.cartao?.carro?.renavam?.includes(searchTerm) ||
+      transacao.cartao?.carro?.lotacao?.includes(searchTerm) ||
+      transacao.cartao?.carro?.desembargador?.includes(searchTerm)
     );
   });
 
@@ -55,7 +72,7 @@ const Transacoes = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida pelo número do cartão, estabelecimento, placa do carro"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -69,13 +86,15 @@ const Transacoes = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Cliente</th>
               <th className="px-4 py-2 border">Estabelecimento</th>
+              <th className="px-4 py-2 border">Placa Carro</th>
               <th className="px-4 py-2 border">Valor</th>
+              <th className="px-4 py-2 border">Numero Cartão</th>
               <th className="px-4 py-2 border">Data</th>
               <th className="px-4 py-2 border">Status</th>
             </tr>
           </thead>
           <tbody>
-            {filteredTransacoes?.map((transacao: TransacaoInterface) => (
+            { filteredTransacoes && filteredTransacoes.length > 0 ? filteredTransacoes.map((transacao: TransacaoInterface) => (
               <tr
                 key={transacao.idTransacao}
                 className="border-t hover:bg-gray-50"
@@ -90,7 +109,13 @@ const Transacoes = () => {
                   {transacao.lavacar?.nome || "Estabelecimento Desconhecido"}
                 </td>
                 <td className="px-4 py-2 text-center border">
+                  {transacao.cartao?.carro?.placa || "Carro Desconhecido"}
+                </td>
+                <td className="px-4 py-2 text-center border">
                   {formatCurrency(transacao.valorDesconto)}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {transacao.cartao?.numeroCartao || "Cartão Desconhecido"}
                 </td>
                 <td className="px-4 py-2 text-center border">
                   {new Date(transacao.dataTransacao).toLocaleDateString(
@@ -101,7 +126,13 @@ const Transacoes = () => {
                   {transacao.status}
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr className="border-t hover:bg-gray-50 ">
+                <td colSpan={10} className="text-center w-full ">
+                  Nenhuma transação encontrada
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

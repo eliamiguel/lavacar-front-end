@@ -20,15 +20,17 @@ const Cartoes = () => {
   const [cartaoEditado, setCartaoEditado] = useState<
     CartaoInterface | undefined
   >(undefined);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const filteredCartoes = queryCartoes.data?.filter(
     (cartao) =>
       cartao.numeroCartao.includes(searchTerm) ||
-      cartao.idCliente.toString().includes(searchTerm) ||
-      cartao.tipoCartao.toLowerCase().includes(searchTerm.toLowerCase())
+      cartao.cliente?.nome?.toString().includes(searchTerm) ||
+      cartao.tipoCartao.includes(searchTerm) ||
+      cartao.carro?.modelo.includes(searchTerm) ||
+      cartao.carro?.placa.includes(searchTerm)
   );
-
+  console.log( "wqwqw", filteredCartoes);
   const handleRecarregar = () => {
     queryCartoes.refetch();
   };
@@ -92,7 +94,7 @@ const Cartoes = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida pelo número do cartão, cliente, carro, tipo de cartão"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -113,12 +115,14 @@ const Cartoes = () => {
               <th className="px-4 py-2 border">Lavagens Disponíveis</th>
               <th className="px-4 py-2 border">Cliente</th>
               <th className="px-4 py-2 border">Carro</th>
+              <th className="px-4 py-2 border">Placa</th>
               <th className="px-4 py-2 border">Tipo Cartão</th>
+              
               <th className="px-4 py-2 border">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCartoes?.map((cartao: CartaoInterface) => (
+            {filteredCartoes && filteredCartoes.length > 0 ? filteredCartoes.map((cartao: CartaoInterface) => (
               <tr key={cartao.idCartao} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2 text-center border">
                   {cartao.numeroCartao}
@@ -133,8 +137,12 @@ const Cartoes = () => {
                   {cartao.carro?.modelo}
                 </td>
                 <td className="px-4 py-2 text-center border">
+                  {cartao.carro?.placa}
+                </td>
+                <td className="px-4 py-2 text-center border">
                   {cartao.tipoCartao}
                 </td>
+                
                 <td className="px-4 py-2 text-center border flex justify-center gap-2">
                   <button
                     onClick={() => {
@@ -155,7 +163,13 @@ const Cartoes = () => {
                   </button>
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td colSpan={10} className="text-center">
+                  Nenhum cartão encontrado
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

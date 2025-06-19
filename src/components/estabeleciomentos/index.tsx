@@ -25,9 +25,14 @@ const Estabelecimentos = () => {
 
   const filteredEstabelecimentos = queryEstabelecimentos.data?.filter(
     (estabelecimento) =>
-      estabelecimento.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      estabelecimento.nome.includes(searchTerm) ||
       estabelecimento.cnpj.includes(searchTerm) ||
-      estabelecimento.email.toLowerCase().includes(searchTerm.toLowerCase())
+      estabelecimento.email.includes(searchTerm) ||
+      estabelecimento.razaoSocial?.includes(searchTerm) ||
+      estabelecimento.atividadePrincipal?.includes(searchTerm) ||
+      estabelecimento.cidade?.includes(searchTerm) ||
+      estabelecimento.endereco?.includes(searchTerm) ||
+      estabelecimento.telefone?.includes(searchTerm)
   );
 
   const vinculados = queryEstabelecimentos.data?.filter(
@@ -113,7 +118,7 @@ const Estabelecimentos = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida pelo nome, cnpj, email, razao social, atividade principal, cidade, endereço, telefone"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"

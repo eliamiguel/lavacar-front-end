@@ -16,7 +16,7 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
   const { data, isLoading, isError, error } = useQuery<CartaoInterface, Error>({
     queryKey: ["cartao", numeroCartao, idLavacarLogado],
     queryFn: async () => {
-      if (!numeroCartao || numeroCartao.trim() === "" || numeroCartao === "0" || !idLavacarLogado) {
+      if (!numeroCartao || numeroCartao.trim() === "" || numeroCartao === "0" || !idLavacarLogado || idLavacarLogado === 0) {
         return { sucesso: false, mensagem: "Número do cartão inválido." }; 
       }
 
@@ -24,7 +24,9 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
 
       return res.data;
     },
-    enabled: !!numeroCartao.trim() && !!idLavacarLogado, 
+    enabled: !!numeroCartao.trim() && !!idLavacarLogado && idLavacarLogado > 0, 
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   return { data, isLoading, isError, error };
