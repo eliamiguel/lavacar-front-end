@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 const makeRequest = axios.create({
-  baseURL: "http://localhost:8003/api", 
+  baseURL: `${process.env.REACT_APP_API_URL}/api`, 
   withCredentials: true // Importante para enviar cookies
 });
 
@@ -44,7 +44,7 @@ makeRequest.interceptors.response.use(
       try {
         // Tenta usar o refresh token dos cookies
         const refreshResponse = await axios.get(
-          'http://localhost:8003/api/auth/refresh',
+          `${process.env.REACT_APP_API_URL}/api/auth/refresh`,
           { withCredentials: true }
         );
         
