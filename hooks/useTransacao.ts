@@ -11,6 +11,18 @@ export const useTransacao= () => {
           return res.data || [];
         })
       });
-    
+      
       return { data, isLoading, isError, error,refetch };
 };
+export const useTransacaoPorCliente = (idCliente:{idCliente:number}) => {
+  return useQuery<TransacaoInterface[]>({
+    queryKey: ["transacoes", idCliente],                        
+    queryFn: async () => {
+      const { data } = await makeRequest.get(`/transacoes/cliente/${idCliente.idCliente}`);
+      return data || [];
+    },
+  });
+};
+
+
+

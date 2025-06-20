@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa"; // Ícone de "check"
+import { FaEdit, FaTrash } from "react-icons/fa";
 import EstabelecimentoForm from "../estabelecimentoForm";
 import { EstabelecimentoInterface } from "../../../interface";
 import {
@@ -25,9 +25,14 @@ const Estabelecimentos = () => {
 
   const filteredEstabelecimentos = queryEstabelecimentos.data?.filter(
     (estabelecimento) =>
-      estabelecimento.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      estabelecimento.nome.includes(searchTerm) ||
       estabelecimento.cnpj.includes(searchTerm) ||
-      estabelecimento.email.toLowerCase().includes(searchTerm.toLowerCase())
+      estabelecimento.email.includes(searchTerm) ||
+      estabelecimento.razaoSocial?.includes(searchTerm) ||
+      estabelecimento.atividadePrincipal?.includes(searchTerm) ||
+      estabelecimento.cidade?.includes(searchTerm) ||
+      estabelecimento.endereco?.includes(searchTerm) ||
+      estabelecimento.telefone?.includes(searchTerm)
   );
 
   const vinculados = queryEstabelecimentos.data?.filter(
@@ -113,7 +118,7 @@ const Estabelecimentos = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida pelo nome, cnpj, email, razao social, atividade principal, cidade, endereço, telefone"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -139,13 +144,12 @@ const Estabelecimentos = () => {
               <th className="px-4 py-2 border">Razão Social</th>
               <th className="px-4 py-2 border">Atividade Principal</th>
               <th className="px-4 py-2 border">Cidade</th>
-              <th className="px-4 py-2 border">Status</th>
+              <th className="px-4 py-2 border">Vincular/Desvincular</th>
               <th className="px-4 py-2 border">Ações</th>
             </tr>
           </thead>
           <tbody>
             {filteredEstabelecimentos?.map((estabelecimento) => {
-              const jaVinculado = (estabelecimento.clientesVinculados ?? []).length > 0;
               return (
                 <tr key={estabelecimento.idLavacar} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-2 border">{estabelecimento.nome}</td>
@@ -158,31 +162,27 @@ const Estabelecimentos = () => {
                   <td className="px-4 py-2 border">{estabelecimento.cidade}</td>
                   
                   <td className="px-4 py-2 border text-center">
-                    {jaVinculado ? (
-                      <div className="flex items-center justify-center text-green-600">
-                        <FaCheckCircle className="mr-2" /> Já Vinculado
-                      </div>
-                    ) : (
-                      <VincularEstabelecimentoCliente idLavacar={estabelecimento.idLavacar} />
-                    )}
+                    <VincularEstabelecimentoCliente 
+                      idLavacar={estabelecimento.idLavacar} 
+                      clientesVinculados={estabelecimento.clientesVinculados}
+                    />
                   </td>
+                  
                   <td className="px-4 py-2 border flex justify-center gap-2">
                     <button
                       onClick={() => {
                         setEstabelecimentoEditando(estabelecimento);
                         setMostrarFormulario(true);
                       }}
-                      className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                      className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
                     >
-                      <FaEdit className="mr-2" />
-                      Editar
+                      <FaEdit />
                     </button>
                     <button
                       onClick={() => handleExcluirEstabelecimento(estabelecimento.idLavacar)}
-                      className="bg-red-500 flex items-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                      className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
                     >
-                      <FaTrash className="mr-2" />
-                      Excluir
+                      <FaTrash />
                     </button>
                   </td>
                 </tr>

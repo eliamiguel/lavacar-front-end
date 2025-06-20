@@ -13,10 +13,12 @@ export interface CartaoInterfacei {
 }
 
 export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) => {
+  
   const { data, isLoading, isError, error } = useQuery<CartaoInterface, Error>({
     queryKey: ["cartao", numeroCartao, idLavacarLogado],
     queryFn: async () => {
-      if (!numeroCartao || numeroCartao.trim() === "" || numeroCartao === "0" || !idLavacarLogado) {
+      
+      if (!numeroCartao || numeroCartao.trim() === "" || numeroCartao === "0" || !idLavacarLogado || idLavacarLogado === 0) {
         return { sucesso: false, mensagem: "Número do cartão inválido." }; 
       }
 
@@ -24,7 +26,9 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
 
       return res.data;
     },
-    enabled: !!numeroCartao.trim() && !!idLavacarLogado, 
+    enabled: !!numeroCartao.trim() && !!idLavacarLogado && idLavacarLogado > 0, 
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   return { data, isLoading, isError, error };
@@ -34,7 +38,7 @@ export const useBuscarCartao = (numeroCartao: string, idLavacarLogado: number) =
 export const usePagarCartao = () => {
   const queryClient = useQueryClient();
     const mutate = useMutation({
-    mutationFn: async (data: { numeroCartao: string; senha: string, idLavacarLogado:number }) => {
+    mutationFn: async (data: { numeroCartao: string; senha: string, idLavacarLogado:number, placaPersonalizada?: string }) => {
       const res = await makeRequest.post("/cartao/pagar", data);
       return res.data;
     },
@@ -114,10 +118,8 @@ export const useCartoes = () => {
   
     const mutate = useMutation({
       mutationFn: async (data:{ idCartao:number, idLavacar:number, idCliente:number }) => {
-        console.log("Enviando dados para API:", data); 
         return await makeRequest.post(`/cartao/vincular-cartao`, data)
           .then((res) => {
-            console.log("Resposta da API ao vincular cartão:", res.data);
             return res.data;
           });
       },
@@ -152,7 +154,7 @@ export const useCartoes = () => {
         quantidadeServicosMensais: number,
         tipoCartao:string
       }) => {
-        return await makeRequest.put(`/cartoes/edit/`, data)
+        return await makeRequest.put(`/cartoes/edit`, data)
           .then((res) => res.data);
       },
       onSuccess: (data) => {
@@ -201,3 +203,105 @@ export const useCartoes = () => {
     });
     return mutate
   }
+
+// Funções para limites mensais
+export const useDefinirLimiteMensal = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ idCartao, mes, ano, limitePersonalizado }: {
+      idCartao: number;
+      mes: number;
+      ano: number;
+      limitePersonalizado: number;
+    }) => {
+      const response = await makeRequest.post('/cartao/limite-mensal', {
+        idCartao,
+        mes,
+        ano,
+        limitePersonalizado
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cartoes'] });
+      queryClient.invalidateQueries({ queryKey: ['limites-mensais'] });
+    }
+  });
+};
+
+export const useObterLimiteMensal = (idCartao: number, mes: number, ano: number) => {
+  return useQuery({
+    queryKey: ['limite-mensal', idCartao, mes, ano],
+    queryFn: async () => {
+      const response = await makeRequest.get(`/cartao/${idCartao}/limite-mensal/${mes}/${ano}`);
+      return response.data;
+    },
+    enabled: false
+  });
+};
+
+export const useListarLimitesMensais = (idCartao: number) => {
+  return useQuery({
+    queryKey: ['limites-mensais', idCartao],
+    queryFn: async () => {
+      const response = await makeRequest.get(`/cartao/${idCartao}/limites-mensais`);
+      return response.data;
+    },
+    enabled: false
+  });
+};
+
+// Funções para gerenciar saldo
+export const useAdicionarSaldo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ idCartao, quantidadeAdicionar }: {
+      idCartao: number;
+      quantidadeAdicionar: number;
+    }) => {
+      const response = await makeRequest.post('/cartao/adicionar-saldo', {
+        idCartao,
+        quantidadeAdicionar
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      if (data.sucesso) {
+        toast.success(data.mensagem || "Saldo adicionado com sucesso!");
+      } else {
+        toast.error(data.mensagem || "Erro ao adicionar saldo.");
+      }
+      queryClient.invalidateQueries({ queryKey: ['cartoes'] });
+      queryClient.invalidateQueries({ queryKey: ['status-saldo'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      const errorMessage = error.response?.data?.message || 'Erro ao adicionar saldo. Tente novamente.';
+      toast.error(errorMessage);
+    }
+  });
+};
+
+export const useObterStatusSaldo = (idCartao: number) => {
+  return useQuery({
+    queryKey: ['status-saldo', idCartao],
+    queryFn: async () => {
+      const response = await makeRequest.get(`/cartao/${idCartao}/status-saldo`);
+      return response.data;
+    },
+    enabled: !!idCartao
+  });
+};
+
+export const useTransacoesCartaoMes = (idCartao: number, mes: number, ano: number) => {
+  return useQuery({
+    queryKey: ['transacoes-cartao-mes', idCartao, mes, ano],
+    queryFn: async () => {
+      const response = await makeRequest.get(`/transacao/cartao/${idCartao}/mes/${mes}/${ano}`);
+      return response.data;
+    },
+    enabled: !!idCartao && !!mes && !!ano
+  });
+};

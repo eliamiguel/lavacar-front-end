@@ -2,14 +2,16 @@
 
 import { useState, useEffect, useContext } from "react";
 import { useBuscarCartao, usePagarCartao } from "../../../hooks/useCartao";
-import { CreditCard, Lock, CheckCircle, Eye, EyeOff } from "lucide-react";
+import { CreditCard, Lock, CheckCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
 import { XCircle } from "lucide-react";
 
 function Dashboard() {
   const [cardNumber, setCardNumber] = useState<string>("");
+  const [isLoadings, setIsLoadings] = useState(false);
   const [searchValue, setSearchValue] = useState<string>(""); 
   const [senha, setSenha] = useState("");
+  const [placaPersonalizada, setPlacaPersonalizada] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCardNumber, setShowCardNumber] = useState(false);
@@ -36,15 +38,38 @@ function Dashboard() {
 
   const erroMensagem = cardData && !cardData.sucesso ? cardData.mensagem : "";
   const exibirDadosCartao = cardData?.sucesso === true;
+  const isCartaoCoringa = cardData?.tipoCartao === "CORINGA";
 
   const pagarCartao = usePagarCartao();
 
   const handlePayment = async () => {
+    setIsLoadings(true);
     pagarCartao.mutate(
-      { numeroCartao: cardNumber, senha, idLavacarLogado: Number(user?.idLavacar) },
+      { 
+        numeroCartao: cardNumber, 
+        senha, 
+        idLavacarLogado: Number(user?.idLavacar),
+        placaPersonalizada: isCartaoCoringa ? placaPersonalizada : undefined
+      },
       {
         onSuccess: (data) => {
-          setMensagem(data.mensagem);
+          setMensagem(data.mensagem || "Pagamento realizado com sucesso");
+          setSenha("");
+          setPlacaPersonalizada("");
+          setIsLoadings(false);
+          setTimeout(() => {
+            setMensagem("");
+          }, 10000);
+        },
+        onError: (error) => {
+          setMensagem(error.response?.data.message || "Erro ao pagar cartão");
+          setSenha("");
+          setPlacaPersonalizada("");
+          setIsLoadings(false);          
+          // Limpar mensagem após 10 segundos
+          setTimeout(() => {
+            setMensagem("");
+          }, 3000);
         },
       }
     );
@@ -112,6 +137,26 @@ function Dashboard() {
       <p className="text-gray-700"><strong>Placa:</strong> {cardData.carroPlaca}</p>
       <p className="text-gray-700"><strong>Lotaçao:</strong> {cardData.carroLotacao}</p>
       <p className="text-gray-700"><strong>Lavagem:</strong> {cardData.quantidadeServicosMensais ?? "0.00"}</p>
+      <p className="text-gray-700"><strong>Tipo:</strong> {cardData.tipoCartao}</p>
+
+      {isCartaoCoringa && (
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Placa do Veículo *
+          </label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bg-black outline-none bg-white"
+            placeholder="Digite a placa do veículo..."
+            value={placaPersonalizada}
+            onChange={(e) => setPlacaPersonalizada(e.target.value.toUpperCase())}
+            maxLength={8}
+          />
+          <p className="text-sm text-gray-500 mt-1">
+            Para cartões CORINGA, é necessário informar a placa do veículo
+          </p>
+        </div>
+      )}
 
       <div className="relative mt-4">
         <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -132,11 +177,12 @@ function Dashboard() {
       </div>
 
       <button
-        className="mt-4 w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 transition"
+        className="mt-4 w-full px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 transition disabled:opacity-50"
         onClick={handlePayment}
+        disabled={isLoadings === true || (isCartaoCoringa && !placaPersonalizada.trim())}
       >
-        <CheckCircle size={18} />
-        Enter
+        {isLoadings ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />}
+        {isLoadings ? "Processando..." : "Pagar"}
       </button>
     </div>
   )}

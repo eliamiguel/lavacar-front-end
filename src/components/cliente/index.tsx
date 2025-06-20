@@ -27,9 +27,12 @@ const Clientes = () => {
 
   const filteredClientes = queryClientes.data?.filter(
     (cliente) =>
-      cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cliente.nome.includes(searchTerm) ||
       cliente.cnpj.includes(searchTerm) ||
-      cliente.email.toLowerCase().includes(searchTerm.toLowerCase())
+      cliente.email.includes(searchTerm) ||
+      cliente.endereco.includes(searchTerm) ||
+      cliente.telefone.includes(searchTerm) ||
+      cliente.dataCadastro?.toString().includes(searchTerm)
   );
 
   const handleRecarregar = () => {
@@ -101,7 +104,7 @@ const Clientes = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida pelo cnpj, nome, email, endereço, telefone"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -133,7 +136,7 @@ const Clientes = () => {
           </thead>
 
           <tbody className="flex flex-col w-full">
-            {filteredClientes?.map((cliente: ClienteIrteface) => (
+            {filteredClientes && filteredClientes.length > 0 ? filteredClientes.map((cliente: ClienteIrteface) => (
               <tr
                 key={cliente.idCliente}
                 className="border-t hover:bg-gray-50 flex  items-stretch w-full"
@@ -164,21 +167,27 @@ const Clientes = () => {
                       setClienteEditado(cliente);
                       setMostrarModal(true);
                     }}
-                    className="bg-gray-700 text-white px-4 py-2 flex items-center rounded-lg hover:bg-gray-600"
+                    className="bg-gray-700 text-white p-2 flex items-center rounded-lg hover:bg-gray-600"
                   >
-                    <FaEdit className="mr-2" />
-                    Editar
+                    <FaEdit />
+                    
                   </button>
                   <button
                     onClick={() => handleExcluirCliente(cliente.idCliente!)}
-                    className="bg-red-500 text-white flex items-center px-4 py-2 rounded-lg hover:bg-red-600"
+                    className="bg-red-500 text-white flex items-center p-2 rounded-lg hover:bg-red-600"
                   >
-                    <FaTrash className="mr-2" />
-                    Excluir
+                    <FaTrash />
+                    
                   </button>
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr className="border-t hover:bg-gray-50 flex  items-stretch w-full">
+                <td colSpan={10} className="text-center">
+                  Nenhum cliente encontrado
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -9,7 +9,7 @@ import { EstabelecimentoInterface, LavacarInterface } from "../interface";
 
 export const useEstabelecimentos = () => {
     const { data, isLoading, isError, error,refetch } = useQuery<EstabelecimentoInterface[]>({
-        queryKey: ['estabelecimento'],
+      queryKey: ['estabelecimento'],
         queryFn: async () => await makeRequest.get('/estabelecimento')
         .then((res)=>{
           return res.data || [];
@@ -118,7 +118,7 @@ export const useEstabelecimentos = () => {
         await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
       enabled: !!idLavacar, 
     });
-  
+
     return { data, isLoading, isError, error,refetch };
   };
 
@@ -141,6 +141,33 @@ export const useEstabelecimentos = () => {
       },
       onError: (error: AxiosError<{ message: string }>) => {
         const errorMessage = error.response?.data?.message || "Erro ao vincular o cliente ao credenciado.";
+        
+        toast.error(`Erro: ${errorMessage}`);
+      },
+    });
+  
+    return mutate;
+  };
+
+  export const useDesvincularEstabelecimentoCliente = () => {
+    const queryClient = useQueryClient();
+  
+    const mutate = useMutation({
+      mutationFn: async (data: { idCliente: number; idLavacar: number }) => {
+        return await makeRequest
+          .post(`/estabelecimento/desvincular-estabelecimento`, data)
+          .then((res) => res.data);
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["clientesVinculados"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["lavacars"] });
+        queryClient.invalidateQueries({ queryKey: ["estabelecimento"] });
+        
+        toast.success(data.mensagem || "Credenciado desvinculado do cliente com sucesso!");
+      },
+      onError: (error: AxiosError<{ message: string }>) => {
+        const errorMessage = error.response?.data?.message || "Erro ao desvincular o cliente do credenciado.";
         
         toast.error(`Erro: ${errorMessage}`);
       },

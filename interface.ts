@@ -48,6 +48,12 @@ export interface IAuthInput{
       renavam?: string,
       lotacao?: string,
       desembargador?: string,
+      cliente?: {
+        nome: string;
+      };
+      cartao?: {
+        numeroCartao: string;
+      };
     }
     export interface EstabelecimentoInterface {
       idLavacar: number;
@@ -84,14 +90,19 @@ export interface IAuthInput{
     numeroCartao: string,
     mensagem?:string,
     sucesso?:boolean,
-    quantidadeServicosMensais: number,
+    quantidadeServicosMensais: number ,
     senha: string,
     confirmSenha?:string,
     idLavacarLogado?:number,
     clienteNome: string;
-  carroModelo: string;
-  carroPlaca: string;
-  carroLotacao?: string;
+    carroModelo: string;
+    carroPlaca: string;
+    carroLotacao?: string;
+    carroMarca: string;
+    carroCor: string;
+    carroChassis: string;
+    carroRenavam: string;
+    carroDesembargador: string;
 
   cliente?: {
     idCliente: number;
@@ -107,6 +118,7 @@ export interface IAuthInput{
     idCarro: number;
     modelo: string;
     placa: string;
+    marca: string;
     ano: number;
     cor: string;
   };
@@ -117,10 +129,25 @@ export interface IAuthInput{
     valorDesconto: number;
     dataTransacao: string;
     status: string;
+    placaVeiculo?: string;
+    
     cartao: {
+      tipoCartao?: string;
       cliente: {
         nome: string;
+        
       };
+      carro: {
+        placa?: string;
+        modelo?: string;
+        marca?: string;
+        cor?: string;
+        chassis?: string;
+        renavam?: string;
+        lotacao?: string;
+        desembargador?: string;
+      };
+      numeroCartao: string;
     };
     lavacar: {
       nome: string;
@@ -128,12 +155,22 @@ export interface IAuthInput{
   }
 
   export interface TransacaoRecente {
-    data: string;
-    valorDesconto: number;
-  }
-  export interface TransacaoRecente {
+    idTransacao: number;
     dataTransacao: string;
     valorDesconto: number;
+    status: string;
+    cartao?: {
+      cliente?: {
+        nome: string;
+      };
+      carro?: {
+        placa?: string;
+        modelo?: string;
+      };
+    };
+    lavacar?: {
+      nome: string;
+    };
   }
   
   export interface DashboardData {
@@ -191,6 +228,13 @@ export  interface IterfacetransacoesSeuEstabelecimento {
   valorDesconto: number;
   dataTransacao: string;
   status: string;
+  cartao?: {
+    numeroCartao: string;
+    carro?: {
+      placa: string;
+      modelo: string;
+    } | null;
+  } | null;
 }
 
 export interface PerfilUser {

@@ -27,11 +27,18 @@ const Carros = () => {
 
   const filteredCarros = queryCarros.data?.filter(
     (carro) =>
-      carro.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      carro.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      carro.cor.toLowerCase().includes(searchTerm.toLowerCase())
+      carro.modelo.includes(searchTerm) ||
+      carro.placa.includes(searchTerm) ||
+      carro.cor.includes(searchTerm) ||
+      carro.cliente?.nome.includes(searchTerm) ||
+      carro.cartao?.numeroCartao.includes(searchTerm) ||
+      carro.marca?.includes(searchTerm) ||
+      carro.chassis?.includes(searchTerm) ||
+      carro.renavam?.includes(searchTerm) ||
+      carro.lotacao?.includes(searchTerm) ||
+      carro.desembargador?.includes(searchTerm)
   );
-
+ 
   const handleRecarregar = () => {
     queryCarros.refetch();
   };
@@ -124,11 +131,13 @@ const Carros = () => {
               <th className="px-4 py-2 border">Cor</th>
               <th className="px-4 py-2 border">Lotação</th>
               <th className="px-4 py-2 border">Desembargador</th>
+              <th className="px-4 py-2 border">Cliente</th>
+              <th className="px-4 py-2 border">Cartão</th>
               <th className="px-4 py-2 border">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCarros?.map((carro: CarroInterface) => (
+            { filteredCarros && filteredCarros.length > 0 ? filteredCarros.map((carro: CarroInterface) => (
               <tr key={carro.idCarro} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2 text-center border">{carro.marca}</td>
                 <td className="px-4 py-2 text-center border">{carro.modelo}</td>
@@ -148,27 +157,39 @@ const Carros = () => {
                 <td className="px-4 py-2 text-center border">
                   {carro.desembargador}
                 </td>
+                <td className="px-4 py-2 text-center border">
+                  {carro.cliente?.nome}
+                </td>
+                <td className="px-4 py-2 text-center border">
+                  {carro.cartao?.numeroCartao}
+                </td>
                 <td className="px-4 py-2 text-center border flex justify-center gap-2">
                   <button
                     onClick={() => {
                       setCarroEditando(carro);
                       setMostrarFormulario(true);
                     }}
-                    className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    className="bg-gray-700 flex items-center text-white p-2 rounded-lg hover:bg-gray-600"
                   >
-                    <FaEdit className="mr-2" />
-                    Editar
+                    <FaEdit />
+                    
                   </button>
                   <button
                     onClick={() => handleExcluirCarro(carro.idCarro!)}
-                    className="bg-red-500 flex items-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                    className="bg-red-500 flex items-center text-white p-2 rounded-lg hover:bg-red-600"
                   >
-                    <FaTrash className="mr-2" />
-                    Excluir
+                    <FaTrash />
+                    
                   </button>
                 </td>
               </tr>
-            ))}
+              )) : (
+              <tr>
+                <td colSpan={10} className="text-center">
+                  Nenhum carro encontrado
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
