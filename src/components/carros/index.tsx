@@ -38,7 +38,7 @@ const Carros = () => {
       carro.lotacao?.includes(searchTerm) ||
       carro.desembargador?.includes(searchTerm)
   );
-  console.log("Carros", filteredCarros);
+ 
   const handleRecarregar = () => {
     queryCarros.refetch();
   };
@@ -169,17 +169,17 @@ const Carros = () => {
                       setCarroEditando(carro);
                       setMostrarFormulario(true);
                     }}
-                    className="bg-gray-700 flex items-center text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    className="bg-gray-700 flex items-center text-white p-2 rounded-lg hover:bg-gray-600"
                   >
-                    <FaEdit className="mr-2" />
-                    Editar
+                    <FaEdit />
+                    
                   </button>
                   <button
                     onClick={() => handleExcluirCarro(carro.idCarro!)}
-                    className="bg-red-500 flex items-center text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                    className="bg-red-500 flex items-center text-white p-2 rounded-lg hover:bg-red-600"
                   >
-                    <FaTrash className="mr-2" />
-                    Excluir
+                    <FaTrash />
+                    
                   </button>
                 </td>
               </tr>

@@ -148,5 +148,32 @@ export const useEstabelecimentos = () => {
   
     return mutate;
   };
+
+  export const useDesvincularEstabelecimentoCliente = () => {
+    const queryClient = useQueryClient();
+  
+    const mutate = useMutation({
+      mutationFn: async (data: { idCliente: number; idLavacar: number }) => {
+        return await makeRequest
+          .post(`/estabelecimento/desvincular-estabelecimento`, data)
+          .then((res) => res.data);
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["clientesVinculados"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        queryClient.invalidateQueries({ queryKey: ["lavacars"] });
+        queryClient.invalidateQueries({ queryKey: ["estabelecimento"] });
+        
+        toast.success(data.mensagem || "Credenciado desvinculado do cliente com sucesso!");
+      },
+      onError: (error: AxiosError<{ message: string }>) => {
+        const errorMessage = error.response?.data?.message || "Erro ao desvincular o cliente do credenciado.";
+        
+        toast.error(`Erro: ${errorMessage}`);
+      },
+    });
+  
+    return mutate;
+  };
   
   

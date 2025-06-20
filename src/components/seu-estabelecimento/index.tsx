@@ -41,7 +41,7 @@ export default function SeuEstabelecimentoDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {lavacar.cartoesPermitidos.map((cartao: IntefacePermitidos) => (
               <div key={cartao.idCartao} className="p-6 bg-blue-100 rounded-lg shadow-md border-l-4 border-blue-500">
-                <p className="text-md text-gray-900 font-semibold">Cartão: {"**********"}</p>
+                <p className="text-md text-gray-900 font-semibold">Cartão: ****{cartao.numeroCartao.slice(-4)}</p>
               
                 <p className="text-md text-green-700 font-bold">Serviços Restantes:{cartao.quantidadeServicosMensais}</p>
                 {/* {cartao.saldo.toFixed(2)} */}
@@ -93,6 +93,21 @@ export default function SeuEstabelecimentoDashboard() {
                     {transacao.status}
                   </span>
                 </p>
+                {transacao.cartao?.carro && (
+                  <p className="text-lg text-gray-700">
+                    <strong>Placa:</strong> <span className="font-semibold text-blue-600">{transacao.cartao.carro.placa}</span>
+                  </p>
+                )}
+                {transacao.cartao?.carro && (
+                  <p className="text-lg text-gray-700">
+                    <strong>Modelo:</strong> <span className="font-semibold text-gray-800">{transacao.cartao.carro.modelo}</span>
+                  </p>
+                )}
+                {transacao.cartao && (
+                  <p className="text-lg text-gray-700">
+                    <strong>Cartão:</strong> <span className="font-semibold text-gray-800">****{transacao.cartao.numeroCartao.slice(-4)}</span>
+                  </p>
+                )}
                 <p className="text-lg text-gray-700">
                   <strong>Data:</strong> {new Date(transacao.dataTransacao).toLocaleDateString()}
                 </p>

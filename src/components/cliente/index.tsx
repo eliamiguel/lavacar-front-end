@@ -167,17 +167,17 @@ const Clientes = () => {
                       setClienteEditado(cliente);
                       setMostrarModal(true);
                     }}
-                    className="bg-gray-700 text-white px-4 py-2 flex items-center rounded-lg hover:bg-gray-600"
+                    className="bg-gray-700 text-white p-2 flex items-center rounded-lg hover:bg-gray-600"
                   >
-                    <FaEdit className="mr-2" />
-                    Editar
+                    <FaEdit />
+                    
                   </button>
                   <button
                     onClick={() => handleExcluirCliente(cliente.idCliente!)}
-                    className="bg-red-500 text-white flex items-center px-4 py-2 rounded-lg hover:bg-red-600"
+                    className="bg-red-500 text-white flex items-center p-2 rounded-lg hover:bg-red-600"
                   >
-                    <FaTrash className="mr-2" />
-                    Excluir
+                    <FaTrash />
+                    
                   </button>
                 </td>
               </tr>

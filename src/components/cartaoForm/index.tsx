@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { CartaoInterface } from "../../../interface";
 import { useCleintes } from "../../../hooks/useClientes";
 import { useCarros } from "../../../hooks/useCarros";
 import { useCartoes } from "../../../hooks/useCartao";
+import { UserContext } from "@/context/UserContext";
 
 interface CartaoFormProps {
   cartaoEditado?: CartaoInterface;
@@ -16,11 +17,12 @@ const CartaoForm: React.FC<CartaoFormProps> = ({
   aoFechar,
   aoSalvar,
 }) => {
+  const { user } = useContext(UserContext);
   const [cartao, setCartao] = useState<CartaoInterface>(() => ({
     idCartao: 0,
     idCliente: 0,
     idCarro: 0,
-    idLavacar: 0,
+    idLavacar: user?.idLavacar || 0,
     estabelcimento: "",
     numeroCartao: "",
     quantidadeServicosMensais: 0,
@@ -28,6 +30,12 @@ const CartaoForm: React.FC<CartaoFormProps> = ({
     clienteNome: "",
     carroModelo: "",
     carroPlaca: "",
+    carroLotacao: "",
+    carroMarca: "",
+    carroCor: "",
+    carroChassis: "",
+    carroRenavam: "",
+    carroDesembargador: "",
     mensagem: undefined,
     sucesso: undefined,
     confirmSenha: "",
@@ -85,7 +93,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({
     setSenha(value);
 
     if (!validarSenha(value)) {
-      setErroSenha("A senha deve ter pelo menos 6 numeros");
+      setErroSenha("A senha deve ter exatamente 6 dígitos numéricos");
     } else {
       setErroSenha("");
     }
@@ -115,7 +123,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({
         return;
       }
       if (!validarSenha(senha)) {
-        setErroSenha("A senha não atende aos requisitos.");
+        setErroSenha("A senha deve ter exatamente 6 dígitos numéricos.");
         return;
       }
     }
@@ -234,7 +242,7 @@ const CartaoForm: React.FC<CartaoFormProps> = ({
                   type="password"
                   name="senha"
                   value={senha}
-                  placeholder="exemplo: Teste@123"
+                  placeholder="Digite 6 dígitos numéricos"
                   onChange={handleSenhaChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   required

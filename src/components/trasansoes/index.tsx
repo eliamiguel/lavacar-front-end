@@ -110,6 +110,18 @@ const Transacoes = () => {
                 </td>
                 <td className="px-4 py-2 text-center border">
                   {transacao.cartao?.carro?.placa || "Carro Desconhecido"}
+                  
+                  {transacao.cartao?.tipoCartao ==="CORINGA" && transacao.placaVeiculo && (
+                    <>
+                    <br />
+                    <span className="text-xs text-gray-500">Cartão Coringa
+                    placa informada no momento da transação:
+                    </span>
+                    <span className="text-xs text-gray-500">{transacao.placaVeiculo}</span>
+                    </>
+                  )}
+                  
+                  
                 </td>
                 <td className="px-4 py-2 text-center border">
                   {formatCurrency(transacao.valorDesconto)}

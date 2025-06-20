@@ -95,9 +95,14 @@ export interface IAuthInput{
     confirmSenha?:string,
     idLavacarLogado?:number,
     clienteNome: string;
-  carroModelo: string;
-  carroPlaca: string;
-  carroLotacao?: string;
+    carroModelo: string;
+    carroPlaca: string;
+    carroLotacao?: string;
+    carroMarca: string;
+    carroCor: string;
+    carroChassis: string;
+    carroRenavam: string;
+    carroDesembargador: string;
 
   cliente?: {
     idCliente: number;
@@ -124,9 +129,13 @@ export interface IAuthInput{
     valorDesconto: number;
     dataTransacao: string;
     status: string;
+    placaVeiculo?: string;
+    
     cartao: {
+      tipoCartao?: string;
       cliente: {
         nome: string;
+        
       };
       carro: {
         placa?: string;
@@ -219,6 +228,13 @@ export  interface IterfacetransacoesSeuEstabelecimento {
   valorDesconto: number;
   dataTransacao: string;
   status: string;
+  cartao?: {
+    numeroCartao: string;
+    carro?: {
+      placa: string;
+      modelo: string;
+    } | null;
+  } | null;
 }
 
 export interface PerfilUser {

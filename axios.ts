@@ -2,16 +2,16 @@ import axios, { AxiosError } from 'axios';
 
 const makeRequest = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}`, 
-  withCredentials: true // Importante para enviar cookies
+  withCredentials: true 
 });
 
-// Interceptor para adicionar token do sessionStorage OU dos cookies
+
 makeRequest.interceptors.request.use(
   (config) => {
-    // Primeiro tenta pegar do sessionStorage
+    
     let token = sessionStorage.getItem("lavacar:token");
     
-    // Se não tiver no sessionStorage, tenta extrair dos cookies (para desenvolvimento)
+   
     if (!token) {
       const cookies = document.cookie.split(';');
       const accessTokenCookie = cookies.find(cookie => 
@@ -31,13 +31,12 @@ makeRequest.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor para lidar com respostas e erros de autenticação
+
 makeRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     
-    // Se o erro for 401 e não for uma tentativa de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       

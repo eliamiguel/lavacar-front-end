@@ -17,7 +17,7 @@ export function formatInfoCarro(
   type: string,
   info: string | undefined
 ): string {
-  console.log({ type, info });
+ 
   if (!info) return "";
 
   const infoFormat = info.toString().toUpperCase();
