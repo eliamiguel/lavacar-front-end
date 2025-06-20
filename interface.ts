@@ -347,3 +347,36 @@ export interface Lavacar {
   transacoes: Transacao[];
 }
 
+export interface TentativaPagamentoInterface {
+  idTentativa: number;
+  idCartao?: number;
+  idLavacar: number;
+  numeroCartao: string;
+  motivoFalha: string;
+  descricaoFalha: string;
+  dataTentativa: string;
+  ipTentativa?: string;
+  userAgent?: string;
+  placaVeiculo?: string;
+  cartao?: {
+    idCartao: number;
+    numeroCartao: string;
+    tipoCartao: string;
+    cliente: {
+      idCliente: number;
+      nome: string;
+    };
+    carro?: {
+      idCarro: number;
+      placa: string;
+      modelo: string;
+      marca: string;
+      lotacao: string;
+    };
+  };
+  lavacar: {
+    idLavacar: number;
+    nome: string;
+  };
+}
+

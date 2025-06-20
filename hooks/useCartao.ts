@@ -305,3 +305,24 @@ export const useTransacoesCartaoMes = (idCartao: number, mes: number, ano: numbe
     enabled: !!idCartao && !!mes && !!ano
   });
 };
+
+export const useTentativasPagamento = () => {
+  return useQuery({
+    queryKey: ['tentativas-pagamento'],
+    queryFn: async () => {
+      const res = await makeRequest.get("/tentativas-pagamento");
+      return res.data;
+    },
+  });
+};
+
+export const useTentativasPagamentoPorCliente = (idCliente: number) => {
+  return useQuery({
+    queryKey: ['tentativas-pagamento-cliente', idCliente],
+    queryFn: async () => {
+      const res = await makeRequest.get(`/tentativas-pagamento/cliente/${idCliente}`);
+      return res.data;
+    },
+    enabled: !!idCliente,
+  });
+};
