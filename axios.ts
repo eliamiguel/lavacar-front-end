@@ -1,5 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
+console.log('Configurando axios com baseURL:', process.env.NEXT_PUBLIC_BACKEND_URL);
+
 const makeRequest = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}`, 
   withCredentials: true 
@@ -8,6 +10,9 @@ const makeRequest = axios.create({
 
 makeRequest.interceptors.request.use(
   (config) => {
+    console.log('Fazendo requisição para:', config.url);
+    console.log('Método:', config.method);
+    console.log('Headers:', config.headers);
     
     let token = sessionStorage.getItem("lavacar:token");
     
@@ -24,11 +29,17 @@ makeRequest.interceptors.request.use(
     
     if (token && token !== 'undefined') {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Token adicionado ao header');
+    } else {
+      console.log('Nenhum token encontrado');
     }
     
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('Erro no interceptor de requisição:', error);
+    return Promise.reject(error);
+  }
 );
 
 

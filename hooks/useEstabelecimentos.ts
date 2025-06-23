@@ -112,12 +112,35 @@ export const useEstabelecimentos = () => {
   }
 
   export const useLavacar = (idLavacar: number) => {
+    console.log('useLavacar chamado com idLavacar:', idLavacar);
+    
     const { data, isLoading, isError, error,refetch } = useQuery<LavacarInterface>({
       queryKey: ["seuEstabelecimento", idLavacar],
-      queryFn: async () =>
-        await makeRequest.get(`/seuestabelecimento?idLavacar=${idLavacar}` ).then((res) => res.data),
-      enabled: !!idLavacar, 
+      queryFn: async () => {
+        console.log('Executando queryFn para idLavacar:', idLavacar);
+        
+        // Validação adicional para garantir que idLavacar é válido
+        if (!idLavacar || idLavacar <= 0 || isNaN(idLavacar)) {
+          console.error('ID do estabelecimento inválido:', idLavacar);
+          throw new Error("ID do estabelecimento inválido");
+        }
+        
+        const url = `/seuestabelecimento?idLavacar=${idLavacar}`;
+        console.log('Fazendo requisição para:', url);
+        
+        try {
+          const response = await makeRequest.get(url);
+          console.log('Resposta recebida:', response.data);
+          return response.data;
+        } catch (error) {
+          console.error('Erro na requisição:', error);
+          throw error;
+        }
+      },
+      enabled: !!idLavacar && idLavacar > 0 && !isNaN(idLavacar), 
     });
+
+    console.log('Estado do hook:', { isLoading, isError, hasData: !!data });
 
     return { data, isLoading, isError, error,refetch };
   };

@@ -8,9 +8,20 @@ import { useLavacar } from "../../../hooks/useEstabelecimentos";
 export default function SeuEstabelecimentoDashboard() {
   const { user } = useContext(UserContext);
   const [filtroPeriodo, setFiltroPeriodo] = useState("tudo");
-  const { data: lavacar, isLoading } = useLavacar(user?.idLavacar || 0);
+  
+  console.log('SeuEstabelecimentoDashboard - user:', user);
+  console.log('SeuEstabelecimentoDashboard - user?.idLavacar:', user?.idLavacar);
+  
+  // Validação adicional para garantir que idLavacar é válido
+  const idLavacar = user?.idLavacar && user.idLavacar > 0 ? user.idLavacar : 0;
+  console.log('SeuEstabelecimentoDashboard - idLavacar final:', idLavacar);
+  
+  const { data: lavacar, isLoading, isError } = useLavacar(idLavacar);
+ 
+  console.log('SeuEstabelecimentoDashboard - estado:', { isLoading, isError, hasData: !!lavacar });
  
   if (isLoading) return <p className="text-center text-gray-600 mt-10 text-lg">Carregando informações...</p>;
+  if (isError) return <p className="text-center text-red-500 mt-10 text-lg">Erro ao carregar informações do estabelecimento.</p>;
   if (!lavacar) return <p className="text-center text-red-500 mt-10 text-lg">Nenhuma informação encontrada.</p>;
    
   return (
@@ -35,25 +46,24 @@ export default function SeuEstabelecimentoDashboard() {
    
       <div className="mt-10">
         <h2 className="text-3xl font-semibold text-gray-900 mb-4">Cartões Permitidos</h2>
-        {lavacar.cartoesPermitidos.length === 0 ? (
+        {!lavacar.cartoesPermitidos || lavacar.cartoesPermitidos.length === 0 ? (
           <p className="text-gray-500 text-lg">Nenhum cartão permitido.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {lavacar.cartoesPermitidos.map((cartao: IntefacePermitidos) => (
               <div key={cartao.idCartao} className="p-6 bg-blue-100 rounded-lg shadow-md border-l-4 border-blue-500">
-                <p className="text-md text-gray-900 font-semibold">Cartão: ****{cartao.numeroCartao.slice(-4)}</p>
+                <p className="text-md text-gray-900 font-semibold">Cartão: ****{cartao.numeroCartao?.slice(-4) || '****'}</p>
               
-                <p className="text-md text-green-700 font-bold">Serviços Restantes:{cartao.quantidadeServicosMensais}</p>
-                {/* {cartao.saldo.toFixed(2)} */}
-                <p className="text-md text-gray-700"><strong>Tipo:</strong> {cartao.tipoCartao}</p>
+                <p className="text-md text-green-700 font-bold">Serviços Restantes:{cartao.quantidadeServicosMensais || 0}</p>
+                <p className="text-md text-gray-700"><strong>Tipo:</strong> {cartao.tipoCartao || 'NORMAL'}</p>
                 <p className="text-md text-gray-700">
                   <strong>Placa:</strong> <span className={` text-md text-gray-800`}>
-                    {cartao.placa}
+                    {cartao.placa || 'Não informada'}
                   </span>
                 </p>
                 <p className="text-md text-gray-700">
                   <strong>Modelo:</strong> <span className={` text-gray-800 text-md`}>
-                    {cartao.modelo}
+                    {cartao.modelo || 'Não informado'}
                   </span>
                 </p>
               </div>
@@ -79,7 +89,7 @@ export default function SeuEstabelecimentoDashboard() {
           </select>
         </div>
 
-        {lavacar.transacoes.length === 0 ? (
+        {!lavacar.transacoes || lavacar.transacoes.length === 0 ? (
           <p className="text-gray-500 text-lg">Nenhuma transação registrada.</p>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -105,7 +115,7 @@ export default function SeuEstabelecimentoDashboard() {
                 )}
                 {transacao.cartao && (
                   <p className="text-lg text-gray-700">
-                    <strong>Cartão:</strong> <span className="font-semibold text-gray-800">****{transacao.cartao.numeroCartao.slice(-4)}</span>
+                    <strong>Cartão:</strong> <span className="font-semibold text-gray-800">****{transacao.cartao.numeroCartao?.slice(-4) || '****'}</span>
                   </p>
                 )}
                 <p className="text-lg text-gray-700">
