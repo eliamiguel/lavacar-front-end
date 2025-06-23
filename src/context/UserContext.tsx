@@ -22,7 +22,13 @@ export interface Carro {
     } | null;
   }
   
-  
+// Interface simplificada para dados do cliente no token
+export interface ClienteToken {
+  idCliente: number;
+  nome: string;
+}
+
+// Interface completa para dados do cliente na API
 export interface Cliente {
   idCliente: number;
   nome: string;
@@ -50,7 +56,8 @@ export interface User {
   urlImagemPerfil: string;
   tipoUsuario: string;
   nomeEstabelecimento?: string;
-  cliente?: Cliente | null; // Informações do cliente vinculado
+  cliente?: Cliente | null; // Informações do cliente vinculado (usuário)
+  clientes?: Cliente[]; // Lista de clientes (estabelecimento)
 }
 
 // Interface do contexto atualizada
@@ -148,7 +155,10 @@ export const UserContextProvider = ({ children }: ContextProps) => {
       // Mescla dados do usuário com informações do token
       const completeUserData: User = {
         ...userData,
+        // Para usuários normais, usa cliente do token (simplificado)
         cliente: (tokenPayload as Record<string, unknown>).cliente as Cliente | null || null,
+        // Para estabelecimentos, usa clientes do token (simplificado)
+        clientes: (tokenPayload as Record<string, unknown>).clientes as Cliente[] || []
       };
 
       setUser(completeUserData);
@@ -161,7 +171,7 @@ export const UserContextProvider = ({ children }: ContextProps) => {
       // Atualiza estados derivados
       setIsAdmin(completeUserData.tipoUsuario === "admin");
       setIsLavacar(!!completeUserData.idLavacar);
-      setHasClientData(!!completeUserData.cliente);
+      setHasClientData(!!(completeUserData.cliente || (completeUserData.clientes && completeUserData.clientes.length > 0)));
       
     }
   };
@@ -202,7 +212,7 @@ export const UserContextProvider = ({ children }: ContextProps) => {
             setToken(tokenJSON);
             setIsAdmin(parsedUser.tipoUsuario === "admin");
             setIsLavacar(!!parsedUser.idLavacar);
-            setHasClientData(!!parsedUser.cliente);
+            setHasClientData(!!(parsedUser.cliente || (parsedUser.clientes && parsedUser.clientes.length > 0)));
           } else {
             console.log('Token inválido, fazendo logout');
             logoutUser();
@@ -264,7 +274,7 @@ export const UserContextProvider = ({ children }: ContextProps) => {
     if (user) {
       setIsAdmin(user.tipoUsuario === "admin");
       setIsLavacar(!!user.idLavacar);
-      setHasClientData(!!user.cliente);
+      setHasClientData(!!(user.cliente || (user.clientes && user.clientes.length > 0)));
     } else {
       setIsAdmin(false);
       setIsLavacar(false);
