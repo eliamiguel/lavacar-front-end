@@ -197,34 +197,55 @@ export interface LavacarInterface {
   telefone: string;
   email: string;
   cnpj: string;
-  atividadePrincipal:string,
-  ramoAtuacao:string,
-  razaoSocial:string,
-  cidade:string,
+  urlImagemPerfil: string;
+  atividadePrincipal: string;
+  ramoAtuacao: string;
+  razaoSocial: string;
+  cidade: string;
+  clientes: {
+    idCliente: number;
+    nome: string;
+    email: string;
+    telefone: string;
+    endereco: string;
+    cnpj: string;
+  }[];
   cartoesPermitidos: {
     idCartao: number;
     numeroCartao: string;
     quantidadeServicosMensais: number;
+    tipoCartao: string;
+    modelo: string;
+    placa: string;
   }[];
   transacoes: {
     idTransacao: number;
+    idLavacar: number;
     valorDesconto: number;
     dataTransacao: string;
     status: string;
+    cartao?: {
+      numeroCartao: string;
+      carro?: {
+        placa: string;
+        modelo: string;
+      } | null;
+    } | null;
   }[];
 }
 export interface IntefacePermitidos {
   idCartao: number;
   numeroCartao: string;
   quantidadeServicosMensais: number;
-  modelo?: string;
-  placa?: string;
-  tipoCartao?: string;
-  limiteSaldo?:number
+  tipoCartao: string;
+  modelo: string;
+  placa: string;
+  limiteSaldo?: number;
 }
 
-export  interface IterfacetransacoesSeuEstabelecimento {
+export interface IterfacetransacoesSeuEstabelecimento {
   idTransacao: number;
+  idLavacar: number;
   valorDesconto: number;
   dataTransacao: string;
   status: string;

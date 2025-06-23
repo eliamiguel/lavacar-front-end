@@ -106,7 +106,7 @@ const Carros = () => {
       <div className="bg-gray-100 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
-          placeholder="Busca rápida"
+          placeholder="Busca rápida marca, modelo, lotação, desembargador, cliente, cartão"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 w-full md:w-1/3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
