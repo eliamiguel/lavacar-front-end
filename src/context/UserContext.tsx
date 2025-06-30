@@ -120,11 +120,10 @@ export const UserContextProvider = ({ children }: ContextProps) => {
     }
   };
 
-  // Função para fazer login e armazenar dados
+ 
   const loginUser = (userData: User, authToken?: string, responseData?: Record<string, unknown>) => {
     let finalToken = authToken;
     
-    // Se não recebeu token como parâmetro, tenta extrair da resposta
     if (!finalToken && responseData?.tokens && typeof responseData.tokens === 'object') {
       const tokens = responseData.tokens as Record<string, unknown>;
       if (tokens.accessToken && typeof tokens.accessToken === 'string') {
@@ -132,7 +131,6 @@ export const UserContextProvider = ({ children }: ContextProps) => {
       }
     }
     
-    // Se ainda não tem token, tenta extrair dos cookies
     if (!finalToken && typeof document !== 'undefined') {
       const cookies = document.cookie.split(';');
       const accessTokenCookie = cookies.find(cookie => 
@@ -148,16 +146,14 @@ export const UserContextProvider = ({ children }: ContextProps) => {
       return;
     }
 
-    // Decodifica o token para obter informações atualizadas
     const tokenPayload = decodeJWT(finalToken);
     
     if (tokenPayload) {
-      // Mescla dados do usuário com informações do token
+      
       const completeUserData: User = {
         ...userData,
-        // Para usuários normais, usa cliente do token (simplificado)
+       
         cliente: (tokenPayload as Record<string, unknown>).cliente as Cliente | null || null,
-        // Para estabelecimentos, usa clientes do token (simplificado)
         clientes: (tokenPayload as Record<string, unknown>).clientes as Cliente[] || []
       };
 
@@ -194,7 +190,7 @@ export const UserContextProvider = ({ children }: ContextProps) => {
         const userJSON = sessionStorage.getItem("lavacar:user");
         let tokenJSON = sessionStorage.getItem("lavacar:token");
         
-        // Se não tem token no sessionStorage, tenta pegar dos cookies
+        
         if (!tokenJSON) {
           tokenJSON = getTokenFromCookies();
           if (tokenJSON) {

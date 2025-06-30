@@ -12,7 +12,20 @@ makeRequest.interceptors.request.use(
   (config) => {
     console.log('Fazendo requisição para:', config.url);
     console.log('Método:', config.method);
-    console.log('Headers:', config.headers);
+    
+    // Primeiro, verifica se é uma rota SSO e retorna sem adicionar token
+    if (config.url?.includes('/auth/sso-login')) {
+      console.log('Requisição SSO detectada - não adicionando token de autorização');
+      // Garante que não há header Authorization
+      if (config.headers) {
+        delete config.headers.Authorization;
+        delete config.headers['authorization'];
+      }
+      console.log('Headers finais SSO:', config.headers);
+      return config;
+    }
+    
+    console.log('Headers antes:', config.headers);
     
     let token = sessionStorage.getItem("lavacar:token");
     
